@@ -1,75 +1,65 @@
-# Nuxt Minimal Starter
+## PDF view mode
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+0. create task 編輯模式
+1. sign task 簽署模式
+2. template preview
+3. signed task preview
+4. webRTC
+5. self task
 
-## Setup
+## annotation type
 
-Make sure to install dependencies:
+### setState
 
-```bash
-# npm
-npm install
+0. pointer
+1. sign
+2. textbox
+3. checkbox
+4. stamp
+5. date
+6. radioBtn
+7. dropdown
+8. file
+9. picture
+10. signatureBP
+11. signatureBO
+12. stampBP
+13. stampBO
+14. signatureAndStamp
+15. canvas
+16. comment (mode 1)
 
-# pnpm
-pnpm install
+---
 
-# yarn
-yarn install
+90. draw (mode 4)
+91. geometry (mode 4)
+92. text (mode 4)
+93. arrow (mode 4)
+94. line (mode 4)
 
-# bun
-bun install
-```
+### render
 
-## Development Server
+0. sign
+1. textbox
+2. checkbox
+3. stamp
+4. date
+5. radioBtn
+6. dropdown
+7. file
+8. picture
+9. signatureBP
+10. signatureBO
+11. stampBP
+12. stampBO
+13. signatureAndStamp
+14. canvas
+15. comment (mode 1)
 
-Start the development server on `http://localhost:3000`:
+---
 
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+90. draw (mode 4)
+91. geometry (mode 4)
+92. text (mode 4)
+93. arrow (mode 4)
+94. line (mode 4)
