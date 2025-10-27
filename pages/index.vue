@@ -11,7 +11,7 @@
                 </v-btn>
                 <v-btn color="red-darken-2" @click="alertStore.showMessage({
                     message: 'asd',
-                    type: 'error',
+                    type: 'info',
                     timeout: 10000,
                 })">
                     Open Snackbar
@@ -31,6 +31,4 @@ import { useAlertStore } from '@/stores/alert'
 
 const counterStore = useCounterStore()
 const alertStore = useAlertStore()
-
-// console.log(alertStore.show)
 </script>

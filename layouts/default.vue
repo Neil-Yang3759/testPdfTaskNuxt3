@@ -4,7 +4,8 @@
         <slot />
 
         <v-snackbar v-model="alertStore.show" location="top" :color="alertStore.type" :timeout="alertStore.timeout"
-            rounded="lg" multi-line>
+            rounded="lg" multi-line style="word-break: break-all;">
+            <v-icon :icon="alertStore.icon" color="white" variant="text" class="mr-2"></v-icon>
             {{ alertStore.message }}
 
             <template v-slot:actions>
