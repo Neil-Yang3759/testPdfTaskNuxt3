@@ -183,7 +183,7 @@
                                 <div style="margin: auto" class="mb-3">
                                     <a class="ml-auto text-decoration-none" @click="cancel2FA">{{
                                         $t('button.return')
-                                    }}</a>
+                                        }}</a>
                                 </div>
                             </div>
                         </v-form>
@@ -198,13 +198,13 @@
                 <v-app-bar dark flat color="primary">
                     <v-toolbar-title class="ml-5 mx-auto text-h6">{{
                         $t('heading.changePassword')
-                    }}</v-toolbar-title>
+                        }}</v-toolbar-title>
                 </v-app-bar>
 
                 <v-card-text class="px-10 pt-10 pb-5">
                     <v-alert v-if="changePasswordError" type="error" outlined>{{
                         changePasswordError
-                    }}</v-alert>
+                        }}</v-alert>
                     <validation-observer ref="changePasswordObserver" vid="changePassword">
                         <v-form ref="changePasswordDialogForm" @submit.prevent>
                             <validation-provider v-slot="{ errors }" vid="oldPassword" :name="$t('label.oldPassword')"
@@ -277,102 +277,155 @@
     </v-container>
 </template>
 
-<style scoped lang="scss">
-.container {
-    max-width: 100%;
-    padding: 0;
-    margin: 0;
-}
+<script setup>
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
 
-.upper-block {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 35%;
-    background-color: #009138;
-}
+definePageMeta({
+    layout: 'empty',
+})
 
-.logo-area {
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 120px;
-}
 
-.logo-area>.svg-container {
-    margin: 0 auto;
-    padding: 8px 0;
-}
+const tab = ref(null)
+const loading = ref(false)
+const isRememberMe = ref(false)
+const showOldPassword = ref(false)
+const showNewPassword = ref(false)
+const showNewPasswordCheck = ref(false)
+const autofill = ref(true)
+const searchAutoFillCount = ref(0)
+const action = ref('')
+const showCloseTabMessage = ref(false)
+const showPassword = ref(false)
+const modelSignup = ref({
+    userName: '',
+    account: '',
+    password: '',
+    agreePrivacy: false,
+    agreeMarketing: false,
+})
+const redirectURL = ref('')
+const changePasswordError = ref('')
+const changePasswordDialog = ref(false)
+const resendMailDialog = ref(false)
+const resendMailDialogLoading = ref(false)
+const clientId = ref('')
+const state = ref('')
+const modelLogin = ref({
+    account: '',
+    password: '',
+    oldPassword: '',
+    newPassword: '',
+    newPasswordCheck: '',
+})
+const show2FAInput = ref(false)
+const twoFactorAuthCode = ref('')
+const thirdParty2FALogin = ref(false)
+const loginObserver = ref(null)
+const signupObserver = ref(null)
+const changePasswordObserver = ref(null)
 
-.logo-area>p {
-    color: #ffffff;
-    margin-top: 8px;
-    font-size: 20px;
-}
+action.value = route.query.action
+clientId.value = route.query.client_id
+redirectURL.value =
+    route.query.redirect_url || route.query.redirect_uri
+state.value = route.query.state
+tab.value = action.value === 'signup' ? 1 : 0
 
-div.v-card.main-card {
-    box-shadow: 0px 22px 60px #5973b126 !important;
-    border-radius: 16px;
-    width: 480px;
-    padding: 40px 60px 55px 60px;
-    min-height: 400px;
-}
+const isOAuth = computed(() => {
+    return clientId.value && redirectURL.value
+})
 
-.v-tab {
-    color: #575757;
-    font-size: 16px;
-    background-color: white;
-}
-
-.active-tab {
-    font-weight: bold;
-    color: #008145;
-}
-
-.social-signin-btn {
-    background: #ffffff !important;
-    border: 1px solid #dfe1e6;
-    justify-content: center;
-}
-
-@media (max-width: 1280px) {
-    ::v-deep div.v-text-field__slot>input {
-        font-size: 18px;
+watch(tab, (value) => {
+    if (value === 0 && loginObserver.value) {
+        loginObserver.value.reset()
+    } else if (value === 1 && signupObserver.value) {
+        signupObserver.value.reset()
     }
-}
+})
 
-@media (max-width: 600px) {
-    .logo-area {
-        height: 25%;
-        padding-bottom: 25px;
+watch('modelLogin.account', (value) => {
+    if (value === '') {
+        autofill.value = false
     }
+})
 
-    .logo-area>img {
-        width: 180px;
-        height: 32px;
+watch('modelLogin.password', (value) => {
+    if (value === '') {
+        autofill.value = false
     }
+})
 
-    .logo-area>p {
-        margin-top: 10px;
-        font-size: 16px;
-    }
-
-    div.v-card.main-card {
-        padding: 20px 30px 40px 30px;
-    }
-
-    @media (min-height: 800px) {
-        .empty-block {
-            height: 18vh;
+onMounted(() => {
+    if (
+        // this.$store.getters.getIsLogin &&
+        // this.$store.getters.getIsGetUserInfo &&
+        !clientId.value &&
+        !redirectURL.value
+    ) {
+        // 已經登入的狀態，如果action是訂閱要跳轉到訂閱頁面
+        if (action.value === 'subscribe') {
+            checkPlanParamAndRedirect()
+        } else if (action.value === 'close-tab') {
+            window.location.href = window.location.origin + '/close-tab'
+        } else {
+            router.push('/')
         }
     }
-}
+    const id = setInterval(() => {
+        const inputEmail = document.querySelector(
+            'input[type=email]:-webkit-autofill'
+        )
+        const inputPassword = document.querySelector(
+            'input[type=password]:-webkit-autofill'
+        )
+        if (inputEmail && inputPassword) {
+            clearInterval(id)
+            autofill.value = true
+        } else if (searchAutoFillCount.value > 10) {
+            clearInterval(id)
+        } else {
+            autofill.value = false
+            searchAutoFillCount.value++
+        }
+    }, 100)
+    initialFacebookSignin()
 
-::v-deep div.v-input .v-input--selection-controls__ripple {
-    display: none !important;
+    $recaptcha.language = $i18n.locale
+    $store.commit('setPageTitle', $t('title.login'))
+})
+
+return {
+    isOAuth,
+    loginObserver,
+    signupObserver,
+    changePasswordObserver,
+    tab,
+    loading,
+    isRememberMe,
+    showOldPassword,
+    showNewPassword,
+    showNewPasswordCheck,
+    autofill,
+    searchAutoFillCount,
+    action,
+    showCloseTabMessage,
+    showPassword,
+    modelSignup,
+    redirectURL,
+    changePasswordError,
+    changePasswordDialog,
+    resendMailDialog,
+    resendMailDialogLoading,
+    clientId,
+    state,
+    modelLogin,
+    show2FAInput,
+    twoFactorAuthCode,
+    thirdParty2FALogin,
 }
-</style>
+</script>
 
 <script>
 export default {
@@ -1019,3 +1072,101 @@ export default {
     },
 }
 </script>
+
+
+<style scoped lang="scss">
+.container {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.upper-block {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 35%;
+    background-color: #009138;
+}
+
+.logo-area {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 120px;
+}
+
+.logo-area>.svg-container {
+    margin: 0 auto;
+    padding: 8px 0;
+}
+
+.logo-area>p {
+    color: #ffffff;
+    margin-top: 8px;
+    font-size: 20px;
+}
+
+div.v-card.main-card {
+    box-shadow: 0px 22px 60px #5973b126 !important;
+    border-radius: 16px;
+    width: 480px;
+    padding: 40px 60px 55px 60px;
+    min-height: 400px;
+}
+
+.v-tab {
+    color: #575757;
+    font-size: 16px;
+    background-color: white;
+}
+
+.active-tab {
+    font-weight: bold;
+    color: #008145;
+}
+
+.social-signin-btn {
+    background: #ffffff !important;
+    border: 1px solid #dfe1e6;
+    justify-content: center;
+}
+
+@media (max-width: 1280px) {
+    ::v-deep div.v-text-field__slot>input {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .logo-area {
+        height: 25%;
+        padding-bottom: 25px;
+    }
+
+    .logo-area>img {
+        width: 180px;
+        height: 32px;
+    }
+
+    .logo-area>p {
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    div.v-card.main-card {
+        padding: 20px 30px 40px 30px;
+    }
+
+    @media (min-height: 800px) {
+        .empty-block {
+            height: 18vh;
+        }
+    }
+}
+
+::v-deep div.v-input .v-input--selection-controls__ripple {
+    display: none !important;
+}
+</style>
