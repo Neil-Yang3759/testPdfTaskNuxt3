@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35">
+  <g id="Group_41861" data-name="Group 41861" transform="translate(-678 -1011)">
+    <g id="Group_41859" data-name="Group 41859" transform="translate(-400.696 1745.5)">
+      <g id="Group_41168" data-name="Group 41168" transform="translate(320.67 -1308.969)">
+        <path id="Subtraction_28" data-name="Subtraction 28" d="M13.073,24.227H1.136A1.137,1.137,0,0,1,0,23.091V1.136A1.137,1.137,0,0,1,1.136,0H10.6V6.435a1.137,1.137,0,0,0,1.136,1.136H18.17v6.757a6.9,6.9,0,0,0-5.841,6.787,6.788,6.788,0,0,0,.744,3.11Zm5.1-18.17H12.113V0h.29a1.129,1.129,0,0,1,.8.331l4.632,4.637a1.124,1.124,0,0,1,.331.8v.287Z" transform="translate(763.025 578.469)" fill="#f1f2f4"/>
+      </g>
+      <path id="Icon_awesome-play-circle" data-name="Icon awesome-play-circle" d="M6.032.563a5.47,5.47,0,1,0,5.47,5.47A5.469,5.469,0,0,0,6.032.563Zm2.552,6L4.7,8.789a.53.53,0,0,1-.787-.463V3.739A.531.531,0,0,1,4.7,3.275l3.882,2.36A.531.531,0,0,1,8.584,6.562Z" transform="translate(1097.607 -715.729)" fill="#f1f2f4"/>
+    </g>
+    <rect id="Rectangle_11751" data-name="Rectangle 11751" width="35" height="35" transform="translate(678 1011)" fill="none"/>
+  </g>
+</svg>

@@ -108,15 +108,32 @@ export default defineNuxtConfig({
     port: 8080,
     host: '0.0.0.0' // This will make the server accessible on your local network
   },
-  // i18n: {
-  //   strategy: "no_prefix",
-  //   defaultLocale: "zh-TW",
-  //   locales: ["zh-TW", "en-US"],
-  //   vueI18n: {
-  //     fallbackLocale: "zh-TW",
-  //   },
-  // },
+  i18n: {
+    strategy: "no_prefix",
+    langDir: '../locales',
+    defaultLocale: "zh-TW",
+    compilation: {
+      strictMessage: false,
+    },
+    locales: [
+      {
+        code: 'en-US',
+        iso: 'en-US',
+        file: 'en-US.json'
+      },
+      {
+        code: 'zh-TW',
+        iso: 'zh-TW',
+        file: 'zh-TW.json'
+      }
+    ],
+  },
   vite: {
+    server: {
+      watch: {
+        usePolling: true
+      }
+    },
     vue: {
       template: {
         transformAssetUrls,

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20.264" height="18.789" viewBox="0 0 20.264 18.789">
+  <g id="Group_9783" data-name="Group 9783" transform="translate(0.625 0.625)">
+    <g id="Group_9603" data-name="Group 9603">
+      <g id="Group_9584" data-name="Group 9584" transform="translate(0 0)">
+        <g id="Icon_feather-folder-plus" data-name="Icon feather-folder-plus" transform="translate(0 0)">
+          <path id="Path_10289" data-name="Path 10289" d="M6286.609-621.821h-3.979a1.591,1.591,0,0,1-1.591-1.592v-11.141a1.592,1.592,0,0,1,1.591-1.592h3.979l1.591,2.388h7.163a1.592,1.592,0,0,1,1.592,1.592v.632h0" transform="translate(-6281.038 636.146)" fill="none" stroke="#797979" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"/>
+        </g>
+        <g id="Group_9477" data-name="Group 9477" transform="translate(8.999 7.47)">
+          <line id="Line_43" data-name="Line 43" x1="6.43" y2="6.43" transform="translate(0 0)" fill="none" stroke="#797979" stroke-width="1.25"/>
+        </g>
+      </g>
+    </g>
+    <g id="Group_9478" data-name="Group 9478" transform="translate(12.162 3.211) rotate(45)">
+      <g id="Ellipse_24" data-name="Ellipse 24" transform="translate(0 0)" fill="none" stroke="#797979" stroke-width="1.25">
+        <circle cx="5.287" cy="5.287" r="5.287" stroke="none"/>
+        <circle cx="5.287" cy="5.287" r="4.662" fill="none"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
+  <g id="Group_9576" data-name="Group 9576" transform="translate(-625 -756)">
+    <g id="stopwatch" transform="translate(631 763.345)">
+      <path id="Path_10259" data-name="Path 10259" d="M17.849,33.469A13.37,13.37,0,1,0,4.478,20.1,13.37,13.37,0,0,0,17.849,33.469Zm0,2.228A15.6,15.6,0,1,0,2.25,20.1,15.6,15.6,0,0,0,17.849,35.7Z" transform="translate(0 -0.043)" fill="#008145" fill-rule="evenodd"/>
+      <path id="Path_10260" data-name="Path 10260" d="M17.914,10.028a1.114,1.114,0,0,1,1.114,1.114v8.914a1.114,1.114,0,0,1-1.114,1.114h-7.8a1.114,1.114,0,1,1,0-2.228H16.8v-7.8A1.114,1.114,0,0,1,17.914,10.028ZM12.343,1.114A1.114,1.114,0,0,1,13.457,0H22.37a1.114,1.114,0,0,1,0,2.228H13.457a1.114,1.114,0,0,1-1.114-1.114Z" transform="translate(-0.065)" fill="#008145" fill-rule="evenodd"/>
+      <path id="Path_10261" data-name="Path 10261" d="M15.75,2.25h4.457V6.707H15.75Z" transform="translate(-0.13 -0.022)" fill="#008145"/>
+    </g>
+    <rect id="Rectangle_8604" data-name="Rectangle 8604" width="22" height="24" transform="translate(652.5 777)" fill="#fff"/>
+    <g id="Group_9460" data-name="Group 9460" transform="translate(22.903 -25)">
+      <g id="Group_9459" data-name="Group 9459" transform="translate(602.097 781)">
+        <g id="Group_9457" data-name="Group 9457" transform="translate(0 0)">
+          <rect id="Rectangle_8588" data-name="Rectangle 8588" width="52" height="52" fill="none"/>
+        </g>
+      </g>
+    </g>
+    <g id="Icon_feather-calendar" data-name="Icon feather-calendar" transform="translate(652.185 780.175)">
+      <path id="Path_10296" data-name="Path 10296" d="M6.206,6H18.15a1.7,1.7,0,0,1,1.706,1.7V19.618a1.7,1.7,0,0,1-1.706,1.7H6.206a1.7,1.7,0,0,1-1.706-1.7V7.7A1.7,1.7,0,0,1,6.206,6Z" transform="translate(-0.493 -3.495)" fill="#fff" stroke="#008145" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"/>
+      <path id="Path_10297" data-name="Path 10297" d="M24,3V7.5" transform="translate(-9.422 -2.575)" fill="none" stroke="#008145" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"/>
+      <path id="Path_10298" data-name="Path 10298" d="M12,3V7.5" transform="translate(-3.318 -2.575)" fill="none" stroke="#008145" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"/>
+      <path id="Path_10299" data-name="Path 10299" d="M4.5,15H18.779" transform="translate(0 -6.675)" fill="none" stroke="#008145" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"/>
+    </g>
+    <g id="Ellipse_22" data-name="Ellipse 22" transform="translate(666 791.1)" fill="#008145" stroke="#008145" stroke-width="1.2">
+      <circle cx="1.15" cy="1.15" r="1.15" stroke="none"/>
+      <circle cx="1.15" cy="1.15" r="0.85" fill="none"/>
+    </g>
+  </g>
+</svg>

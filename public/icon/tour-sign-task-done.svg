@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="35" height="35" viewBox="0 0 35 35">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_11700" data-name="Rectangle 11700" width="33.58" height="30.374" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" y1="0.223" x2="0.727" y2="0.785" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#26ff55"/>
+      <stop offset="0.494" stop-color="#268aff"/>
+      <stop offset="1" stop-color="#fc55ff"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_41631" data-name="Group 41631" transform="translate(-1208 -401)">
+    <g id="Group_41625" data-name="Group 41625">
+      <g id="Group_41397" data-name="Group 41397" transform="translate(1208.371 403.5)">
+        <g id="Group_41396" data-name="Group 41396" clip-path="url(#clip-path)">
+          <path id="Path_105841" data-name="Path 105841" d="M3.544,30.374A3.541,3.541,0,0,1,0,26.824V3.544A3.549,3.549,0,0,1,3.54,0h10.04a2.335,2.335,0,0,1,.8.141,2.335,2.335,0,0,1,.8-.141h.306A3.522,3.522,0,0,1,18,1.035l4.919,4.92a3.516,3.516,0,0,1,1.036,2.5c0,.014-.006.349-.006.349a2.342,2.342,0,0,1-.138.756l.014.038q.077-.043.156-.08a2.338,2.338,0,0,1,.463-.662L25.8,7.484a3.622,3.622,0,0,1,5.114-.011l1.609,1.61a3.634,3.634,0,0,1,0,5.111l-1.373,1.372a2.333,2.333,0,0,1-.667.467,2.325,2.325,0,0,1-.463.664l-6.605,6.65a2.329,2.329,0,0,1,.525,1.476V26.83a3.549,3.549,0,0,1-3.54,3.544Z" transform="translate(0)" fill="#fff"/>
+        </g>
+      </g>
+      <path id="Icon_awesome-file-signature" data-name="Icon awesome-file-signature" d="M10.243,19.913a.52.52,0,0,0-.477-.306.512.512,0,0,0-.47.291l-.36.72a.751.751,0,0,1-1.384-.1l-.79-2.37-.5,1.5a2.027,2.027,0,0,1-1.925,1.386H3.756a.751.751,0,0,1,0-1.5h.582a.526.526,0,0,0,.5-.36l.854-2.565a1.127,1.127,0,0,1,2.139,0l.652,1.955a2.107,2.107,0,0,1,3.1.665.533.533,0,0,0,.439.294V15.664L18.029,9.7V7.512H11.643a1.13,1.13,0,0,1-1.127-1.127V0H1.127A1.124,1.124,0,0,0,0,1.127V22.911a1.124,1.124,0,0,0,1.127,1.127H16.9a1.124,1.124,0,0,0,1.127-1.127V21.033l-6.01-.005A2.016,2.016,0,0,1,10.243,19.913Zm7.786-14.19A1.123,1.123,0,0,0,17.7,4.93L13.1.329a1.126,1.126,0,0,0-.8-.329h-.286V6.01h6.01ZM13.521,16.29v3.241H16.76l7.591-7.642L21.164,8.7ZM26.693,7.856l-1.5-1.5a1.2,1.2,0,0,0-1.691,0L22.226,7.639l3.187,3.187,1.279-1.279A1.2,1.2,0,0,0,26.693,7.856Z" transform="translate(1211.64 406.668)" fill="url(#linear-gradient)"/>
+    </g>
+    <rect id="Rectangle_11744" data-name="Rectangle 11744" width="35" height="35" transform="translate(1208 401)" fill="none"/>
+  </g>
+</svg>

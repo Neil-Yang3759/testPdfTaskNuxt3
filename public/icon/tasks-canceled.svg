@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20.107" height="18.774" viewBox="0 0 20.107 18.774">
+  <g id="Group_9887" data-name="Group 9887" transform="translate(0.625 0.625)">
+    <g id="Group_9585" data-name="Group 9585">
+      <g id="Icon_feather-folder-plus" data-name="Icon feather-folder-plus" transform="translate(0 0)">
+        <path id="Path_10289" data-name="Path 10289" d="M6286.609-621.821h-3.979a1.591,1.591,0,0,1-1.591-1.592v-11.141a1.592,1.592,0,0,1,1.591-1.592h3.979l1.591,2.388h7.163a1.592,1.592,0,0,1,1.592,1.592v.632h0" transform="translate(-6281.038 636.146)" fill="none" stroke="#797979" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"/>
+      </g>
+    </g>
+    <g id="Group_9478" data-name="Group 9478" transform="translate(12.208 3.6) rotate(45)">
+      <g id="Ellipse_24" data-name="Ellipse 24" transform="translate(0 0)" fill="none" stroke="#797979" stroke-width="1.25">
+        <circle cx="5.144" cy="5.144" r="5.144" stroke="none"/>
+        <circle cx="5.144" cy="5.144" r="4.519" fill="none"/>
+      </g>
+    </g>
+    <g id="Group_9479" data-name="Group 9479" transform="translate(9.743 10.849) rotate(-45)">
+      <line id="Line_44" data-name="Line 44" y2="3.611" transform="translate(1.805 0)" fill="none" stroke="#797979" stroke-linecap="round" stroke-width="1.25"/>
+      <line id="Line_45" data-name="Line 45" x1="3.611" transform="translate(0 1.805)" fill="none" stroke="#797979" stroke-linecap="round" stroke-width="1.25"/>
+    </g>
+  </g>
+</svg>

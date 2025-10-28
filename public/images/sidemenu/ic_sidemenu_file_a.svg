@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="ic_sidemenu_file_a" transform="translate(-35 -75)">
+    <rect id="mask" width="24" height="24" transform="translate(35 75)" fill="none"/>
+    <g id="Group_46" data-name="Group 46" transform="translate(-61.22 -20.879)">
+      <rect id="Rectangle_12" data-name="Rectangle 12" width="7.295" height="7.664" transform="translate(104.445 107.69)" fill="#008145"/>
+      <path id="Union_1" data-name="Union 1" d="M24.22,4.887a2,2,0,0,1-2-2V-10.407h.013a1.94,1.94,0,0,1,1.92-1.715h4.719l1.714,1.715H40.22a2,2,0,0,1,2,2V2.887a2,2,0,0,1-2,2Zm.105-2.105h15.79V-8.3H24.325Z" transform="translate(76 111.496)" fill="#008145" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"/>
+      <path id="Path_114" data-name="Path 114" d="M113.681,112.669a.7.7,0,0,1-.7-.7V106.34h-7.014a.7.7,0,0,1,0-1.4h7.714a.7.7,0,0,1,.7.7v6.329A.7.7,0,0,1,113.681,112.669Z" fill="#008145"/>
+      <path id="Path_115" data-name="Path 115" d="M109.527,110.491h-3.164a.5.5,0,0,1,0-1h3.164a.5.5,0,0,1,0,1Z" fill="#fff"/>
+      <path id="Path_116" data-name="Path 116" d="M109.527,113.458h-3.164a.5.5,0,0,1,0-1h3.164a.5.5,0,0,1,0,1Z" fill="#fff"/>
+    </g>
+  </g>
+</svg>

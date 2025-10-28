@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <g id="Group_40689" data-name="Group 40689" transform="translate(-304 -561)">
+    <g id="Group_39444" data-name="Group 39444" transform="translate(32 -120.781)">
+      <path id="Icon_material-assignment-ind" data-name="Icon material-assignment-ind" d="M14.814,2.789H12.119a1.926,1.926,0,0,0-3.636,0H5.789A1.293,1.293,0,0,0,4.5,4.078V13.1a1.293,1.293,0,0,0,1.289,1.289h9.024A1.293,1.293,0,0,0,16.1,13.1V4.078A1.293,1.293,0,0,0,14.814,2.789Zm-4.512,0a.645.645,0,1,1-.645.645A.647.647,0,0,1,10.3,2.789Zm0,2.578A1.934,1.934,0,1,1,8.368,7.3,1.931,1.931,0,0,1,10.3,5.368ZM14.169,13.1H6.434v-.9c0-1.289,2.578-2,3.868-2s3.868.709,3.868,2Z" transform="translate(270.698 680.503)" fill="#000"/>
+      <g id="Group_39440" data-name="Group 39440" transform="translate(272 698.672)">
+        <line id="Line_26" data-name="Line 26" x2="18" fill="none" stroke="#000" stroke-width="2"/>
+      </g>
+    </g>
+    <rect id="Rectangle_11068" data-name="Rectangle 11068" width="18" height="18" transform="translate(304 561)" fill="none"/>
+  </g>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="35" height="35" viewBox="0 0 35 35">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_11746" data-name="Rectangle 11746" width="35" height="35" transform="translate(-2.042 -2)" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x2="0.868" y2="0.846" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#26ff55"/>
+      <stop offset="0.46" stop-color="#268aff"/>
+      <stop offset="1" stop-color="#fc55ff"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_41641" data-name="Group 41641" transform="translate(-1200.958 -655.294)">
+    <rect id="Rectangle_11748" data-name="Rectangle 11748" width="32" height="34.294" transform="translate(1203 656)" fill="none"/>
+    <g id="Group_41638" data-name="Group 41638" transform="translate(-42.763 0.257)">
+      <g id="Group_41637" data-name="Group 41637" transform="translate(1245.763 657.037)">
+        <g id="Group_41636" data-name="Group 41636" transform="translate(0 0)" clip-path="url(#clip-path)">
+          <path id="Path_106183" data-name="Path 106183" d="M3.787,29.955A3.732,3.732,0,0,1,0,26.287V3.668A3.735,3.735,0,0,1,3.784,0H13.854a2.643,2.643,0,0,1,.806.125A2.63,2.63,0,0,1,15.466,0h.308a3.822,3.822,0,0,1,2.672,1.072L23.374,5.85A3.619,3.619,0,0,1,24.483,8.44V8.6a2.352,2.352,0,0,1-.03.536,2.5,2.5,0,0,1-.1.381,2.449,2.449,0,0,1,.129.78v6.962A2.525,2.525,0,0,1,22.3,19.727a4.64,4.64,0,0,0-4.032,4.535,4.4,4.4,0,0,0,.508,2.056,2.434,2.434,0,0,1-.094,2.442,2.6,2.6,0,0,1-2.2,1.195Z" transform="translate(-1 -0.001)" fill="#fff"/>
+          <path id="Path_106184" data-name="Path 106184" d="M19.82,29.722a8.4,8.4,0,1,1,8.4-8.4,8.407,8.407,0,0,1-8.4,8.4" transform="translate(1.294 2.045)" fill="#fff"/>
+        </g>
+      </g>
+      <g id="Group_41633" data-name="Group 41633" transform="translate(1247.918 661.126)">
+        <g id="Group_41168" data-name="Group 41168" transform="translate(0.04)">
+          <path id="Subtraction_28" data-name="Subtraction 28" d="M12.679,22.061H1.1A1.07,1.07,0,0,1,0,21.027V1.034A1.07,1.07,0,0,1,1.1,0h9.178V5.86a1.07,1.07,0,0,0,1.1,1.034h6.241v6.153a6.42,6.42,0,0,0-5.665,6.18,5.877,5.877,0,0,0,.721,2.832ZM17.621,5.515H11.747V0h.281a1.132,1.132,0,0,1,.78.3L17.3,4.524a.993.993,0,0,1,.321.729v.261Z" transform="translate(0 0)" fill="url(#linear-gradient)"/>
+        </g>
+        <path id="Icon_ionic-md-add-circle" data-name="Icon ionic-md-add-circle" d="M8.356,3.375a4.981,4.981,0,1,0,4.981,4.981A4.981,4.981,0,0,0,8.356,3.375Zm2.562,5.484H8.859v2.059H7.853V8.859H5.794V7.853H7.853V5.794H8.859V7.853h2.059Z" transform="translate(10.229 10.895)" fill="url(#linear-gradient)"/>
+      </g>
+    </g>
+  </g>
+</svg>

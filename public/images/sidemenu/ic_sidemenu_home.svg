@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="ic_sidemenu_home" transform="translate(-35 -75)">
+    <rect id="mask" width="24" height="24" transform="translate(35 75)" fill="none"/>
+    <g id="Group_45" data-name="Group 45" transform="translate(-13.825 -19.967)">
+      <path id="Path_110" data-name="Path 110" d="M68.661,107.128l-7.835-6.965-7.835,6.965-1.329-1.5,9.165-8.146,9.165,8.146Z" fill="#4c4c4c"/>
+      <path id="Path_111" data-name="Path 111" d="M65.075,105.94l-4.25-3.778-4.25,3.778-2.125,1.889v8.618h4.675v-6.262h3.4v6.262H67.2v-8.618Z" fill="#4c4c4c"/>
+    </g>
+  </g>
+</svg>

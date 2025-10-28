@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
+  <g id="Group_9574" data-name="Group 9574" transform="translate(-302 -781)">
+    <g id="Icon_ionic-ios-checkmark-circle-outline" data-name="Icon ionic-ios-checkmark-circle-outline" transform="translate(310.125 789.392)">
+      <path id="Path_10228" data-name="Path 10228" d="M28.438,13.87l-1.479-1.56a.314.314,0,0,0-.235-.1h0a.3.3,0,0,0-.235.1l-10.254,10.6L12.5,19.077a.319.319,0,0,0-.471,0l-1.5,1.535a.35.35,0,0,0,0,.491l4.707,4.828a1.474,1.474,0,0,0,.983.491,1.546,1.546,0,0,0,.975-.474h.008L28.446,14.362A.376.376,0,0,0,28.438,13.87Z" transform="translate(-1.779 -1.611)" fill="#008145" stroke="#008145" stroke-width="0.1"/>
+      <path id="Path_10229" data-name="Path 10229" d="M21.074,5.758a15.311,15.311,0,1,1-10.832,4.484A15.215,15.215,0,0,1,21.074,5.758m0-2.383a17.7,17.7,0,1,0,17.7,17.7,17.7,17.7,0,0,0-17.7-17.7Z" transform="translate(-3.375 -3.375)" fill="#008145" stroke="#008145" stroke-width="0.1"/>
+    </g>
+    <g id="Group_9457" data-name="Group 9457" transform="translate(302 781)">
+      <rect id="Rectangle_8588" data-name="Rectangle 8588" width="52" height="52" fill="none"/>
+    </g>
+  </g>
+</svg>

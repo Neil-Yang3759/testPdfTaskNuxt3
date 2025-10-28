@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35">
+  <g id="Group_41646" data-name="Group 41646" transform="translate(-1043 732)">
+    <rect id="Rectangle_11751" data-name="Rectangle 11751" width="35" height="35" transform="translate(1043 -732)" fill="none"/>
+    <g id="Group_41629" data-name="Group 41629" transform="translate(-164.758 -1210.5)">
+      <g id="Group_41168" data-name="Group 41168" transform="translate(449.733 -95.969)">
+        <path id="Subtraction_28" data-name="Subtraction 28" d="M13.073,24.227H1.136A1.137,1.137,0,0,1,0,23.091V1.136A1.137,1.137,0,0,1,1.136,0H10.6V6.435a1.137,1.137,0,0,0,1.136,1.136H18.17v6.757a6.9,6.9,0,0,0-5.841,6.787,6.788,6.788,0,0,0,.744,3.11Zm5.1-18.17H12.113V0h.29a1.129,1.129,0,0,1,.8.331l4.632,4.637a1.124,1.124,0,0,1,.331.8v.287Z" transform="translate(763.025 578.469)" fill="#f1f2f4"/>
+      </g>
+      <path id="Icon_ionic-md-add-circle" data-name="Icon ionic-md-add-circle" d="M8.845,3.375a5.47,5.47,0,1,0,5.47,5.47A5.47,5.47,0,0,0,8.845,3.375ZM11.659,9.4H9.4v2.262h-1.1V9.4H6.031v-1.1H8.293V6.031H9.4V8.293h2.262Z" transform="translate(1223.225 494.796)" fill="#f1f2f4"/>
+    </g>
+  </g>
+</svg>

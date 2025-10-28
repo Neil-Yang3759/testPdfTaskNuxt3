@@ -1,0 +1,22 @@
+<svg id="Component_53_2" data-name="Component 53 – 2" xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <rect id="Rectangle_11768" data-name="Rectangle 11768" width="80" height="80" fill="none"/>
+  <g id="Group_41800" data-name="Group 41800" transform="translate(-826.079 -310.069)">
+    <g id="Group_41797" data-name="Group 41797" transform="translate(878.423 317.462)">
+      <g id="Icon_feather-code" data-name="Icon feather-code" transform="translate(0 1.486)">
+        <path id="Path_104275" data-name="Path 104275" d="M24,18.15l4.575-4.575L24,9" transform="translate(-6.999 -9)" fill="none" stroke="#bbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        <path id="Path_104276" data-name="Path 104276" d="M7.575,9,3,13.575,7.575,18.15" transform="translate(-3 -9)" fill="none" stroke="#bbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <line id="Line_1758" data-name="Line 1758" x1="4.348" y2="12.122" transform="translate(8.114)" fill="none" stroke="#bbb" stroke-linecap="round" stroke-width="3"/>
+    </g>
+    <path id="Subtraction_12" data-name="Subtraction 12" d="M46.381,67.462H8.432A8.441,8.441,0,0,1,0,59.03V8.432A8.441,8.441,0,0,1,8.432,0H30.57a2.093,2.093,0,0,1,1.489.618L54.195,22.753a2.1,2.1,0,0,1,.618,1.492V59.03A8.441,8.441,0,0,1,46.381,67.462ZM8.432,4.218A4.219,4.219,0,0,0,4.218,8.432v50.6a4.219,4.219,0,0,0,4.214,4.214H46.381A4.219,4.219,0,0,0,50.6,59.03V25.116L29.7,4.218Z" transform="translate(832.079 316.069)" fill="#bbb"/>
+    <g id="Group_41799" data-name="Group 41799" transform="translate(-408 -13)">
+      <g id="Group_41459" data-name="Group 41459" transform="translate(1263.338 367.583)">
+        <path id="Path_106174" data-name="Path 106174" d="M177,1667.826s4.108-5.517,9.625,0" transform="translate(-177 -1665.374)" fill="none" stroke="#bbb" stroke-linecap="round" stroke-width="3"/>
+      </g>
+      <g id="Group_41461" data-name="Group 41461" transform="translate(1260.823 359.339)">
+        <ellipse id="Ellipse_967" data-name="Ellipse 967" cx="2" cy="2.5" rx="2" ry="2.5" transform="translate(10.177 -0.339)" fill="#bbb"/>
+        <ellipse id="Ellipse_968" data-name="Ellipse 968" cx="2" cy="2.5" rx="2" ry="2.5" transform="translate(0.177 -0.339)" fill="#bbb"/>
+      </g>
+    </g>
+  </g>
+</svg>

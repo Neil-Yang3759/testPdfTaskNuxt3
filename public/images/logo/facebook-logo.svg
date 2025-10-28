@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="42" viewBox="0 0 60 42">
+<defs>
+	<style>
+	.a{fill:#fff;opacity:0.6;}.b{fill:#3b5998;}.c{stroke:none;}.d{fill:none;}
+	</style>
+</defs>
+<g transform="translate(-1301 -921)">
+	<g class="a" transform="translate(1301 921)">
+		<rect class="c" width="60" height="42" rx="4"/>
+		<rect class="d" x="0.5" y="0.5" width="59" height="41" rx="3.5"/>
+	</g>
+	<path class="b" d="M11.832,11.489l.567-3.7H8.852v-2.4a1.848,1.848,0,0,1,2.084-2h1.612V.25A19.662,19.662,0,0,0,9.686,0c-2.921,0-4.83,1.77-4.83,4.975V7.793H1.609v3.7H4.856v8.936h4V11.489Z" transform="translate(1324.501 931.379)"/>
+</g>
+</svg>

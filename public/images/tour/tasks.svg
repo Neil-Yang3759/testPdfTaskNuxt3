@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="88" height="88" viewBox="0 0 88 88">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_11775" data-name="Rectangle 11775" width="88" height="88" transform="translate(7138.306 -2154.173)" fill="#fff"/>
+    </clipPath>
+  </defs>
+  <g id="Mask_Group_522" data-name="Mask Group 522" transform="translate(-7138.306 2154.173)" clip-path="url(#clip-path)">
+    <rect id="Rectangle_11771" data-name="Rectangle 11771" width="88" height="88" transform="translate(7138.306 -2153)" fill="none"/>
+    <g id="Group_41682" data-name="Group 41682" transform="translate(7147.71 -2139.173) rotate(-11)">
+      <g id="Group_41680" data-name="Group 41680">
+        <path id="Icon_material-mail" data-name="Icon material-mail" d="M57.51,0H6.39A6.382,6.382,0,0,0,.032,6.39L0,44.73a6.409,6.409,0,0,0,6.39,6.39H57.51a6.409,6.409,0,0,0,6.39-6.39V6.39A6.409,6.409,0,0,0,57.51,0Zm0,12.78L31.95,28.755,6.39,12.78V6.39L31.95,22.365,57.51,6.39Z" transform="translate(1.963 2.734)" fill="#d8dbea"/>
+        <g id="Group_41679" data-name="Group 41679" transform="translate(57.008 -0.877)">
+          <circle id="Ellipse_972" data-name="Ellipse 972" cx="9.37" cy="9.37" r="9.37" transform="translate(0 0)" fill="#009138"/>
+          <text id="_1" data-name="1" transform="translate(6.145 13.511)" fill="#fff" font-size="12" font-family="Lato-Medium, Lato" font-weight="500"><tspan x="0" y="0">1</tspan></text>
+        </g>
+      </g>
+    </g>
+    <rect id="Rectangle_11772" data-name="Rectangle 11772" width="15.382" height="6" rx="3" transform="translate(7138.943 -2110.34) rotate(-9)" fill="#f1f2f7"/>
+    <rect id="Rectangle_11773" data-name="Rectangle 11773" width="12.285" height="6" rx="3" transform="translate(7138.943 -2121.205) rotate(-9)" fill="#f1f2f7"/>
+    <rect id="Rectangle_11774" data-name="Rectangle 11774" width="16.327" height="6" rx="3" transform="translate(7138.943 -2099.328) rotate(-9)" fill="#f1f2f7"/>
+    <path id="Icon_material-send" data-name="Icon material-send" d="M.015,27,31.5,13.5.015,0,0,10.5l22.5,3L0,16.5Z" transform="matrix(0.545, -0.839, 0.839, 0.545, 7166.984, -2080.878)" fill="#f1f2f7"/>
+  </g>
+</svg>

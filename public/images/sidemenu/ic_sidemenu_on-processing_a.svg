@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="ic_sidemenu_on-processing_a" transform="translate(-35 -75)">
+    <rect id="mask" width="24" height="24" transform="translate(35 75)" fill="none"/>
+    <g id="Group_50" data-name="Group 50" transform="translate(-252.46 -20.708)">
+      <path id="Path_119" data-name="Path 119" d="M298.311,98.149v5.762h5.348l-5.327-5.762Z" fill="#008145"/>
+      <path id="Path_120" data-name="Path 120" d="M297.344,114.809H290.96V99.183h7.377l4.623,4.5v1.31c.212-.02.426-.033.643-.033a6.977,6.977,0,0,1,1.357.135v-2.257l-5.811-5.653h-9.368a.81.81,0,0,0-.821.8V116.01a.811.811,0,0,0,.821.8h8.975A6.939,6.939,0,0,1,297.344,114.809Z" fill="#008145"/>
+      <path id="Path_121" data-name="Path 121" d="M303.6,118.234a6.358,6.358,0,1,1,6.358-6.358A6.365,6.365,0,0,1,303.6,118.234Zm0-11.315a4.958,4.958,0,1,0,4.958,4.957A4.963,4.963,0,0,0,303.6,106.919Z" fill="#008145"/>
+      <g id="Group_49" data-name="Group 49">
+        <path id="Path_122" data-name="Path 122" d="M304.738,112.941h-3.923a.7.7,0,1,1,0-1.4h3.923a.7.7,0,0,1,0,1.4Z" fill="#008145"/>
+        <g id="Group_48" data-name="Group 48">
+          <path id="Path_123" data-name="Path 123" d="M304.339,109.265v5.953l2.975-2.976Z" fill="#008145"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

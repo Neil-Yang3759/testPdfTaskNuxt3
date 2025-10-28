@@ -1,34 +1,15 @@
 <template>
-    <div class="bg-white py-24">
-        <div class="flex flex-col items-center">
-            <span class="text-9xl font-semibold text-sky-600">{{ counterStore.count }}</span>
-            <div class="mt-8 flex flex-row">
-                <v-btn class="" @click="counterStore.increment">
-                    增加
-                </v-btn>
-                <v-btn class="" @click="counterStore.decrement">
-                    減少
-                </v-btn>
-                <v-btn color="red-darken-2" @click="alertStore.showMessage({
-                    message: 'asd',
-                    type: 'info',
-                    timeout: 10000,
-                })">
-                    Open Snackbar
-                </v-btn>
-            </div>
 
-        </div>
-
-    </div>
-
+    <iframe ref="iframeRef" style="height: 100%; width: 100%" :src="currentFileUrl">
+    </iframe>
 </template>
 
 <script setup>
-import { useCounterStore } from '@/stores/counter'
-import { useAlertStore } from '@/stores/alert'
-
-
-const counterStore = useCounterStore()
-const alertStore = useAlertStore()
+const iframeRef = ref(null)
+const currentFileUrl = ref('')
+currentFileUrl.value = ''
+// currentFileUrl.value = encodeURIComponent("https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf")
+// currentFileUrl.value = encodeURIComponent("C:/Users/neil.yang/Downloads/蒙恬2025-10-29員旅手冊.pdf")
+// `libs/pdfjs/web/viewer.html?file=${currentFileUrl}`
+currentFileUrl.value = "https://www-ws.gov.taipei/Download.ashx?u=LzAwMS9VcGxvYWQvNDIzL3JlbGZpbGUvNDExNzcvNzUyNDk2OS9jNTk3MDY4NC1mMWU4LTQzY2ItYTRkNC02NDE4ZGJhZDgwNGYucGRm&n=57WQ5ama5pu457SELnBkZg%3d%3d&icon=..pdf"
 </script>

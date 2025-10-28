@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="61" height="61" viewBox="0 0 61 61">
+  <g id="Group_12115" data-name="Group 12115" transform="translate(-907 -477)">
+    <rect id="Rectangle_8879" data-name="Rectangle 8879" width="61" height="61" transform="translate(907 477)" fill="none"/>
+    <g id="Group_12029" data-name="Group 12029" transform="translate(912.341 478.969)">
+      <g id="Group_12028" data-name="Group 12028" transform="translate(0 12.738)">
+        <path id="Icon_ionic-ios-phone-portrait" data-name="Icon ionic-ios-phone-portrait" d="M30.548,2.25h-16.9a3.394,3.394,0,0,0-3.526,3.265v37.81a3.484,3.484,0,0,0,3.526,3.384H30.538a3.409,3.409,0,0,0,3.441-3.384V5.515A3.3,3.3,0,0,0,30.548,2.25ZM20.459,4.532h3.2a.4.4,0,1,1,0,.794h-3.2a.4.4,0,1,1,0-.794ZM22.111,45.22a1.731,1.731,0,1,1,1.854-1.727A1.795,1.795,0,0,1,22.111,45.22Zm9.961-4.863H12.043a.207.207,0,0,1-.213-.2V7.51a.207.207,0,0,1,.213-.2H32.072a.207.207,0,0,1,.213.2V40.159A.207.207,0,0,1,32.072,40.357Z" transform="translate(-10.125 -2.25)" fill="#fff"/>
+        <path id="Subtraction_1" data-name="Subtraction 1" d="M22.632,23.854H0V22.16H20.47a.213.213,0,0,0,.213-.213V1.918A.213.213,0,0,0,20.47,1.7H0V0H22.611a3.472,3.472,0,0,1,2.484,1.032,3.518,3.518,0,0,1,1.021,2.494v16.9A3.386,3.386,0,0,1,25.1,22.867,3.5,3.5,0,0,1,22.632,23.854ZM23.24,9.908a.427.427,0,0,0-.426.426v3.2a.426.426,0,1,0,.852,0v-3.2A.426.426,0,0,0,23.24,9.908Z" transform="translate(24.956 16.555)" fill="#fff"/>
+      </g>
+      <path id="Icon_material-rotate-right" data-name="Icon material-rotate-right" d="M14.942,5.886,9.056,0V3.972a10.339,10.339,0,0,0,0,20.518V21.876a7.753,7.753,0,0,1,0-15.291v5.058Z" transform="translate(44.63 10.35) rotate(115)" fill="#95e9bf"/>
+    </g>
+  </g>
+</svg>

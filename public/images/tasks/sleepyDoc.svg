@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59">
+  <g id="Group_10167" data-name="Group 10167" transform="translate(-710 -355)">
+    <g id="Group_10164" data-name="Group 10164" transform="translate(4105.677 492.984)">
+      <g id="Group_10163" data-name="Group 10163" transform="translate(-3387.677 -135.984)">
+        <g id="Icon_feather-file-plus" data-name="Icon feather-file-plus" transform="translate(0 8.398)">
+          <path id="Path_10136" data-name="Path 10136" d="M29.217,3H10.438A4.539,4.539,0,0,0,6,7.634V44.708a4.539,4.539,0,0,0,4.438,4.634H37.064A4.539,4.539,0,0,0,41.5,44.708V14.825Z" transform="translate(-6 -3)" fill="none" stroke="#818181" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+          <path id="Path_10137" data-name="Path 10137" d="M21,3V15.458H33.458" transform="translate(2.044 -3)" fill="none" stroke="#818181" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        </g>
+        <g id="Group_10162" data-name="Group 10162" transform="translate(7.219 27.146)">
+          <path id="Path_10413" data-name="Path 10413" d="M-3378.335-95.435a4.412,4.412,0,0,0,6.739,0" transform="translate(3378.335 95.435)" fill="none" stroke="#707070" stroke-linecap="round" stroke-width="2"/>
+          <path id="Path_10414" data-name="Path 10414" d="M-3378.335-95.435a4.412,4.412,0,0,0,6.739,0" transform="translate(3392.66 95.435)" fill="none" stroke="#707070" stroke-linecap="round" stroke-width="2"/>
+          <line id="Line_1062" data-name="Line 1062" x2="4.983" transform="translate(8.041 9.278)" fill="none" stroke="#707070" stroke-linecap="round" stroke-width="2"/>
+        </g>
+        <path id="Path_10415" data-name="Path 10415" d="M-3395.535-148.3h3.919l-3.238,4.431h3.919" transform="translate(3429.058 157.073)" fill="none" stroke="#818181" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        <path id="Path_10416" data-name="Path 10416" d="M-3395.535-148.3h4.674l-3.861,5.284h4.674" transform="translate(3434.659 148.298)" fill="none" stroke="#818181" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+    </g>
+    <rect id="Rectangle_9255" data-name="Rectangle 9255" width="59" height="59" transform="translate(710 355)" fill="none"/>
+  </g>
+</svg>

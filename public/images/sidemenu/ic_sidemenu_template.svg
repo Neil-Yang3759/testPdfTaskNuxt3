@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="ic_sidemenu_template" transform="translate(-35 -75)">
+    <rect id="mask" width="24" height="24" transform="translate(35 75)" fill="none"/>
+    <g id="Group_47" data-name="Group 47" transform="translate(-109.658 -21.008)">
+      <path id="Path_117" data-name="Path 117" d="M158.009,99.16v5.762h5.348l-5.327-5.762Z" fill="#4c4c4c"/>
+      <path id="Path_118" data-name="Path 118" d="M158.035,100.194l4.623,4.5v11.128h-12V100.194h7.377m.812-2h-9.368a.81.81,0,0,0-.821.8v18.027a.81.81,0,0,0,.821.8h14.357a.811.811,0,0,0,.822-.8V103.848l-5.811-5.654Z" fill="#4c4c4c"/>
+      <rect id="Rectangle_13" data-name="Rectangle 13" width="7" height="1.6" transform="translate(153.587 111.401)" fill="#4c4c4c"/>
+      <rect id="Rectangle_14" data-name="Rectangle 14" width="5" height="1.6" transform="translate(153.587 107.236)" fill="#4c4c4c"/>
+    </g>
+  </g>
+</svg>

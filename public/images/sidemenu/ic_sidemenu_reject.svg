@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="ic_sidemenu_reject" transform="translate(-35 -75)">
+    <rect id="mask" width="24" height="24" transform="translate(35 75)" fill="none"/>
+    <g id="Group_54" data-name="Group 54" transform="translate(-396.461 -20.708)">
+      <path id="Path_132" data-name="Path 132" d="M442.311,98.149v5.762h5.348l-5.327-5.762Z" fill="#4c4c4c"/>
+      <path id="Path_133" data-name="Path 133" d="M441.344,114.809H434.96V99.183h7.377l4.623,4.5v1.31c.212-.02.426-.033.643-.033a6.977,6.977,0,0,1,1.357.135v-2.257l-5.811-5.653h-9.368a.81.81,0,0,0-.821.8V116.01a.811.811,0,0,0,.821.8h8.975A6.939,6.939,0,0,1,441.344,114.809Z" fill="#4c4c4c"/>
+      <path id="Path_134" data-name="Path 134" d="M447.6,118.234a6.358,6.358,0,1,1,6.358-6.358A6.365,6.365,0,0,1,447.6,118.234Zm0-11.315a4.958,4.958,0,1,0,4.958,4.957A4.963,4.963,0,0,0,447.6,106.919Z" fill="#4c4c4c"/>
+      <text id="_" data-name="!" transform="translate(446.461 115.708)" fill="#4c4c4c" font-size="10" font-family="Roboto-BoldCondensed, Roboto" font-weight="700"><tspan x="0" y="0">!</tspan></text>
+    </g>
+  </g>
+</svg>

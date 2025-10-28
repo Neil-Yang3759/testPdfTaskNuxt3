@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="27" height="25" viewBox="0 0 27 25">
+  <g id="Group_37715" data-name="Group 37715" transform="translate(-20 -563)">
+    <rect id="Rectangle_9659" data-name="Rectangle 9659" width="25" height="25" transform="translate(20 563)" fill="none"/>
+    <g id="Group_37707" data-name="Group 37707" transform="translate(-9559 143)">
+      <rect id="Rectangle_9665" data-name="Rectangle 9665" width="25" height="24.774" transform="translate(9581 420)" fill="none"/>
+      <g id="Group_37706" data-name="Group 37706" transform="translate(9581 422)">
+        <g id="Group_37703" data-name="Group 37703" transform="translate(0 0.226)">
+          <path id="Icon_open-text" data-name="Icon open-text" d="M0,0V3.909H.991A1.975,1.975,0,0,1,2.974,1.955H5.949V12.706a.975.975,0,0,1-.991.977H3.966v1.955H11.9V13.683h-.991a.975.975,0,0,1-.991-.977V1.955h2.974a1.975,1.975,0,0,1,1.983,1.955h.991V0Z" transform="translate(3.172 3.371)" fill="#707070"/>
+          <rect id="Rectangle_9606" data-name="Rectangle 9606" width="23" height="22.774" transform="translate(0 0)" fill="none"/>
+        </g>
+        <path id="Icon_awesome-arrows-alt-v" data-name="Icon awesome-arrows-alt-v" d="M4.528,6.3H3.761V2.235h.768a.4.4,0,0,0,.283-.683L3.377.117a.4.4,0,0,0-.566,0L1.376,1.552a.4.4,0,0,0,.283.683h.768V6.3H1.659a.4.4,0,0,0-.283.683L2.811,8.418a.4.4,0,0,0,.566,0L4.811,6.984A.4.4,0,0,0,4.528,6.3Z" transform="translate(19.071 0)" fill="#707070"/>
+      </g>
+    </g>
+  </g>
+</svg>

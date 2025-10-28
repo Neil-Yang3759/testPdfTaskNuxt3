@@ -1,0 +1,16 @@
+<svg id="Component_51_5" data-name="Component 51 – 5" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+  <g id="內部表單icon">
+    <rect id="Rectangle_11398" data-name="Rectangle 11398" width="21" height="21" fill="none"/>
+    <g id="Group_40842" data-name="Group 40842" transform="translate(1 1)">
+      <path id="Subtraction_11" data-name="Subtraction 11" d="M10.276,18.268H2.283A2.286,2.286,0,0,1,0,15.985V2.283A2.286,2.286,0,0,1,2.283,0H8.278a.567.567,0,0,1,.4.167l5.994,5.994a.568.568,0,0,1,.167.4v4.3H13.7V6.8L8.042,1.142H2.283A1.142,1.142,0,0,0,1.142,2.283v13.7a1.142,1.142,0,0,0,1.141,1.141h7.993v1.141Z" transform="translate(0 0)" fill="#191823"/>
+      <g id="Group_40830" data-name="Group 40830" transform="translate(3.281 6.695)">
+        <g id="Icon_feather-code" data-name="Icon feather-code" transform="translate(0 0.598)">
+          <path id="Path_104275" data-name="Path 104275" d="M24,12.682l1.841-1.841L24,9" transform="translate(-17.561 -9)" fill="none" stroke="#191823" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="Path_104276" data-name="Path 104276" d="M4.841,9,3,10.841l1.841,1.841" transform="translate(-3 -9)" fill="none" stroke="#191823" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <line id="Line_1758" data-name="Line 1758" x1="1.75" y2="4.878" transform="translate(3.265)" fill="none" stroke="#191823" stroke-linecap="round" stroke-width="1"/>
+      </g>
+      <path id="Icon_awesome-lock" data-name="Icon awesome-lock" d="M6.215,3.481H5.842V2.362a2.362,2.362,0,0,0-4.724,0V3.481H.746A.746.746,0,0,0,0,4.226V7.21a.746.746,0,0,0,.746.746h5.47a.746.746,0,0,0,.746-.746V4.226A.746.746,0,0,0,6.215,3.481Zm-1.616,0H2.362V2.362a1.119,1.119,0,0,1,2.238,0Z" transform="translate(11.362 11.573)" fill="#191823"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="ic_sidemenu_pending" transform="translate(-35 -75)">
+    <rect id="mask" width="24" height="24" transform="translate(35 75)" fill="none"/>
+    <g id="Group_51" data-name="Group 51" transform="translate(-301.461 -20.708)">
+      <path id="Path_124" data-name="Path 124" d="M347.311,98.149v5.762h5.348l-5.327-5.762Z" fill="#4c4c4c"/>
+      <path id="Path_125" data-name="Path 125" d="M346.344,114.809H339.96V99.183h7.377l4.623,4.5v1.31c.212-.02.426-.033.643-.033a6.977,6.977,0,0,1,1.357.135v-2.257l-5.811-5.653h-9.368a.81.81,0,0,0-.821.8V116.01a.811.811,0,0,0,.821.8h8.975A6.939,6.939,0,0,1,346.344,114.809Z" fill="#4c4c4c"/>
+      <path id="Path_126" data-name="Path 126" d="M352.6,118.234a6.358,6.358,0,1,1,6.358-6.358A6.365,6.365,0,0,1,352.6,118.234Zm0-11.315a4.958,4.958,0,1,0,4.958,4.957A4.963,4.963,0,0,0,352.6,106.919Z" fill="#4c4c4c"/>
+      <path id="Path_127" data-name="Path 127" d="M349.65,113.875v1.208h1.208l3.562-3.563-1.208-1.208Zm6.17-3.729a.322.322,0,0,0,0-.454l-.754-.754a.32.32,0,0,0-.454,0l-.589.589,1.207,1.208Z" fill="#4c4c4c"/>
+    </g>
+  </g>
+</svg>

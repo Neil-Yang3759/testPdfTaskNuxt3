@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15.002" viewBox="0 0 15 15.002">
+  <g id="Group_9914" data-name="Group 9914" transform="translate(108 -498.998)">
+    <g id="Group_3" data-name="Group 3" transform="translate(-1961 619)">
+      <g id="Group_9912" data-name="Group 9912" transform="translate(1853 -117.973)">
+        <g id="Group" transform="translate(8.079 1.829)" opacity="0">
+          <rect id="Boundary" width="6.921" height="9.226" fill="#333"/>
+          <path id="Boundary_-_Outline" data-name="Boundary - Outline" d="M.639.852V8.374H6.282V.852H.639M0,0H6.921V9.226H0Z" transform="translate(0 0)" fill="#333"/>
+        </g>
+        <path id="Path_pencil" data-name="Path / pencil" d="M9.808,4.552a.383.383,0,0,0,0-.542l-.9-.9a.383.383,0,0,0-.542,0l-.707.7L9.1,5.255M3,8.477V9.918H4.442L8.693,5.663,7.252,4.221Z" transform="translate(5.079 3.012)" fill="#333"/>
+        <path id="Path_account-group" data-name="Path / account-group" d="M8.182,5.5A2.386,2.386,0,1,1,5.8,7.886,2.386,2.386,0,0,1,8.182,5.5M3.409,7.2a2.013,2.013,0,0,1,1.043.286,3.775,3.775,0,0,0,.77,2.7A2.044,2.044,0,1,1,3.409,7.2m9.545,0a2.045,2.045,0,1,1-1.814,2.986,3.775,3.775,0,0,0,.77-2.7A2.013,2.013,0,0,1,12.954,7.2m-9.2,6.989c0-1.411,1.984-2.557,4.432-2.557s3.32.615,3.953,1.516L9.9,15.386H3.75V14.193M0,15.386V14.364c0-.948,1.289-1.745,3.034-1.977a2.757,2.757,0,0,0-.648,1.807v1.193H0" transform="translate(0 -7.528)" fill="#333"/>
+      </g>
+      <rect id="Rectangle_9400" data-name="Rectangle 9400" width="15" height="15" transform="translate(1853 -120)" fill="none"/>
+    </g>
+  </g>
+</svg>
