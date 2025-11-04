@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-export const useStore = defineStore('main', () => {
+export const useMainStore = defineStore('main', () => {
+    // ==================== State ====================
     const account = ref('')
     const token = ref(null)
     const options = ref(null)
@@ -39,82 +40,82 @@ export const useStore = defineStore('main', () => {
     ])
     const settingDrawerItems = ref([
         {
-            title: 'title.plan', // 方案資訊
+            title: 'title.plan',
             to: '/plan',
             check: [''],
         },
         {
-            title: 'title.points', // 我的點數
+            title: 'title.points',
             to: '/points',
             check: ['isAdmin', 'useCredit', 'notSIAdmin', 'notSIChild'],
         },
         {
-            title: 'title.cloudTaskCount', // 我的點數
+            title: 'title.cloudTaskCount',
             to: '/cloud-task-count',
             check: ['isAdmin', 'useB2b2c'],
         },
         {
-            title: 'title.groupMembers', // 帳戶管理
+            title: 'title.groupMembers',
             to: '/account',
             check: ['isAdmin', 'hasMember'],
         },
         {
-            title: 'title.brand', // 公司品牌
+            title: 'title.brand',
             to: '/company',
             check: ['isAdmin'],
         },
         {
-            title: 'title.recording', // 錄影設定
+            title: 'title.recording',
             to: '/recording',
             check: ['useVideo', 'isAdmin'],
         },
         {
-            title: 'title.security', // 安全設定
+            title: 'title.security',
             to: '/security',
             check: ['isAdmin', 'useWhiteList'],
         },
         {
-            title: 'title.developer', // 開發者權限
+            title: 'title.developer',
             to: '/developer',
             check: ['isAdmin', 'useAPI'],
         },
         {
-            title: 'title.usageReport', // 用量報表
+            title: 'title.usageReport',
             to: '/usage-report',
             check: ['isAdmin', 'notSIAdmin'],
         },
         {
-            title: 'title.usageReport', // 用量報表 (協作管理)
+            title: 'title.usageReport',
             to: '/si/usage-report',
             check: ['siAdmin'],
         },
         {
-            title: 'title.siManagement', // 協作管理
+            title: 'title.siManagement',
             to: '/si',
             check: ['siAdmin'],
         },
     ])
     const accountDrawerItems = ref([
         {
-            title: 'title.profile', // 個人資訊
+            title: 'title.profile',
             to: '/profile',
             iconClass: 'account-profile',
             check: [''],
         },
         {
-            title: 'title.signature', // 簽章管理
+            title: 'title.signature',
             to: '/signature',
             iconClass: 'account-signature',
             check: [''],
         },
         {
-            title: 'title.signerGroup', // 簽署組合
+            title: 'title.signerGroup',
             iconClass: 'account-signer-group',
             to: '/signer-group',
             check: ['useSignerGroup'],
         },
         {
-            title: 'title.contacts', // 通訊錄
+            title: 'title.contacts',
             to: '/contacts',
             iconClass: 'account-contacts',
             check: [''],
@@ -151,454 +152,282 @@ export const useStore = defineStore('main', () => {
     const publishedBook = ref(null)
     const closedAnnouncementDialog = ref(null)
 
-    const getBreadCrumbs = computed(() => breadcrumbs.value)
-    const getPageTitle = computed(() => pageTitle.value)
-    const getIsLogin = computed(() => token.value !== null)
-    const getIsGetUserInfo = computed(() => userInfo.value !== null)
-    const getToken = computed(() => token.value)
-    const getRememberedAccount = computed(() => account.value)
-    const getUserInfo = computed(() => userInfo.value)
-    const getUserType = computed(() => userInfo.value?.userType)
-    const getPlanInfo = computed(() => planInfo.value)
-    const getIsGetPlanInfo = computed(() => planInfo.value !== null)
-    const getItemsPerPageOption = computed(() => options.value?.itemsPerPage ?? 10)
-    const getTabItems = computed(() => drawerItems.value)
+    // ==================== Computed ====================
+    const isLogin = computed(() => token.value !== null)
+    const isGetPlanInfo = computed(() => planInfo.value !== null)
+    const itemsPerPageOption = computed(() => options.value?.itemsPerPage ?? 10)
 
-    const getAccountItems = computed(() => {
-        if (userInfo.value === null) {
-            return null
-        }
+    const accountItems = computed(() => {
+        if (userInfo.value === null) return null
+
         const checkRules = {
             authType: userInfo.value.authType === 'CUSTOM',
             useSignerGroup: planInfo.value && planInfo.value.signingGroupCount > 0,
         }
-        const accountItems = accountDrawerItems.value.map((item) => {
-            const newItem = { ...item }
-            newItem.disable = item.check.some((c) => c !== '' && !checkRules[c])
-            return newItem
-        })
-        return accountItems
+
+        return accountDrawerItems.value.map((item) => ({
+            ...item,
+            disable: item.check.some((c) => c !== '' && !checkRules[c])
+        }))
     })
 
-    const getSettingItems = computed(() => {
-        if (userInfo.value === null) {
-            return null
-        }
+    const settingItems = computed(() => {
+        if (userInfo.value === null) return null
+
         const checkRules = {
             isAdmin: userInfo.value.userType === 'COMPANY_ADMIN',
-            // SI 管理者
             siAdmin: userInfo.value.companyType === 'SI_ADMIN',
             notSIAdmin: userInfo.value.companyType !== 'SI_ADMIN',
             notSIChild: userInfo.value.companyType !== 'SI_CHILD',
             hasMember: userInfo.value.maxUser > 1,
-            // 聲明錄影
-            useVideo: planInfo.value && planInfo.value.useVideo,
-            // 開發者模式（API Key）
-            useAPI: planInfo.value && planInfo.value.useAPI,
-            // 公司品牌（Logo or 浮水印，有其中一個就可以進入此頁面）
-            useBrand:
-                planInfo.value &&
-                (planInfo.value.useWatermark || planInfo.value.useBrand),
-            // IP白名單
-            useWhiteList: planInfo.value && planInfo.value.useWhiteList,
-            useCredit: planInfo.value && planInfo.value.useCredit,
-            useAatlTrack: planInfo.value && planInfo.value.useAatlTrack,
-            useB2b2c: planInfo.value && planInfo.value.useB2b2c,
+            useVideo: planInfo.value?.useVideo,
+            useAPI: planInfo.value?.useAPI,
+            useBrand: planInfo.value && (planInfo.value.useWatermark || planInfo.value.useBrand),
+            useWhiteList: planInfo.value?.useWhiteList,
+            useCredit: planInfo.value?.useCredit,
+            useAatlTrack: planInfo.value?.useAatlTrack,
+            useB2b2c: planInfo.value?.useB2b2c,
         }
-        const settingItems = settingDrawerItems.value.map((item) => {
-            const newItem = { ...item }
-            newItem.disable = item.check.some((c) => c !== '' && !checkRules[c])
-            return newItem
-        })
-        return settingItems
+
+        return settingDrawerItems.value.map((item) => ({
+            ...item,
+            disable: item.check.some((c) => c !== '' && !checkRules[c])
+        }))
     })
 
-    const getNavigationDrawerItems = computed(() => {
-        const settingItems = getSettingItems.value
-        const settingItem = {
-            title: 'title.setting',
-            to: '/settings',
-            label: 'settings',
-            iconClass: 'setting-icon',
-            subItems: settingItems,
-        }
-        const accountItems = getAccountItems.value
-        const accountItem = {
-            title: 'title.accountSetting',
-            to: '/account',
-            label: 'account',
-            iconClass: 'account-icon',
-            subItems: accountItems,
-        }
-        return [accountItem, settingItem]
-    })
-
-    const getAttachmentFiles = computed(() => attachmentFiles.value)
-    const getSearchOptions = computed(() => searchOptions.value)
-    const getReportOptions = computed(() => reportOptions.value)
-    const getTagsList = computed(() => tagsList.value)
-    const getTemplateTagsList = computed(() => templateTagsList.value)
-    const getEditTaskPerson = computed(() => editTaskPerson.value)
-    const getTaskCount = computed(() => taskCount.value)
-    const getFormCount = computed(() => formCount.value)
-    const getSendTemplateData = computed(() => sendTemplateData.value)
-    const getIsFirstLogin = computed(() => isFirstLogin.value)
-    const getLoginSurveyFinished = computed(() => loginSurveyFinished.value)
-    const getPublishedForm = computed(() => publishedForm.value)
-    const getPublishedBook = computed(() => publishedBook.value)
-    const getClosedAnnouncementDialog = computed(() => closedAnnouncementDialog.value)
-
-    function setBreadCrumbs(newBreadcrumbs) {
-        breadcrumbs.value = newBreadcrumbs
-    }
-
-    function pushBreadCrumbs(newBreadcrumb) {
-        breadcrumbs.value.push(newBreadcrumb)
-    }
-
-    function popBreadCrumbs() {
-        breadcrumbs.value.pop()
-    }
-
-    function setSearchOptions(newOptions) {
-        searchOptions.value = newOptions
-    }
-
-    function setReportOptions(newOptions) {
-        reportOptions.value = newOptions
-    }
-
-    function setPageTitle(newTitle) {
-        pageTitle.value = newTitle
-    }
-
-    function setToken(newToken) {
-        token.value = newToken
-    }
-
-    function setRememberedAccount(newAccount) {
-        account.value = newAccount
-    }
-
-    function setUserInfo(newUserInfo) {
-        if (newUserInfo !== null) {
-            userInfo.value = newUserInfo
-            // 如果使用者沒有名字，就用信箱當作名字
-            if (userInfo.value.name === null || userInfo.value.name === '') {
-                userInfo.value.name = userInfo.value.email
+    const navigationDrawerItems = computed(() => {
+        return [
+            {
+                title: 'title.accountSetting',
+                to: '/account',
+                label: 'account',
+                iconClass: 'account-icon',
+                subItems: accountItems.value,
+            },
+            {
+                title: 'title.setting',
+                to: '/settings',
+                label: 'settings',
+                iconClass: 'setting-icon',
+                subItems: settingItems.value,
             }
+        ]
+    })
+
+    // ==================== Actions (只保留有額外邏輯的) ====================
+
+    // ✅ 保留: 有額外邏輯 (同時更新 isGetUserInfo)
+    function setUserInfo(info) {
+        if (info !== null) {
+            userInfo.value = info
             isGetUserInfo.value = true
-        } else {
-            userInfo.value = null
-            isGetUserInfo.value = false
         }
     }
 
-    function setPlanInfo(newPlanInfo) {
-        planInfo.value = newPlanInfo
-    }
+    // ✅ 保留: 有複雜邏輯 (初始化流程)
+    async function nuxtServerInit({ app, redirect }) {
+        const { $cookies, i18n, $apiRepository } = app
+        const tokenValue = $cookies.get('PDF_JWT_TOKEN')
+        const accountValue = $cookies.get('PDF_ACCOUNT')
+        const optionsValue = $cookies.get('PDF_Options')
+        const searchOptionsValue = $cookies.get('bzsnsoptions')
+        const reportOptionsValue = $cookies.get('bzsnroptions')
+        const tutorialState = $cookies.get('BZSN_TUTORIAL_STATE')
 
-    function setOptions(newOptions) {
-        options.value = newOptions
-    }
+        if (tokenValue) {
+            token.value = tokenValue
+            if (!userInfo.value) {
+                try {
+                    const result = await $apiRepository(i18n.locale).user.myInfo.get()
+                    if (result?.errorCode === 200 && result.body) {
+                        setUserInfo(result.body)
+                        loginSurveyFinished.value = result.body.finishOnboarding
 
-    function addAttachmentFiles(files) {
-        attachmentFiles.value.push(...files)
-    }
-
-    function deleteAllAttachmentFiles() {
-        attachmentFiles.value = []
-    }
-
-    function deleteAttachmentFiles(idx) {
-        attachmentFiles.value.splice(idx, 1)
-    }
-
-    function setTagsList(list) {
-        tagsList.value = list
-    }
-
-    function setTemplateTagsList(list) {
-        templateTagsList.value = list
-    }
-
-    function setEditTaskPerson(newTaskPerson) {
-        editTaskPerson.value = newTaskPerson
-    }
-
-    function setTagEdit(tag) {
-        tagsList.value.forEach((t) => {
-            t.editTagField = t.id === tag.id
-        })
-    }
-
-    function setTemplateTagEdit(tag) {
-        templateTagsList.value.forEach((t) => {
-            t.editTagField = t.id === tag.id
-        })
-    }
-
-    function setTaskCount(newTaskCount) {
-        taskCount.value = newTaskCount
-    }
-
-    function setFormCount(newFormCount) {
-        formCount.value = newFormCount
-    }
-
-    function setSendTemplateData(newSendTemplateData) {
-        sendTemplateData.value = newSendTemplateData
-    }
-
-    function setIsFirstLogin(newIsFirstLogin) {
-        isFirstLogin.value = newIsFirstLogin
-    }
-
-    function setLoginSurveyFinished(newLoginSurveyFinished) {
-        loginSurveyFinished.value = newLoginSurveyFinished
-    }
-
-    function setPublishedForm(newPublishedForm) {
-        publishedForm.value = newPublishedForm
-    }
-
-    function setClosedAnnouncementDialog(dateString) {
-        closedAnnouncementDialog.value = dateString
-    }
-
-    function setPublishedBook(newPublishedBook) {
-        publishedBook.value = newPublishedBook
-    }
-
-    // nuxtServerInit and nuxtClientInit are not part of Pinia.
-    // You should move this logic to a Nuxt plugin or middleware.
-    async function nuxtServerInit() {
-        const nuxtApp = useNuxtApp()
-        const token = nuxtApp.$cookies.get('PDF_JWT_TOKEN')
-        const account = nuxtApp.$cookies.get('PDF_ACCOUNT')
-        const options = nuxtApp.$cookies.get('PDF_Options')
-        const searchOptions = nuxtApp.$cookies.get('bzsnsoptions')
-        const reportOptions = nuxtApp.$cookies.get('bzsnroptions')
-        const tutorialState = nuxtApp.$cookies.get('BZSN_TUTORIAL_STATE')
-        if (token) {
-            setToken(token)
-            if (getIsGetUserInfo.value === false) {
-                await nuxtApp.$apiRepository(nuxtApp.i18n.locale)
-                    .user.myInfo.get()
-                    .then(async (result) => {
-                        if (
-                            result !== null &&
-                            result.errorCode === 200 &&
-                            result.body !== null
-                        ) {
-                            setUserInfo(result.body)
-                            setLoginSurveyFinished(result.body.finishOnboarding)
-                            if (getIsGetPlanInfo.value === false) {
-                                await nuxtApp.$apiRepository(nuxtApp.i18n.locale)
-                                    .plan.restrict.get()
-                                    .then((result) => {
-                                        if (
-                                            result !== null &&
-                                            result.errorCode === 200 &&
-                                            result.body !== null
-                                        ) {
-                                            setPlanInfo(result.body)
-                                        }
-                                    })
+                        if (!planInfo.value) {
+                            const planResult = await $apiRepository(i18n.locale).plan.restrict.get()
+                            if (planResult?.errorCode === 200 && planResult.body) {
+                                planInfo.value = planResult.body
                             }
-                        } else if (result !== null && result.errorCode === 401) {
-                            logout().then(() => navigateTo(nuxtApp.localePath('/login')))
                         }
-                    })
+                    } else if (result?.errorCode === 401) {
+                        await logout(app)
+                        redirect(app.localePath('/login'))
+                    }
+                } catch (error) {
+                    console.error('Error fetching user info:', error)
+                }
             }
         }
+
         if (tutorialState) {
-            // Assuming you have a tour store
-            // tour.setTutorialState(tutorialState)
+            // const tourStore = useTourStore()
+            // tourStore.setTutorialState(tutorialState)
         }
-        setRememberedAccount(account)
-        setOptions(options)
-        setSearchOptions(searchOptions)
-        setReportOptions(reportOptions)
+
+        account.value = accountValue
+        options.value = optionsValue
+        searchOptions.value = searchOptionsValue
+        reportOptions.value = reportOptionsValue
     }
 
-    async function nuxtClientInit() {
-        const nuxtApp = useNuxtApp()
-        const token = nuxtApp.$cookies.get('PDF_JWT_TOKEN')
-        const account = nuxtApp.$cookies.get('PDF_ACCOUNT')
-        const options = nuxtApp.$cookies.get('PDF_Options')
-        if (token) {
-            setToken(token)
-            if (getIsGetUserInfo.value === false) {
-                await nuxtApp.$apiRepository(nuxtApp.i18n.locale)
-                    .user.myInfo.get()
-                    .then(async (result) => {
-                        if (
-                            result !== null &&
-                            result.errorCode === 200 &&
-                            result.body !== null
-                        ) {
-                            setUserInfo(result.body)
-                            if (getIsGetPlanInfo.value === false) {
-                                await nuxtApp.$apiRepository(nuxtApp.i18n.locale)
-                                    .plan.restrict.get()
-                                    .then((result) => {
-                                        if (
-                                            result !== null &&
-                                            result.errorCode === 200 &&
-                                            result.body !== null
-                                        ) {
-                                            setPlanInfo(result.body)
-                                        }
-                                    })
+    // ✅ 保留: 同 nuxtServerInit
+    async function nuxtClientInit({ app, redirect }) {
+        const { $cookies, i18n, $apiRepository } = app
+        const tokenValue = $cookies.get('PDF_JWT_TOKEN')
+        const accountValue = $cookies.get('PDF_ACCOUNT')
+        const optionsValue = $cookies.get('PDF_Options')
+
+        if (tokenValue) {
+            token.value = tokenValue
+            if (!userInfo.value) {
+                try {
+                    const result = await $apiRepository(i18n.locale).user.myInfo.get()
+                    if (result?.errorCode === 200 && result.body) {
+                        setUserInfo(result.body)
+
+                        if (!planInfo.value) {
+                            const planResult = await $apiRepository(i18n.locale).plan.restrict.get()
+                            if (planResult?.errorCode === 200 && planResult.body) {
+                                planInfo.value = planResult.body
                             }
-                        } else if (result !== null && result.errorCode === 401) {
-                            logout().then(() => navigateTo(nuxtApp.localePath('/login')))
                         }
-                    })
+                    } else if (result?.errorCode === 401) {
+                        await logout(app)
+                        redirect(app.localePath('/login'))
+                    }
+                } catch (error) {
+                    console.error('Error fetching user info:', error)
+                }
             }
         }
-        setRememberedAccount(account)
-        setOptions(options)
+
+        account.value = accountValue
+        options.value = optionsValue
     }
 
-    async function changeLogin(payload) {
-        const nuxtApp = useNuxtApp()
+    // ✅ 保留: 有複雜邏輯 (包含 cookie 操作和 API 調用)
+    async function changeLogin(payload, app) {
+        const { $cookies, $apiRepository, $i18n } = app
+
         if (payload.isLogin === true) {
             if (payload.token) {
-                nuxtApp.$cookies.set('PDF_JWT_TOKEN', payload.token, {
+                $cookies.set('PDF_JWT_TOKEN', payload.token, {
                     path: '/',
                     maxAge: 60 * 60 * 24 * 7,
                 })
-                setToken(payload.token)
+                token.value = payload.token
             }
             if (payload.userInfo) {
-                setIsFirstLogin(payload.userInfo.isFirstLogin)
-                setLoginSurveyFinished(payload.userInfo.finishOnboarding)
+                isFirstLogin.value = payload.userInfo.isFirstLogin
+                loginSurveyFinished.value = payload.userInfo.finishOnboarding
                 setUserInfo(payload.userInfo)
+
                 const userCulture = payload.userInfo.lastLoginCulture
-                const browserCultre = payload.locale
+                const browserCulture = payload.locale
 
                 if (userCulture === null) {
-                    // 使用者語系為空，使用瀏覽器語系更新使用者語系
-                    await patchLocale(browserCultre)
-                } else if (userCulture !== browserCultre) {
-                    // 使用者語系優先
-                    nuxtApp.$i18n.setLocale(userCulture)
+                    await patchLocale(browserCulture, app)
+                } else if (userCulture !== browserCulture) {
+                    $i18n.setLocale(userCulture)
                 }
 
-                if (getIsGetPlanInfo.value === false) {
-                    await nuxtApp.$apiRepository(nuxtApp.$i18n.locale)
-                        .plan.restrict.get()
-                        .then((result) => {
-                            if (
-                                result !== null &&
-                                result.errorCode === 200 &&
-                                result.body !== null
-                            ) {
-                                setPlanInfo(result.body)
-                            }
-                        })
+                if (!planInfo.value) {
+                    const result = await $apiRepository($i18n.locale).plan.restrict.get()
+                    if (result?.errorCode === 200 && result.body) {
+                        planInfo.value = result.body
+                    }
                 }
             }
         } else {
-            nuxtApp.$cookies.remove('PDF_JWT_TOKEN')
-            nuxtApp.$cookies.remove('bzsnsoptions')
-            nuxtApp.$cookies.remove('bzsnroptions')
-            nuxtApp.$cookies.remove('i18n_redirected')
-            setToken(null)
-            setUserInfo({})
-            setPlanInfo({})
+            $cookies.remove('PDF_JWT_TOKEN')
+            $cookies.remove('bzsnsoptions')
+            $cookies.remove('bzsnroptions')
+            $cookies.remove('i18n_redirected')
+            token.value = null
+            userInfo.value = {}
+            planInfo.value = {}
         }
     }
 
-    async function patchLocale(localeCode) {
-        const nuxtApp = useNuxtApp()
-        const result = await nuxtApp.$apiRepository(
-            nuxtApp.$i18n.locale
-        ).user.myInfo.patch({ culture: localeCode })
-        if (result !== null && result.errorCode === 200 && result.body !== null) {
+    // ✅ 保留: 有 API 調用
+    async function patchLocale(localeCode, app) {
+        const { $apiRepository, $i18n } = app
+        const result = await $apiRepository($i18n.locale).user.myInfo.patch({
+            culture: localeCode
+        })
+        if (result?.errorCode === 200 && result.body) {
             setUserInfo(result.body)
         }
     }
 
-    function logout() {
-        changeLogin({
-            isLogin: false,
-        })
+    // ✅ 保留: 封裝 changeLogin
+    function logout(app) {
+        changeLogin({ isLogin: false }, app)
     }
 
-    function rememberInfo(payload) {
-        const nuxtApp = useNuxtApp()
-        if (payload.isRememberMe === true) {
+    // ✅ 保留: 有 cookie 操作
+    function rememberInfo(payload, app) {
+        const { $cookies } = app
+        if (payload.isRememberMe) {
             if (payload.account) {
-                nuxtApp.$cookies.set('PDF_ACCOUNT', payload.account, {
+                $cookies.set('PDF_ACCOUNT', payload.account, {
                     path: '/',
                     maxAge: 60 * 60 * 24 * 7,
                 })
-                setRememberedAccount(payload.account)
+                account.value = payload.account
             }
         } else {
-            nuxtApp.$cookies.remove('PDF_ACCOUNT')
-            setRememberedAccount('')
+            $cookies.remove('PDF_ACCOUNT')
+            account.value = ''
         }
     }
 
-    function setSearchOptions(options) {
-        const nuxtApp = useNuxtApp()
-        setSearchOptions(options)
-        nuxtApp.$cookies.set(
-            'bzsnsoptions',
-            { ...options },
-            {
-                path: '/',
-            }
-        )
+    // ✅ 保留: 有 cookie 操作
+    function updateSearchOptions(payload, app) {
+        searchOptions.value = payload.options
+        app.$cookies.set('bzsnsoptions', { ...payload.options }, { path: '/' })
     }
 
-    function removeSearchOptions() {
-        const nuxtApp = useNuxtApp()
-        setSearchOptions(null)
-        nuxtApp.$cookies.remove('bzsnsoptions')
+    // ✅ 保留: 有 cookie 操作
+    function removeSearchOptions(app) {
+        searchOptions.value = null
+        app.$cookies.remove('bzsnsoptions')
     }
 
-    function setReportOptions(options) {
-        const nuxtApp = useNuxtApp()
-        setReportOptions(options)
-        nuxtApp.$cookies.set(
-            'bzsnroptions',
-            { ...options },
-            {
-                path: '/',
-            }
-        )
+    // ✅ 保留: 有 cookie 操作
+    function updateReportOptions(payload, app) {
+        reportOptions.value = payload.options
+        app.$cookies.set('bzsnroptions', { ...payload.options }, { path: '/' })
     }
 
-    function removeReportOptions() {
-        const nuxtApp = useNuxtApp()
-        setReportOptions(null)
-        nuxtApp.$cookies.remove('bzsnroptions')
+    // ✅ 保留: 有 cookie 操作
+    function removeReportOptions(app) {
+        reportOptions.value = null
+        app.$cookies.remove('bzsnroptions')
     }
 
-    function setTagsList(payload) {
-        payload.list.sort((a, b) => a.name.localeCompare(b.name))
+    // ✅ 保留: 有排序邏輯
+    function updateTagsList(payload) {
+        const sortedList = [...payload.list].sort((a, b) => a.name.localeCompare(b.name))
         if (payload.isTemplate) {
-            setTemplateTagsList(payload.list)
+            templateTagsList.value = sortedList
         } else {
-            setTagsList(payload.list)
+            tagsList.value = sortedList
         }
     }
 
-    function setTagEdit(payload) {
-        if (payload.isTemplate) {
-            setTemplateTagEdit(payload.tag)
-        } else {
-            setTagEdit(payload.tag)
+    // ✅ 保留: 有查找和更新邏輯
+    function updateTagEdit(payload) {
+        const targetList = payload.isTemplate ? templateTagsList : tagsList
+        const index = targetList.value.findIndex((v) => v.id === payload.tag.id)
+        if (index !== -1) {
+            targetList.value[index] = payload.tag
         }
     }
 
-    function setTaskCount(payload) {
-        const data = {
+    // ✅ 保留: 有數據轉換
+    function updateTaskCount(payload) {
+        taskCount.value = {
             waiting: payload.waitingTaskCount,
             assigned: payload.assignedTaskCount,
             done: payload.doneTaskCount,
@@ -608,18 +437,19 @@ export const useStore = defineStore('main', () => {
             groupWaiting: payload.processingTaskGroupCount,
             groupDone: payload.doneTaskGroupCount,
         }
-        setTaskCount(data)
     }
 
-    function setFormCount(payload) {
-        const data = {
+    // ✅ 保留: 有數據轉換
+    function updateFormCount(payload) {
+        formCount.value = {
             internal: payload.internalFormCount,
             external: payload.externalFormCount,
         }
-        setFormCount(data)
     }
 
+    // ==================== Return ====================
     return {
+        // State
         account,
         token,
         options,
@@ -646,74 +476,30 @@ export const useStore = defineStore('main', () => {
         publishedForm,
         publishedBook,
         closedAnnouncementDialog,
-        getBreadCrumbs,
-        getPageTitle,
-        getIsLogin,
-        getIsGetUserInfo,
-        getToken,
-        getRememberedAccount,
-        getUserInfo,
-        getUserType,
-        getPlanInfo,
-        getIsGetPlanInfo,
-        getItemsPerPageOption,
-        getTabItems,
-        getAccountItems,
-        getSettingItems,
-        getNavigationDrawerItems,
-        getAttachmentFiles,
-        getSearchOptions,
-        getReportOptions,
-        getTagsList,
-        getTemplateTagsList,
-        getEditTaskPerson,
-        getTaskCount,
-        getFormCount,
-        getSendTemplateData,
-        getIsFirstLogin,
-        getLoginSurveyFinished,
-        getPublishedForm,
-        getPublishedBook,
-        getClosedAnnouncementDialog,
-        setBreadCrumbs,
-        pushBreadCrumbs,
-        popBreadCrumbs,
-        setSearchOptions,
-        setReportOptions,
-        setPageTitle,
-        setToken,
-        setRememberedAccount,
+
+        // Computed
+        isLogin,
+        isGetPlanInfo,
+        itemsPerPageOption,
+        accountItems,
+        settingItems,
+        navigationDrawerItems,
+
+        // Actions (只保留有邏輯的)
         setUserInfo,
-        setPlanInfo,
-        setOptions,
-        addAttachmentFiles,
-        deleteAllAttachmentFiles,
-        deleteAttachmentFiles,
-        setTagsList,
-        setTemplateTagsList,
-        setEditTaskPerson,
-        setTagEdit,
-        setTemplateTagEdit,
-        setTaskCount,
-        setFormCount,
-        setSendTemplateData,
-        setIsFirstLogin,
-        setLoginSurveyFinished,
-        setPublishedForm,
-        setClosedAnnouncementDialog,
-        setPublishedBook,
         nuxtServerInit,
         nuxtClientInit,
         changeLogin,
         patchLocale,
         logout,
         rememberInfo,
+        updateSearchOptions,
         removeSearchOptions,
-        setReportOptions,
+        updateReportOptions,
         removeReportOptions,
-        setTagsList,
-        setTagEdit,
-        setTaskCount,
-        setFormCount,
+        updateTagsList,
+        updateTagEdit,
+        updateTaskCount,
+        updateFormCount,
     }
 })

@@ -279,8 +279,14 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
+import { useNuxtApp } from '#app';
+
 const route = useRoute();
 const router = useRouter();
+const nuxtApp = useNuxtApp();
+const { $i18n, $alert, $apiRepository, $recaptcha } = nuxtApp;
+
+const mainStore = useMainStore()
 
 definePageMeta({
     layout: 'empty',
@@ -359,8 +365,8 @@ watch('modelLogin.password', (value) => {
 
 onMounted(() => {
     if (
-        // this.$store.getters.getIsLogin &&
-        // this.$store.getters.getIsGetUserInfo &&
+        mainStore.isLogin &&
+        mainStore.isGetUserInfo &&
         !clientId.value &&
         !redirectURL.value
     ) {
@@ -393,686 +399,215 @@ onMounted(() => {
     initialFacebookSignin()
 
     $recaptcha.language = $i18n.locale
-    $store.commit('setPageTitle', $t('title.login'))
+    mainStore.pageTitle = $i18n.t('title.login')
 })
 
-return {
-    isOAuth,
-    loginObserver,
-    signupObserver,
-    changePasswordObserver,
-    tab,
-    loading,
-    isRememberMe,
-    showOldPassword,
-    showNewPassword,
-    showNewPasswordCheck,
-    autofill,
-    searchAutoFillCount,
-    action,
-    showCloseTabMessage,
-    showPassword,
-    modelSignup,
-    redirectURL,
-    changePasswordError,
-    changePasswordDialog,
-    resendMailDialog,
-    resendMailDialogLoading,
-    clientId,
-    state,
-    modelLogin,
-    show2FAInput,
-    twoFactorAuthCode,
-    thirdParty2FALogin,
+const signup = async () => {
+    loading.value = true
+    const success = await signupObserver.value.validate()
+    if (!success) {
+        loading.value = false
+        await $recaptcha.reset()
+        return
+    }
+    let recaptchaResponse = null
+    try {
+        recaptchaResponse = await $recaptcha.getResponse()
+    } catch (error) { }
+    if (!recaptchaResponse) {
+        loading.value = false
+        await $recaptcha.reset()
+        $alert.showMessage({
+            message: $i18n.t('message.iAmNotBot'),
+            type: 'error',
+        })
+        return
+    }
+    const result = await $apiRepository(
+        $i18n.locale
+    ).user.createUser.post({
+        name: modelSignup.value.userName,
+        account: modelSignup.value.account,
+        password: modelSignup.value.password,
+        recaptchaResponse,
+        privacy: modelSignup.value.agreePrivacy,
+        marketing: modelSignup.value.agreeMarketing,
+    })
+    const email = modelSignup.value.account
+    loading.value = false
+    await $recaptcha.reset()
+    if (result !== null && result.errorCode === 201) {
+        signupForm.value.reset()
+        // 註冊成功後進入成功提示頁面
+        router.push(`/signup-success?email=${email}`)
+    } else {
+        $alert.showMessage({
+            message: result.message,
+            type: 'error',
+        })
+    }
 }
-</script>
 
-<script>
-export default {
-    layout: 'empty',
-    data() {
-        return {
-            // ui
-            tab: null,
-            loading: false,
-            isRememberMe: false,
-            showOldPassword: false,
-            showNewPassword: false,
-            showNewPasswordCheck: false,
-            autofill: true,
-            searchAutoFillCount: 0,
-            action: '',
-            showCloseTabMessage: false,
-            // data - signup
-            showPassword: false,
-            modelSignup: {
-                userName: '',
-                account: '',
-                password: '',
-                agreePrivacy: false,
-                agreeMarketing: false,
-            },
-            // data - login
-            redirectURL: '',
-            changePasswordError: '',
-            changePasswordDialog: false,
-            resendMailDialog: false,
-            resendMailDialogLoading: false,
-            clientId: '',
-            state: '',
-            modelLogin: {
-                account: '',
-                password: '',
-                oldPassword: '',
-                newPassword: '',
-                newPasswordCheck: '',
-            },
-            show2FAInput: false,
-            twoFactorAuthCode: '',
-            thirdParty2FALogin: false,
-        }
-    },
-    computed: {
-        isOAuth() {
-            return this.clientId && this.redirectURL
-        },
-    },
-    watch: {
-        tab(value) {
-            if (value === 0 && this.$refs.loginObserver) {
-                this.$refs.loginObserver.reset()
-            } else if (value === 1 && this.$refs.signupObserver) {
-                this.$refs.signupObserver.reset()
-            }
-        },
-        'modelLogin.account': {
-            handler(value) {
-                if (value === '') {
-                    this.autofill = false
-                }
-            },
-        },
-        'modelLogin.password': {
-            handler(value) {
-                if (value === '') {
-                    this.autofill = false
-                }
-            },
-        },
-    },
-    created() {
-        this.action = this.$route.query.action
-        this.clientId = this.$route.query.client_id
-        this.redirectURL =
-            this.$route.query.redirect_url || this.$route.query.redirect_uri
-        this.state = this.$route.query.state
-        this.tab = this.action === 'signup' ? 1 : 0
-        // const rememberAccount = this.$store.getters.getRememberedAccount
-        // if (rememberAccount) {
-        //     this.modelLogin.account = rememberAccount
-        //     this.isRememberMe = true
-        // }
-    },
-    mounted() {
-        if (
-            // this.$store.getters.getIsLogin &&
-            // this.$store.getters.getIsGetUserInfo &&
-            !this.clientId &&
-            !this.redirectURL
-        ) {
-            // 已經登入的狀態，如果action是訂閱要跳轉到訂閱頁面
-            if (this.action === 'subscribe') {
-                this.checkPlanParamAndRedirect()
-            } else if (this.action === 'close-tab') {
-                window.location.href = window.location.origin + '/close-tab'
-            } else {
-                this.$router.push('/')
-            }
-        }
-        const id = setInterval(() => {
-            const inputEmail = document.querySelector(
-                'input[type=email]:-webkit-autofill'
-            )
-            const inputPassword = document.querySelector(
-                'input[type=password]:-webkit-autofill'
-            )
-            if (inputEmail && inputPassword) {
-                clearInterval(id)
-                this.autofill = true
-            } else if (this.searchAutoFillCount > 10) {
-                clearInterval(id)
-            } else {
-                this.autofill = false
-                this.searchAutoFillCount++
-            }
-        }, 100)
-        this.initialFacebookSignin()
+const login = async () => {
+    loading.value = true
+    const success = await loginObserver.value.validate()
+    if (!success) {
+        loading.value = false
+        return
+    }
+    await mainStore.rememberInfo({
+        isRememberMe: isRememberMe.value,
+        account: modelLogin.value.account,
+    }, nuxtApp)
 
-        this.$recaptcha.language = this.$i18n.locale
-        this.$store.commit('setPageTitle', this.$t('title.login'))
-    },
-    methods: {
-        async signup() {
-            this.loading = true
-            const success = await this.$refs.signupObserver.validate()
-            if (!success) {
-                this.loading = false
-                await this.$recaptcha.reset()
-                return
-            }
-            let recaptchaResponse = null
-            try {
-                recaptchaResponse = await this.$recaptcha.getResponse()
-            } catch (error) { }
-            if (!recaptchaResponse) {
-                this.loading = false
-                await this.$recaptcha.reset()
-                this.$alert.showMessage({
-                    message: this.$t('message.iAmNotBot'),
-                    type: 'error',
-                })
-                return
-            }
-            const result = await this.$apiRepository(
-                this.$i18n.locale
-            ).user.createUser.post({
-                name: this.modelSignup.userName,
-                account: this.modelSignup.account,
-                password: this.modelSignup.password,
-                recaptchaResponse,
-                privacy: this.modelSignup.agreePrivacy,
-                marketing: this.modelSignup.agreeMarketing,
-            })
-            const email = this.modelSignup.account
-            this.loading = false
-            await this.$recaptcha.reset()
-            if (result !== null && result.errorCode === 201) {
-                this.$refs.signupForm.reset()
-                // 註冊成功後進入成功提示頁面
-                this.$router.push(`/signup-success?email=${email}`)
-            } else {
-                this.$alert.showMessage({
-                    message: result.message,
-                    type: 'error',
-                })
-            }
-        },
-        async login() {
-            this.loading = true
-            const success = await this.$refs.loginObserver.validate()
-            if (!success) {
-                this.loading = false
-                return
-            }
-            await this.$store.dispatch('rememberInfo', {
-                isRememberMe: this.isRememberMe,
-                account: this.modelLogin.account,
-            })
+    const postData = {
+        loginType: 'PASSWORD',
+        account: modelLogin.value.account,
+        password: modelLogin.value.password,
+    }
 
-            const postData = {
-                loginType: 'PASSWORD',
-                account: this.modelLogin.account,
-                password: this.modelLogin.password,
-            }
+    if (show2FAInput.value) {
+        postData.code = twoFactorAuthCode.value
+    }
 
-            if (this.show2FAInput) {
-                postData.code = this.twoFactorAuthCode
-            }
+    const result = await $apiRepository(
+        $i18n.locale
+    ).user.login.post(postData)
 
-            const result = await this.$apiRepository(
-                this.$i18n.locale
-            ).user.login.post(postData)
-
-            this.loading = false
-            if (result !== null && result.errorCode === 200 && result.body !== null) {
-                // OAuth流程，導向redirectURL
-                await this.$store
-                    .dispatch('changeLogin', {
-                        isLogin: true,
-                        token: result.body.token,
-                        userInfo: result.body,
-                        locale: this.$i18n.locale,
+    loading.value = false
+    if (result !== null && result.errorCode === 200 && result.body !== null) {
+        // OAuth流程，導向redirectURL
+        await mainStore
+            .changeLogin({
+                isLogin: true,
+                token: result.body.token,
+                userInfo: result.body,
+                locale: $i18n.locale,
+            }, nuxtApp)
+            .then(async () => {
+                if (isOAuth.value) {
+                    const codeResult = await $apiRepository(
+                        $i18n.locale
+                    ).user.oauth.post({
+                        loginType: 'PASSWORD',
+                        account: modelLogin.value.account,
+                        password: modelLogin.value.password,
+                        clientId: clientId.value,
                     })
-                    .then(async () => {
-                        if (this.isOAuth) {
-                            const codeResult = await this.$apiRepository(
-                                this.$i18n.locale
-                            ).user.oauth.post({
-                                loginType: 'PASSWORD',
-                                account: this.modelLogin.account,
-                                password: this.modelLogin.password,
-                                clientId: this.clientId,
-                            })
-                            const param = `?code=${codeResult.body.code}&state=${this.state}`
-                            this.redirectURL += param
-                        }
-                        if (this.redirectURL && this.redirectURL !== '') {
-                            this.$router.push({
-                                redirect: (window.location.href = this.redirectURL),
-                            })
-                        } else if (this.action === 'subscribe') {
-                            this.checkPlanParamAndRedirect()
-                        } else if (this.action === 'close-tab') {
-                            window.location.href = window.location.origin + '/close-tab'
-                        } else {
-                            this.$router.push(this.localePath('/'))
-                        }
+                    const param = `?code=${codeResult.body.code}&state=${state.value}`
+                    redirectURL.value += param
+                }
+                if (redirectURL.value && redirectURL.value !== '') {
+                    router.push({
+                        redirect: (window.location.href = redirectURL.value),
                     })
-            } else if (
-                result !== null &&
-                result.errorCode === 204 &&
-                result.body !== null
-            ) {
-                this.$store.commit('setToken', result.body.token)
-                this.changePasswordDialog = true
-            } else if (
-                result !== null &&
-                result.errorCode === 409 &&
-                result.body !== null
-            ) {
-                this.resendMailDialog = true
-            } else if (
-                result !== null &&
-                result.errorCode === 417 &&
-                result.body !== null
-            ) {
-                this.show2FAInput = true
-            } else {
-                this.$alert.showMessage({
-                    message: result.message,
-                    type: 'error',
-                })
+                } else if (action.value === 'subscribe') {
+                    checkPlanParamAndRedirect()
+                } else if (action.value === 'close-tab') {
+                    window.location.href = window.location.origin + '/close-tab'
+                } else {
+                    router.push($i18n.localePath('/'))
+                }
+            })
+    } else if (
+        result !== null &&
+        result.errorCode === 204 &&
+        result.body !== null
+    ) {
+        mainStore.token = result.body.token
+        changePasswordDialog.value = true
+    } else if (
+        result !== null &&
+        result.errorCode === 409 &&
+        result.body !== null
+    ) {
+        resendMailDialog.value = true
+    } else if (
+        result !== null &&
+        result.errorCode === 417 &&
+        result.body !== null
+    ) {
+        show2FAInput.value = true
+    } else {
+        $alert.showMessage({
+            message: result.message,
+            type: 'error',
+        })
+    }
+}
+
+const changePasswordOK = async () => {
+    await changePasswordObserver.value
+        .validate()
+        .then(async (success) => {
+            if (!success) {
+                return
             }
-        },
-        async changePasswordOK() {
-            await this.$refs.changePasswordObserver
-                .validate()
-                .then(async (success) => {
-                    if (!success) {
-                        return
-                    }
-                    await this.$apiRepository(this.$i18n.locale)
-                        .user.myInfo.patch({
-                            originPassword: this.modelLogin.oldPassword,
-                            password: this.modelLogin.newPassword,
-                        })
-                        .then(async (result) => {
-                            if (
-                                result !== null &&
-                                result.errorCode === 200 &&
-                                result.body !== null
-                            ) {
-                                this.changePasswordDialog = false
-                                this.changePasswordError = ''
-                                this.$refs.changePasswordDialogForm.reset()
-                                this.$refs.changePasswordObserver.reset()
-                                // await this.$store
-                                //     .dispatch('changeLogin', {
-                                //         isLogin: true,
-                                //         token: this.$store.getters.getToken,
-                                //         userInfo: result.body,
-                                //         locale: this.$i18n.locale,
-                                //     })
-                                //     .then(async () => {
-                                //         await this.$store.dispatch('loginRedirect')
-                                //     })
-                            } else {
-                                this.changePasswordError = result.message
-                            }
-                        })
+            await $apiRepository($i18n.locale)
+                .user.myInfo.patch({
+                    originPassword: modelLogin.value.oldPassword,
+                    password: modelLogin.value.newPassword,
                 })
-        },
-        changePasswordCancel() {
-            this.changePasswordDialog = false
-            this.changePasswordError = ''
-            this.$refs.changePasswordDialogForm.reset()
-            this.$refs.changePasswordObserver.reset()
-        },
-        async resendMailOK() {
-            this.resendMailDialogLoading = true
-            await this.$apiRepository(this.$i18n.locale)
-                .user.resendMail.postItem(this.modelLogin.account, {})
-                .then((result) => {
-                    this.resendMailDialogLoading = false
+                .then(async (result) => {
                     if (
                         result !== null &&
                         result.errorCode === 200 &&
                         result.body !== null
                     ) {
-                        this.resendMailDialog = false
-                        this.$messageDialog.showMessage({
-                            message: this.$t('message.reVerifyMailSuccess'),
-                            width: 450,
-                        })
+                        changePasswordDialog.value = false
+                        changePasswordError.value = ''
+                        changePasswordDialogForm.value.reset()
+                        changePasswordObserver.value.reset()
+                        await mainStore
+                            .changeLogin({
+                                isLogin: true,
+                                token: mainStore.token,
+                                userInfo: result.body,
+                                locale: $i18n.locale,
+                            }, nuxtApp)
+                            .then(async () => {
+                                router.push($i18n.localePath('/'))
+                            })
                     } else {
-                        this.resendMailDialog = false
-                        this.$alert.showMessage({
-                            message: this.$t('message.reVerifyMailError'),
-                            type: 'error',
-                        })
+                        changePasswordError.value = result.message
                     }
                 })
-        },
-        socialSignin(platform) {
-            try {
-                const googleClientId = this.$config.GOOGLE_CLIENT_ID
-                const self = this
-                switch (platform) {
-                    case 'google':
-                        window.google.accounts.id.initialize({
-                            client_id: googleClientId,
-                            use_fedcm_for_prompt: true,
-                            callback: async (response) => {
-                                const accessToken = response.credential
-                                const postData = {
-                                    loginType: 'GOOGLE',
-                                    token: accessToken,
-                                }
-                                if (this.show2FAInput) {
-                                    postData.code = this.twoFactorAuthCode
-                                }
-                                const result = await self
-                                    .$apiRepository(self.$i18n.locale)
-                                    .user.login.post(postData)
-                                if (
-                                    result !== null &&
-                                    result.errorCode === 200 &&
-                                    result.body !== null
-                                ) {
-                                    await self.$store
-                                        .dispatch('changeLogin', {
-                                            isLogin: true,
-                                            token: result.body.token,
-                                            userInfo: result.body,
-                                            locale: this.$i18n.locale,
-                                        })
-                                        .then(async () => {
-                                            if (self.isOAuth) {
-                                                const codeResult = await self
-                                                    .$apiRepository(self.$i18n.locale)
-                                                    .user.oauth.post({
-                                                        loginType: 'GOOGLE',
-                                                        token: accessToken,
-                                                        clientId: self.clientId,
-                                                    })
-                                                const param = `?code=${codeResult.body.code}&state=${self.state}`
-                                                self.redirectURL += param
-                                            }
-                                            if (result.body.newUser) {
-                                                self.$router.push(self.localePath('/signupthankyou'))
-                                            } else if (self.redirectURL && self.redirectURL !== '') {
-                                                self.$router.push({
-                                                    redirect: (window.location.href = self.redirectURL),
-                                                })
-                                            } else if (this.action === 'subscribe') {
-                                                self.checkPlanParamAndRedirect()
-                                            } else if (this.action === 'close-tab') {
-                                                window.location.href =
-                                                    window.location.origin + '/close-tab'
-                                            } else {
-                                                self.$router.push(self.localePath('/'))
-                                            }
-                                        })
-                                } else if (result.errorCode === 417) {
-                                    self.thirdParty2FALogin = true
-                                    self.show2FAInput = true
-                                } else {
-                                    self.$alert.showMessage({
-                                        message: result.message,
-                                        type: 'error',
-                                    })
-                                }
-                            },
-                        })
-                        window.google.accounts.id.prompt(() => {
-                            const client = window.google.accounts.oauth2.initTokenClient({
-                                client_id: googleClientId,
-                                scope:
-                                    'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
-                                callback: async (tokenResponse) => {
-                                    const postData = {
-                                        loginType: 'GOOGLE',
-                                        token: tokenResponse.access_token,
-                                    }
-                                    if (this.show2FAInput) {
-                                        postData.code = this.twoFactorAuthCode
-                                    }
-                                    const result = await self
-                                        .$apiRepository(self.$i18n.locale)
-                                        .user.login.post(postData)
-                                    if (
-                                        result !== null &&
-                                        result.errorCode === 200 &&
-                                        result.body !== null
-                                    ) {
-                                        await self.$store
-                                            .dispatch('changeLogin', {
-                                                isLogin: true,
-                                                token: result.body.token,
-                                                userInfo: result.body,
-                                                locale: this.$i18n.locale,
-                                            })
-                                            .then(async () => {
-                                                if (self.isOAuth) {
-                                                    const codeResult = await self
-                                                        .$apiRepository(self.$i18n.locale)
-                                                        .user.oauth.post({
-                                                            loginType: 'GOOGLE',
-                                                            token: tokenResponse.access_token,
-                                                            clientId: self.clientId,
-                                                        })
-                                                    const param = `?code=${codeResult.body.code}&state=${self.state}`
-                                                    self.redirectURL += param
-                                                }
-                                                if (result.body.newUser) {
-                                                    self.$router.push(self.localePath('/signupthankyou'))
-                                                } else if (
-                                                    self.redirectURL &&
-                                                    self.redirectURL !== ''
-                                                ) {
-                                                    self.$router.push({
-                                                        redirect: (window.location.href = self.redirectURL),
-                                                    })
-                                                } else if (this.action === 'subscribe') {
-                                                    self.checkPlanParamAndRedirect()
-                                                } else {
-                                                    self.$router.push(self.localePath('/'))
-                                                }
-                                            })
-                                    } else if (result.errorCode === 417) {
-                                        self.thirdParty2FALogin = true
-                                        self.show2FAInput = true
-                                    } else {
-                                        self.$alert.showMessage({
-                                            message: result.message,
-                                            type: 'error',
-                                        })
-                                    }
-                                },
-                            })
-                            client.requestAccessToken()
-                        })
-                        break
-                    case 'facebook':
-                        window.FB.login(
-                            async function (response) {
-                                if (response.status === 'connected') {
-                                    const accessToken = response.authResponse.accessToken
-                                    const result = await self
-                                        .$apiRepository(self.$i18n.locale)
-                                        .user.login.post({
-                                            loginType: 'FACEBOOK',
-                                            token: accessToken,
-                                        })
-                                    if (
-                                        result !== null &&
-                                        result.errorCode === 200 &&
-                                        result.body !== null
-                                    ) {
-                                        await self.$store
-                                            .dispatch('changeLogin', {
-                                                isLogin: true,
-                                                token: result.body.token,
-                                                userInfo: result.body,
-                                                locale: this.$i18n.locale,
-                                            })
-                                            .then(() => {
-                                                if (result.body.newUser) {
-                                                    self.$router.push(self.localePath('/signupthankyou'))
-                                                } else if (
-                                                    self.redirectURL &&
-                                                    self.redirectURL !== ''
-                                                ) {
-                                                    self.$router.push({
-                                                        redirect: (window.location.href = self.redirectURL),
-                                                    })
-                                                } else if (this.action === 'subscribe') {
-                                                    self.checkPlanParamAndRedirect()
-                                                } else {
-                                                    self.$router.push(self.localePath('/'))
-                                                }
-                                            })
-                                    } else {
-                                        self.$alert.showMessage({
-                                            message: result.message,
-                                            type: 'error',
-                                        })
-                                    }
-                                }
-                            },
-                            { scope: 'email' }
-                        )
-                        break
-                    case 'apple':
-                        window.AppleID.auth.signIn()
-                        break
-                }
-            } catch (err) {
-                console.log(err)
-            }
-        },
-        initialFacebookSignin() {
-            const facebookId = this.$config.FACEBOOK_ID
-            const self = this
-            window.fbAsyncInit = function () {
-                window.FB.init({
-                    appId: facebookId,
-                    cookie: true,
-                    xfbml: true,
-                    version: 'v16.0',
-                })
-                self.fabookLogout()
-            }
-        },
-        fabookLogout() {
-            try {
-                if (window.FB.getAccessToken() !== null) {
-                    window.FB.logout(function (response) {
-                        this.$store.dispatch('logout')
-                    })
-                }
-            } catch (err) {
-                console.log(err)
-            }
-        },
-        initialAppleSignin() {
-            const appleClientId = this.$config.APPLE_CLIENT_ID
-            const appleRedirectURI = this.$config.APPLE_RETURN_URI
-            window.AppleID.auth.init({
-                clientId: appleClientId,
-                scope: 'name email',
-                redirectURI: appleRedirectURI,
-            })
-        },
-        cancel2FA() {
-            this.show2FAInput = false
-            this.thirdParty2FALogin = false
-            this.twoFactorAuthCode = ''
-            this.modelLogin.password = ''
-            this.modelLogin.account = ''
-            this.$refs.loginObserver.reset()
-        },
-        login2FA() {
-            if (this.thirdParty2FALogin) {
-                this.socialSignin('google')
-            } else {
-                this.login()
-            }
-        },
-        checkPlanParamAndRedirect() {
-            const { plan } = this.$route.query
-            if (!plan) {
-                return null
-            }
-
-            const [tier, period, count] = plan.split(',')
-            const validTiers = ['enterprise', 'pro']
-            const validPeriods = ['monthly', 'yearly']
-            const validCounts = ['1', '5', '10', '20', '30', '40']
-
-            if (
-                !validTiers.includes(tier) ||
-                !validPeriods.includes(period) ||
-                !validCounts.includes(count)
-            ) {
-                console.log('invalid plan')
-                this.$router.push({ path: '/' })
-                return
-            }
-            this.$router.push({ path: '/settings/subscription', query: { plan } })
-        },
-    },
-    head() {
-        return {
-            title: this.$t('title.login'),
-            titleTemplate: '',
-            meta: [
-                {
-                    hid: 'description',
-                    name: 'description',
-                    content: this.$t('title.loginDescr'),
-                },
-                {
-                    vmid: 'og:title',
-                    hid: 'og:title',
-                    property: 'og:title',
-                    content: this.$t('title.login'),
-                },
-                {
-                    vmid: 'og:description',
-                    hid: 'og:description',
-                    property: 'og:description',
-                    content: this.$t('title.loginDescr'),
-                },
-            ],
-            script: [
-                // Google JS
-                {
-                    hid: 'google',
-                    src: 'https://accounts.google.com/gsi/client',
-                    async: true,
-                },
-                // Facebook JS
-                // {
-                //   hid: 'facebook',
-                //   src: 'https://connect.facebook.net/zh_TW/sdk.js',
-                //   async: true,
-                // },
-                // Apple JS
-                // {
-                //   hid: 'apple',
-                //   src: 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/zh_TW/appleid.auth.js',
-                //   defer: true,
-                //   callback: () => {
-                //     this.initialAppleSignin()
-                //   },
-                // },
-            ],
-        }
-    },
+        })
 }
-</script>
 
+// return {
+//     isOAuth,
+//     loginObserver,
+//     signupObserver,
+//     changePasswordObserver,
+//     tab,
+//     loading,
+//     isRememberMe,
+//     showOldPassword,
+//     showNewPassword,
+//     showNewPasswordCheck,
+//     autofill,
+//     searchAutoFillCount,
+//     action,
+//     showCloseTabMessage,
+//     showPassword,
+//     modelSignup,
+//     redirectURL,
+//     changePasswordError,
+//     changePasswordDialog,
+//     resendMailDialog,
+//     resendMailDialogLoading,
+//     clientId,
+//     state,
+//     modelLogin,
+//     show2FAInput,
+//     twoFactorAuthCode,
+//     thirdParty2FALogin,
+//     signup,
+//     login,
+//     changePasswordOK,
+// }
+</script>
 
 <style scoped lang="scss">
 .container {
@@ -1134,7 +669,7 @@ div.v-card.main-card {
 }
 
 @media (max-width: 1280px) {
-    ::v-deep div.v-text-field__slot>input {
+    :v-deep div.v-text-field__slot>input {
         font-size: 18px;
     }
 }
@@ -1166,7 +701,7 @@ div.v-card.main-card {
     }
 }
 
-::v-deep div.v-input .v-input--selection-controls__ripple {
+:v-deep div.v-input .v-input--selection-controls__ripple {
     display: none !important;
 }
 </style>
