@@ -1,3 +1,11 @@
+## 上機要改
+
+0. useSetCookie: secure, httpOnly
+1. 
+
+---
+
+
 ## PDF view mode
 
 0. create task 編輯模式

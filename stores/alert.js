@@ -14,7 +14,7 @@ export const useAlertStore = defineStore('alert', () => {
         return iconItem ? iconItem[type.value] : ''
     })
 
-    function showMessage(payload) {
+    function showAlert(payload) {
         message.value = payload.message
         type.value = payload.type
         show.value = true
@@ -31,7 +31,7 @@ export const useAlertStore = defineStore('alert', () => {
         type,
         timeout,
         icon,
-        showMessage,
+        showAlert,
         closeMessage,
     }
 })

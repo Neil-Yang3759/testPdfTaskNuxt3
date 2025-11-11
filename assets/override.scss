@@ -1,0 +1,246 @@
+.v-data-table-header-mobile {
+  display: none;
+}
+
+.v-data-table > .v-data-table__wrapper .v-data-table__mobile-table-row {
+  margin: 10px;
+  border: thin solid rgba(0, 0, 0, 0.12);
+  display: block;
+}
+
+@media screen and (max-width: 600px) {
+  .theme--light.v-data-table tbody tr.v-data-table__selected {
+    background: #f5f5f5 !important;
+  }
+
+  .theme--light.v-data-table
+    > .v-data-table__wrapper
+    > table
+    > tbody
+    > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+    background: none;
+  }
+}
+
+.v-data-table__mobile-row__cell {
+  max-width: 190px;
+}
+
+@media screen and (max-width: 375px) {
+  .v-data-table__mobile-row__cell {
+    max-width: 150px;
+  }
+}
+
+.v-data-table__mobile-row__cell > div {
+  overflow-wrap: break-word;
+}
+
+.v-chip .v-chip__content {
+  display: contents;
+}
+
+.v-navigation-drawer__border {
+  box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
+  opacity: 0.5;
+}
+
+.v-list-item .v-badge__badge {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #e0e0e0 !important;
+  border-color: #e0e0e0 !important;
+}
+
+.v-list-item--active .v-badge__badge {
+  color: white;
+  background-color: #009149 !important;
+  border-color: #009149 !important;
+}
+
+.v-pagination {
+  justify-content: end !important;
+}
+
+.v-pagination__navigation {
+  border: 1px solid #e0e0e0 !important;
+  box-shadow: none !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.v-pagination > li:not(:last-child) {
+  margin-right: -1px !important;
+}
+
+.v-pagination__item {
+  border: 1px solid #e0e0e0 !important;
+  box-shadow: none !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.v-window__prev,
+.v-window__next {
+  background: none !important;
+}
+
+.v-text-field.v-text-field--solo .v-input__control {
+  min-height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.v-btn-toggle > .v-btn.v-btn:not(.v-btn--active) {
+  opacity: 1 !important;
+}
+
+.v-overlay {
+  touch-action: none;
+  user-select: none;
+}
+
+@media screen and (max-width: 1280px) {
+  // 行動裝置上不顯示 tooltip
+  div.v-tooltip__content.button-tooltip {
+    display: none;
+  }
+
+  // 行動裝置上不顯示 button hover
+  .v-btn:hover::before {
+    opacity: 0;
+  }
+
+  .v-btn--active:hover::before,
+  .v-btn--active::before {
+    opacity: 0.18;
+  }
+}
+
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background: #fafbfc !important;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position-x: 100% !important;
+  background-position-y: 50% !important;
+  border-radius: 5px !important;
+  border: 1px solid #dfe1e6 !important;
+}
+
+select.dropdown {
+  border: 2px solid black !important;
+}
+
+.theme--light.v-input--is-disabled.v-text-field--solo
+  > .v-input__control
+  > .v-input__slot {
+  background: rgb(244, 244, 244);
+  background-color: rgb(244, 244, 244);
+}
+
+.trackAnimation__path {
+  opacity: 0;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+
+  .animated & {
+    opacity: 1;
+    animation-name: line;
+  }
+}
+
+@keyframes line {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+// 移除所有ripple特效
+.v-ripple__container {
+  display: none !important;
+}
+
+.v-navigation-drawer--bottom.v-navigation-drawer--is-mobile {
+  max-height: 55% !important;
+  top: 0 !important;
+  bottom: auto !important;
+  transform: translateY(-100%) !important;
+}
+
+.v-navigation-drawer--bottom.v-navigation-drawer--is-mobile.v-navigation-drawer--open {
+  transform: translateY(0%) !important;
+}
+
+.v-btn,
+.v-tab {
+  text-transform: capitalize;
+}
+
+.v-tabs--vertical > .v-window {
+  overflow-y: auto;
+}
+
+.v-dialog--fullscreen {
+  max-width: 100% !important;
+}
+
+.v-card__text,
+.v-card__title {
+  word-break: normal;
+}
+
+.v-btn.primaryCustom {
+  color: #fff !important;
+}
+
+i.custom-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  font-size: 16px;
+}
+
+i.icon-signatureBO {
+  background: url('/icon/custom/signatureBO.svg') no-repeat top left;
+  color: #000;
+}
+
+i.icon-signatureBP {
+  background: url('/icon/custom/signatureBP.svg') no-repeat top left;
+}
+
+i.icon-stampBP {
+  background: url('/icon/custom/stampBP.svg') no-repeat top left;
+}
+
+i.icon-stampBO {
+  background: url('/icon/custom/stampBO.svg') no-repeat top left;
+}
+
+i.icon-signatureBO-black {
+  background: url('/icon/custom/signatureBO-Black.svg') no-repeat top left;
+  color: #000;
+}
+
+i.icon-signatureBP-black {
+  background: url('/icon/custom/signatureBP-Black.svg') no-repeat top left;
+}
+
+i.icon-stampBP-black {
+  background: url('/icon/custom/stampBP-Black.svg') no-repeat top left;
+}
+
+i.icon-stampBO-black {
+  background: url('/icon/custom/stampBO-Black.svg') no-repeat top left;
+}
+
+i.icon-signatureAndStamp {
+  background: url('/icon/custom/signatureAndStamp.svg') no-repeat top left;
+}

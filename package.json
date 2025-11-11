@@ -26,6 +26,8 @@
     "@types/fabric": "^5.3.10",
     "@types/node": "^24.9.1",
     "@unhead/vue": "^2.0.19",
+    "@vee-validate/i18n": "^4.15.1",
+    "@vee-validate/rules": "^4.15.1",
     "@vite-pwa/nuxt": "^1.0.7",
     "@vuepic/vue-datepicker": "^11.0.3",
     "better-sqlite3": "^12.4.1",
@@ -44,7 +46,6 @@
     "fabric": "^6.7.1",
     "jimp": "^1.6.0",
     "nuxt": "^3.19.3",
-    "nuxt-recaptcha": "^0.0.7",
     "pdfjs-dist": "^5.4.296",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.5.0",
@@ -58,11 +59,13 @@
     "typescript": "^5.9.3",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.22",
+    "vue-recaptcha-v3": "^2.0.1",
     "vue-router": "^4.6.3",
     "vue-tippy": "^6.7.1",
     "vuedraggable": "^4.1.0",
     "webm-duration-fix": "^1.0.4",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "vite-plugin-vuetify": "^2.1.2",

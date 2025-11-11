@@ -3,6 +3,9 @@ import { ref, computed } from 'vue'
 
 export const useMainStore = defineStore('main', () => {
     // ==================== State ====================
+    const { myInfoApi, patchMyInfoApi } = useUserApi();
+    const { restrictApi } = usePlanApi();
+    const { $i18n } = useNuxtApp()
     const account = ref('')
     const token = ref(null)
     const options = ref(null)
@@ -225,34 +228,29 @@ export const useMainStore = defineStore('main', () => {
     }
 
     // ✅ 保留: 有複雜邏輯 (初始化流程)
-    async function nuxtServerInit({ app, redirect }) {
-        const { $cookies, i18n, $apiRepository } = app
-        const tokenValue = $cookies.get('PDF_JWT_TOKEN')
-        const accountValue = $cookies.get('PDF_ACCOUNT')
-        const optionsValue = $cookies.get('PDF_Options')
-        const searchOptionsValue = $cookies.get('bzsnsoptions')
-        const reportOptionsValue = $cookies.get('bzsnroptions')
-        const tutorialState = $cookies.get('BZSN_TUTORIAL_STATE')
+    async function nuxtServerInit() {
+        const tokenValue = useSetCookie('PDF_JWT_TOKEN', 24 * 7)
+        const accountValue = useSetCookie('PDF_ACCOUNT', 24 * 7)
+        const optionsValue = useSetCookie('PDF_Options', 24 * 7)
+        const searchOptionsValue = useSetCookie('bzsnsoptions', 24 * 7)
+        const reportOptionsValue = useSetCookie('bzsnroptions', 24 * 7)
+        const tutorialState = useSetCookie('BZSN_TUTORIAL_STATE', 24 * 7)
 
-        if (tokenValue) {
-            token.value = tokenValue
+        if (tokenValue.value) {
+            token.value = tokenValue.value
             if (!userInfo.value) {
                 try {
-                    const result = await $apiRepository(i18n.locale).user.myInfo.get()
-                    if (result?.errorCode === 200 && result.body) {
-                        setUserInfo(result.body)
-                        loginSurveyFinished.value = result.body.finishOnboarding
+                    const result = await myInfoApi()
+                    setUserInfo(result.body)
+                    loginSurveyFinished.value = result.body.finishOnboarding
 
-                        if (!planInfo.value) {
-                            const planResult = await $apiRepository(i18n.locale).plan.restrict.get()
-                            if (planResult?.errorCode === 200 && planResult.body) {
-                                planInfo.value = planResult.body
-                            }
+                    if (!planInfo.value) {
+                        const planResult = await restrictApi()
+                        if (planResult.body) {
+                            planInfo.value = planResult.body
                         }
-                    } else if (result?.errorCode === 401) {
-                        await logout(app)
-                        redirect(app.localePath('/login'))
                     }
+
                 } catch (error) {
                     console.error('Error fetching user info:', error)
                 }
@@ -271,29 +269,23 @@ export const useMainStore = defineStore('main', () => {
     }
 
     // ✅ 保留: 同 nuxtServerInit
-    async function nuxtClientInit({ app, redirect }) {
-        const { $cookies, i18n, $apiRepository } = app
-        const tokenValue = $cookies.get('PDF_JWT_TOKEN')
-        const accountValue = $cookies.get('PDF_ACCOUNT')
-        const optionsValue = $cookies.get('PDF_Options')
+    async function nuxtClientInit() {
+        const tokenValue = useSetCookie('PDF_JWT_TOKEN')
+        const accountValue = useSetCookie('PDF_ACCOUNT')
+        const optionsValue = useSetCookie('PDF_Options')
 
-        if (tokenValue) {
-            token.value = tokenValue
+        if (tokenValue.value) {
+            token.value = tokenValue.value
             if (!userInfo.value) {
                 try {
-                    const result = await $apiRepository(i18n.locale).user.myInfo.get()
-                    if (result?.errorCode === 200 && result.body) {
-                        setUserInfo(result.body)
+                    const result = await myInfoApi()
+                    setUserInfo(result.body)
 
-                        if (!planInfo.value) {
-                            const planResult = await $apiRepository(i18n.locale).plan.restrict.get()
-                            if (planResult?.errorCode === 200 && planResult.body) {
-                                planInfo.value = planResult.body
-                            }
+                    if (!planInfo.value) {
+                        const planResult = await restrictApi()
+                        if (planResult.body) {
+                            planInfo.value = planResult.body
                         }
-                    } else if (result?.errorCode === 401) {
-                        await logout(app)
-                        redirect(app.localePath('/login'))
                     }
                 } catch (error) {
                     console.error('Error fetching user info:', error)
@@ -306,16 +298,11 @@ export const useMainStore = defineStore('main', () => {
     }
 
     // ✅ 保留: 有複雜邏輯 (包含 cookie 操作和 API 調用)
-    async function changeLogin(payload, app) {
-        const { $cookies, $apiRepository, $i18n } = app
-
+    async function changeLogin(payload) {
         if (payload.isLogin === true) {
             if (payload.token) {
-                $cookies.set('PDF_JWT_TOKEN', payload.token, {
-                    path: '/',
-                    maxAge: 60 * 60 * 24 * 7,
-                })
-                token.value = payload.token
+                const pdfToken = useSetCookie('PDF_JWT_TOKEN', 24 * 7)
+                token.value = pdfToken.value = payload.token
             }
             if (payload.userInfo) {
                 isFirstLogin.value = payload.userInfo.isFirstLogin
@@ -326,23 +313,25 @@ export const useMainStore = defineStore('main', () => {
                 const browserCulture = payload.locale
 
                 if (userCulture === null) {
-                    await patchLocale(browserCulture, app)
+                    await patchLocale(browserCulture)
                 } else if (userCulture !== browserCulture) {
                     $i18n.setLocale(userCulture)
                 }
 
                 if (!planInfo.value) {
-                    const result = await $apiRepository($i18n.locale).plan.restrict.get()
-                    if (result?.errorCode === 200 && result.body) {
+                    const result = await restrictApi()
+                    if (result.body) {
                         planInfo.value = result.body
                     }
                 }
             }
         } else {
-            $cookies.remove('PDF_JWT_TOKEN')
-            $cookies.remove('bzsnsoptions')
-            $cookies.remove('bzsnroptions')
-            $cookies.remove('i18n_redirected')
+            useCookie('PDF_JWT_TOKEN').value = null
+            useCookie('PDF_ACCOUNT').value = null
+            useCookie('PDF_Options').value = null
+            useCookie('bzsnsoptions').value = null
+            useCookie('bzsnroptions').value = null
+            useCookie('i18n_redirected').value = null
             token.value = null
             userInfo.value = {}
             planInfo.value = {}
@@ -350,60 +339,53 @@ export const useMainStore = defineStore('main', () => {
     }
 
     // ✅ 保留: 有 API 調用
-    async function patchLocale(localeCode, app) {
-        const { $apiRepository, $i18n } = app
-        const result = await $apiRepository($i18n.locale).user.myInfo.patch({
-            culture: localeCode
-        })
-        if (result?.errorCode === 200 && result.body) {
+    async function patchLocale(localeCode) {
+        const result = await patchMyInfoApi({ culture: localeCode })
+        if (result.body) {
             setUserInfo(result.body)
         }
     }
 
     // ✅ 保留: 封裝 changeLogin
-    function logout(app) {
-        changeLogin({ isLogin: false }, app)
+    function logout() {
+        changeLogin({ isLogin: false })
     }
 
     // ✅ 保留: 有 cookie 操作
-    function rememberInfo(payload, app) {
-        const { $cookies } = app
+    function rememberInfo(payload) {
+        const pdfAccount = useSetCookie('PDF_ACCOUNT', 24 * 7)
         if (payload.isRememberMe) {
             if (payload.account) {
-                $cookies.set('PDF_ACCOUNT', payload.account, {
-                    path: '/',
-                    maxAge: 60 * 60 * 24 * 7,
-                })
-                account.value = payload.account
+                pdfAccount.value = payload.account
+
             }
         } else {
-            $cookies.remove('PDF_ACCOUNT')
-            account.value = ''
+            pdfAccount.value = null       // 刪除 cookie
         }
     }
 
     // ✅ 保留: 有 cookie 操作
-    function updateSearchOptions(payload, app) {
+    function updateSearchOptions(payload) {
         searchOptions.value = payload.options
-        app.$cookies.set('bzsnsoptions', { ...payload.options }, { path: '/' })
+        useSetCookie('bzsnsoptions', 24 * 7).value = { ...payload.options }
     }
 
     // ✅ 保留: 有 cookie 操作
-    function removeSearchOptions(app) {
+    function removeSearchOptions() {
         searchOptions.value = null
-        app.$cookies.remove('bzsnsoptions')
+        useCookie('bzsnsoptions').value = null
     }
 
     // ✅ 保留: 有 cookie 操作
-    function updateReportOptions(payload, app) {
+    function updateReportOptions(payload) {
         reportOptions.value = payload.options
-        app.$cookies.set('bzsnroptions', { ...payload.options }, { path: '/' })
+        useSetCookie('bzsnroptions', 24 * 7).value = { ...payload.options }
     }
 
     // ✅ 保留: 有 cookie 操作
-    function removeReportOptions(app) {
+    function removeReportOptions() {
         reportOptions.value = null
-        app.$cookies.remove('bzsnroptions')
+        useCookie('bzsnroptions').value = null
     }
 
     // ✅ 保留: 有排序邏輯
@@ -449,7 +431,6 @@ export const useMainStore = defineStore('main', () => {
 
     // ==================== Return ====================
     return {
-        // State
         account,
         token,
         options,

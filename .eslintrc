@@ -1,0 +1,7 @@
+// .eslintrc.js
+module.exports = {
+  // ...
+  rules: {
+    'vue/html-self-closing': ['off']
+  }
+}

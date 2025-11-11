@@ -1,0 +1,29 @@
+// Ref: https://github.com/nuxt-community/vuetify-module#customvariables
+//
+// The variables you want to modify
+// $font-size-root: 20px;
+$material-light: (
+  'background': #ffffff,
+  // 'background': #f1f5f8,
+  'app-bar': white,
+  'icons': (
+    'active': rgba(0, 0, 0, 0.7),
+    'inactive': rgba(0, 0, 0, 0.38),
+  ),
+);
+
+$material-dark: (
+  'navigation-drawer': #1e1e1e,
+  'app-bar': #1e1e1e,
+);
+
+$body-font-family: 'Montserrat', 'Noto Sans TC', 'Noto Sans SC', 'Helvetica',
+  'Microsoft JhengHei', sans-serif;
+
+$shadow-key-umbra-opacity: rgba(85, 85, 85, 0.08);
+$shadow-key-penumbra-opacity: rgba(85, 85, 85, 0.06);
+$shadow-key-ambient-opacity: rgba(85, 85, 85, 0.03);
+
+$window-transition: none;
+
+
