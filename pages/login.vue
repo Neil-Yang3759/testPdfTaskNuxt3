@@ -4,58 +4,81 @@
       <div class="upper-block"></div>
       <div class="logo-area">
         <a :href="$config.landingURL">
-          <img alt="logo" width="250" height="45" src="/images/logo/logo_white.png" />
+          <img
+            alt="logo"
+            width="250"
+            height="45"
+            src="/images/logo/logo_white.png"
+          />
         </a>
-        <p>{{ $t("heading.loginSlogan") }}</p>
+        <p>{{ $t('heading.loginSlogan') }}</p>
       </div>
       <v-card class="main-card" flat>
         <v-card-text v-if="!show2FAInput" class="pa-0">
-          <v-tabs v-model="tab" grow active-class="active-tab" slider-color="#008145" slider-size="3">
-            <v-tab>{{ $t("button.login") }}</v-tab>
-            <v-tab>{{ $t("button.signUp") }}</v-tab>
+          <v-tabs
+            v-model="tab"
+            grow
+            active-class="active-tab"
+            slider-color="#008145"
+            slider-size="3"
+          >
+            <v-tab>{{ $t('button.login') }}</v-tab>
+            <v-tab>{{ $t('button.signUp') }}</v-tab>
           </v-tabs>
           <v-tabs-window v-model="tab">
             <v-tabs-window-item key="login">
-              <v-form class="pt-15" :validation-schema="schema" @submit.prevent="login" v-slot="{ isSubmitting }">
-                <v-text-field id="email" v-model="modelLogin.account" type="email" :error-messages="accountError"
-                  :label="autofill ? null : $t('label.email')" placeholder="E-mail" variant="outlined" required
-                  class="rounded-lg"></v-text-field>
+              <v-form class="pt-15" @submit.prevent="login">
+                <v-text-field
+                  id="email"
+                  v-model="modelLogin.account.value"
+                  type="email"
+                  :error-messages="modelLogin.account.errorMessage"
+                  :label="autofill ? null : $t('label.email')"
+                  placeholder="E-mail"
+                  variant="outlined"
+                  required
+                  class="rounded-lg"
+                ></v-text-field>
 
-                <v-text-field id="password" v-model="modelLogin.password" :error-messages="errors"
-                  :label="autofill ? null : $t('label.password')" :type="showPassword ? 'text' : 'password'"
-                  placeholder="Password" variant="outlined"
-                  :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" required class="rounded-lg"
-                  @click:append="showPassword = !showPassword"></v-text-field>
+                <v-text-field
+                  id="password"
+                  v-model="modelLogin.password.value"
+                  :error-messages="modelLogin.password.errorMessage"
+                  :label="autofill ? null : $t('label.password')"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="Password"
+                  variant="outlined"
+                  :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  required
+                  class="rounded-lg"
+                  @click:append-inner="showPassword = !showPassword"
+                ></v-text-field>
 
                 <div class="d-flex flex-column align-center mt-n2 mb-3">
                   <div style="margin-left: auto" class="mb-3">
-                    <a class="ml-auto text-decoration-none" @click="$router.push(localePath('/forget-password'))">{{
-                      $t("label.forgotPassword") }}</a>
+                    <a
+                      class="ml-auto text-decoration-none"
+                      @click="$router.push(localePath('/forget-password'))"
+                      >{{ $t('label.forgotPassword') }}</a
+                    >
                   </div>
                   <div style="margin-right: auto">
-                    <v-checkbox v-model="isRememberMe" :label="$t('label.rememberMe')"></v-checkbox>
+                    <v-checkbox
+                      v-model="isRememberMe"
+                      :label="$t('label.rememberMe')"
+                    ></v-checkbox>
                   </div>
                 </div>
 
-                <v-btn block :size="smAndUp ? 'x-large' : xs ? 'large' : 'medium'" color="primary"
-                  :disabled="isSubmitting" :class="{ submitting: isSubmitting }" :loading="loading"
-                  class="rounded-lg text-subtitle-1 text-sm-h6" type="submit">{{ $t("button.login") }}</v-btn>
-              </v-form>
-              <v-form @submit.prevent="onSubmit">
-
-                <v-text-field v-model="email" :error-messages="emailError" label="Email" variant="outlined"
-                  density="compact" prepend-inner-icon="mdi-email" placeholder="請輸入 Email" />
-
-                <v-text-field v-model="password" :error-messages="passwordError" label="密碼" type="password"
-                  variant="outlined" density="compact" prepend-inner-icon="mdi-lock" placeholder="至少 8 個字元" />
-
-                <v-text-field v-model="confirmPassword" :error-messages="confirmPasswordError" label="確認密碼"
-                  type="password" variant="outlined" density="compact" prepend-inner-icon="mdi-check"
-                  placeholder="請再次輸入密碼" />
-
-                <v-btn type="submit" color="primary" block class="mt-2">
-                  註冊
-                </v-btn>
+                <v-btn
+                  block
+                  :size="smAndUp ? 'x-large' : xs ? 'large' : 'medium'"
+                  color="primary"
+                  :loading="loading"
+                  class="rounded-lg text-subtitle-1 text-sm-h6"
+                  type="submit"
+                  >{{ $t('button.login') }}</v-btn
+                >
               </v-form>
               <!-- <validation-observer ref="loginObserver" vid="login">
                                 <v-form ref="loginForm" class="pt-15" @submit.prevent="login">
@@ -93,15 +116,28 @@
                             </validation-observer> -->
               <div class="d-flex flex-row align-center py-5">
                 <v-divider color="#aaaaaa" class="opacity-100"></v-divider>
-                <div class="text-subtitle-2 font-weight-bold white px-4" style="white-space: nowrap">
-                  {{ $t("text.or3rdPartyLogin") }}
+                <div
+                  class="text-subtitle-2 font-weight-bold white px-4"
+                  style="white-space: nowrap"
+                >
+                  {{ $t('text.or3rdPartyLogin') }}
                 </div>
                 <v-divider color="#aaaaaa" class="opacity-100"></v-divider>
               </div>
               <div class="text-center">
-                <v-btn dark width="100%" max-width="60px" height="48px" class="social-signin-btn align-content-center"
-                  @click="socialSignin('google')">
-                  <img width="60" alt="Google Signin Logo" src="/images/logo/google-logo.svg" />
+                <v-btn
+                  dark
+                  width="100%"
+                  max-width="60px"
+                  height="48px"
+                  class="social-signin-btn align-content-center"
+                  @click="socialSignin('google')"
+                >
+                  <img
+                    width="60"
+                    alt="Google Signin Logo"
+                    src="/images/logo/google-logo.svg"
+                  />
                 </v-btn>
                 <!--
                 <v-btn
@@ -229,12 +265,17 @@
       </v-card>
       <div class="empty-block"></div>
     </div>
-    <v-dialog v-model="changePasswordDialog" overlay-opacity="0.9" max-width="450" persistent
-      @input="changePasswordCancel()">
+    <v-dialog
+      v-model="changePasswordDialog"
+      overlay-opacity="0.9"
+      max-width="450"
+      persistent
+      @input="changePasswordCancel()"
+    >
       <v-card class="rounded-lg">
         <v-app-bar dark flat color="primary">
           <v-toolbar-title class="ml-5 mx-auto text-h6">{{
-            $t("heading.changePassword")
+            $t('heading.changePassword')
           }}</v-toolbar-title>
         </v-app-bar>
 
@@ -277,36 +318,62 @@
         </v-card-text>
         <v-card-actions class="px-10 py-5 grey lighten-3">
           <v-spacer></v-spacer>
-          <v-btn large outlined color="primary" class="text-subtitle-2 mr-2" @click="changePasswordCancel()">
-            {{ $t("button.cancel") }}
+          <v-btn
+            large
+            outlined
+            color="primary"
+            class="text-subtitle-2 mr-2"
+            @click="changePasswordCancel()"
+          >
+            {{ $t('button.cancel') }}
           </v-btn>
-          <v-btn large color="primary" class="text-subtitle-2" @click="changePasswordOK()">
-            {{ $t("button.ok") }}
+          <v-btn
+            large
+            color="primary"
+            class="text-subtitle-2"
+            @click="changePasswordOK()"
+          >
+            {{ $t('button.ok') }}
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="resendMailDialog" overlay-opacity="0.9" max-width="450" @input="resendMailDialog = false">
+    <v-dialog
+      v-model="resendMailDialog"
+      overlay-opacity="0.9"
+      max-width="450"
+      @input="resendMailDialog = false"
+    >
       <v-card class="rounded-lg pa-5">
         <v-card-title>
           <v-icon class="mr-1">mdi-information-outline</v-icon>
           <span style="font-weight: 700">
-            {{ $t("heading.acctNeedActivate") }}
+            {{ $t('heading.acctNeedActivate') }}
           </span>
         </v-card-title>
         <v-card-text class="px-10 pt-5 pb-5">
           <div class="text-subtitle-1">
-            {{ $t("message.acctNeedActivate", { mail: modelLogin.account }) }}
+            {{ $t('message.acctNeedActivate', { mail: modelLogin.account }) }}
           </div>
         </v-card-text>
         <v-card-actions class="px-5 py-5">
           <v-spacer></v-spacer>
-          <v-btn color="primary" dark class="text-subtitle-2" :loading="resendMailDialogLoading"
-            @click="resendMailOK()">
-            {{ $t("button.resendMail") }}
+          <v-btn
+            color="primary"
+            dark
+            class="text-subtitle-2"
+            :loading="resendMailDialogLoading"
+            @click="resendMailOK()"
+          >
+            {{ $t('button.resendMail') }}
           </v-btn>
-          <v-btn text color="primary" class="text-subtitle-2 mr-2" @click="resendMailDialog = false">
-            {{ $t("button.okGotIt") }}
+          <v-btn
+            text
+            color="primary"
+            class="text-subtitle-2 mr-2"
+            @click="resendMailDialog = false"
+          >
+            {{ $t('button.okGotIt') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -315,129 +382,100 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from "vue-router";
-import { useNuxtApp } from "#app";
-import { useReCaptcha } from "vue-recaptcha-v3";
-import { useDisplay } from "vuetify";
-// import * as yup from "yup";
-import { useForm, useField } from 'vee-validate';
+import { useRoute, useRouter } from 'vue-router'
+import { useNuxtApp } from '#app'
+import { useReCaptcha } from 'vue-recaptcha-v3'
+import { useDisplay } from 'vuetify'
+import { useForm, useField } from 'vee-validate'
 
-const { loginApi } = useUserApi();
-const { smAndUp, xs } = useDisplay();
-const route = useRoute();
-const router = useRouter();
-const { $i18n } = useNuxtApp();
-const { executeRecaptcha } = useReCaptcha();
+const { loginApi } = useUserApi()
+const { smAndUp, xs } = useDisplay()
+const route = useRoute()
+const router = useRouter()
+const { $i18n } = useNuxtApp()
+const { executeRecaptcha } = useReCaptcha()
 
-const mainStore = useMainStore();
+const mainStore = useMainStore()
 
 definePageMeta({
-  layout: "empty",
-});
+  layout: 'empty',
+})
 
-const tab = ref(null);
-const loading = ref(false);
-const isRememberMe = ref(false);
-const showOldPassword = ref(false);
-const showNewPassword = ref(false);
-const showNewPasswordCheck = ref(false);
-const autofill = ref(true);
-const searchAutoFillCount = ref(0);
-const action = ref("");
-const showCloseTabMessage = ref(false);
-const showPassword = ref(false);
+const { handleSubmit, handleReset } = useForm({
+  validationSchema: {
+    // 不可多出未使用的，submit會沒反應
+    account: 'required|email',
+    password: 'required',
+  },
+})
+const tab = ref(null)
+const loading = ref(false)
+const isRememberMe = ref(false)
+const showOldPassword = ref(false)
+const showNewPassword = ref(false)
+const showNewPasswordCheck = ref(false)
+const autofill = ref(true)
+const searchAutoFillCount = ref(0)
+const action = ref('')
+const showCloseTabMessage = ref(false)
+const showPassword = ref(false)
 const modelSignup = ref({
-  userName: "",
-  account: "",
-  password: "",
+  userName: '',
+  account: '',
+  password: '',
   agreePrivacy: false,
   agreeMarketing: false,
-});
-const redirectURL = ref("");
-const changePasswordError = ref("");
-const changePasswordDialog = ref(false);
-const resendMailDialog = ref(false);
-const resendMailDialogLoading = ref(false);
-const clientId = ref("");
-const state = ref("");
+})
+const redirectURL = ref('')
+const changePasswordError = ref('')
+const changePasswordDialog = ref(false)
+const resendMailDialog = ref(false)
+const resendMailDialogLoading = ref(false)
+const clientId = ref('')
+const state = ref('')
 const modelLogin = reactive({
-  account: "",
-  password: "",
-  oldPassword: "",
-  newPassword: "",
-  newPasswordCheck: "",
-});
-const show2FAInput = ref(false);
-const twoFactorAuthCode = ref("");
-const thirdParty2FALogin = ref(false);
-const loginObserver = ref(null);
-const signupObserver = ref(null);
-const changePasswordObserver = ref(null);
-// const schema = yup.object({
-//   email: yup.string().required().email(),
-//   password: yup.string().required().min(8),
-// });
-const { handleSubmit } = useForm();
+  account: useField('account'),
+  password: useField('password'),
+  oldPassword: '',
+  newPassword: '',
+  newPasswordCheck: '',
+})
+const show2FAInput = ref(false)
+const twoFactorAuthCode = ref('')
+const thirdParty2FALogin = ref(false)
+const loginObserver = ref(null)
+const signupObserver = ref(null)
+const changePasswordObserver = ref(null)
 
-// 3. 為每個欄位建立連結 (v-model + error)
-//    useField('欄位名稱', '驗證規則')
-//    規則字串就是我們在 plugin 中定義的
-const { value: email, errorMessage: emailError } = useField(
-  'email',
-  'required|email'
-);
-const { errorMessage: accountError } = useField(
-  toRef(modelLogin, 'account'),
-  'required|email'
-);
-const { value: password, errorMessage: passwordError } = useField(
-  'password',
-  'required|min:8'
-);
-
-const { value: confirmPassword, errorMessage: confirmPasswordError } = useField(
-  'confirm_password',
-  'required|confirmed:@password' // @password 會自動抓 'password' 欄位
-);
-
-// 4. 建立 submit 處理器
-//    handleSubmit 會先執行驗證，成功後才會執行內部的回呼函式
-const onSubmit = handleSubmit(values => {
-  // 'values' 是驗證通過的表單資料
-  console.log('表單驗證成功 (Vuetify)：', values);
-  alert('註冊成功！');
-  // 這裡呼叫 API...
-});
-
-action.value = route.query.action;
-clientId.value = route.query.client_id;
-redirectURL.value = route.query.redirect_url || route.query.redirect_uri;
-state.value = route.query.state;
-tab.value = action.value === "signup" ? 1 : 0;
+action.value = route.query.action
+clientId.value = route.query.client_id
+redirectURL.value = route.query.redirect_url || route.query.redirect_uri
+state.value = route.query.state
+tab.value = action.value === 'signup' ? 1 : 0
 
 const isOAuth = computed(() => {
-  return clientId.value && redirectURL.value;
-});
+  return clientId.value && redirectURL.value
+})
 
 watch(tab, (value) => {
   if (value === 0 && loginObserver.value) {
-    loginObserver.value.reset();
+    loginObserver.value.reset()
   } else if (value === 1 && signupObserver.value) {
-    signupObserver.value.reset();
+    signupObserver.value.reset()
   }
-});
+})
 
-watch("modelLogin.account", (value) => {
-  if (value === "") {
-    autofill.value = false;
+watch('modelLogin.account', (value) => {
+  if (value === '') {
+    autofill.value = false
   }
-});
+})
 
-watch("modelLogin.password", (value) => {
-  if (value === "") {
-    autofill.value = false;
+watch('modelLogin.password', (value) => {
+  if (value === '') {
+    autofill.value = false
   }
-});
+})
 
 onMounted(() => {
   if (
@@ -447,60 +485,60 @@ onMounted(() => {
     !redirectURL.value
   ) {
     // 已經登入的狀態，如果action是訂閱要跳轉到訂閱頁面
-    if (action.value === "subscribe") {
-      checkPlanParamAndRedirect();
-    } else if (action.value === "close-tab") {
-      window.location.href = window.location.origin + "/close-tab";
+    if (action.value === 'subscribe') {
+      checkPlanParamAndRedirect()
+    } else if (action.value === 'close-tab') {
+      window.location.href = window.location.origin + '/close-tab'
     } else {
-      router.push("/");
+      router.push('/')
     }
   }
   const id = setInterval(() => {
     const inputEmail = document.querySelector(
-      "input[type=email]:-webkit-autofill",
-    );
+      'input[type=email]:-webkit-autofill'
+    )
     const inputPassword = document.querySelector(
-      "input[type=password]:-webkit-autofill",
-    );
+      'input[type=password]:-webkit-autofill'
+    )
     if (inputEmail && inputPassword) {
-      clearInterval(id);
-      autofill.value = true;
+      clearInterval(id)
+      autofill.value = true
     } else if (searchAutoFillCount.value > 10) {
-      clearInterval(id);
+      clearInterval(id)
     } else {
-      autofill.value = false;
-      searchAutoFillCount.value++;
+      autofill.value = false
+      searchAutoFillCount.value++
     }
-  }, 100);
+  }, 100)
   // initialFacebookSignin()
 
   // $recaptcha.language = $i18n.locale
-  mainStore.pageTitle = $i18n.t("title.login");
-});
+  mainStore.pageTitle = $i18n.t('title.login')
+})
 
 const signup = async () => {
-  loading.value = true;
-  const success = await signupObserver.value.validate();
+  loading.value = true
+  const success = await signupObserver.value.validate()
   if (!success) {
-    loading.value = false;
+    loading.value = false
     // await $recaptcha.reset()
-    return;
+    return
   }
-  let recaptchaResponse = null;
+  let recaptchaResponse = null
   try {
-    recaptchaResponse = await executeRecaptcha("signup");
+    recaptchaResponse = await executeRecaptcha('signup')
     // recaptchaResponse = await $recaptcha.getResponse()
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
   if (!recaptchaResponse) {
-    loading.value = false;
+    loading.value = false
     // await $recaptcha.reset()
     $alert.showMessage({
-      message: $i18n.t("message.iAmNotBot"),
-      type: "error",
-    });
-    return;
+      message: $i18n.t('message.iAmNotBot'),
+      type: 'error',
+    })
+    return
   }
   const result = await $apiRepository($i18n.locale).user.createUser.post({
     name: modelSignup.value.userName,
@@ -509,24 +547,24 @@ const signup = async () => {
     recaptchaResponse,
     privacy: modelSignup.value.agreePrivacy,
     marketing: modelSignup.value.agreeMarketing,
-  });
-  const email = modelSignup.value.account;
-  loading.value = false;
+  })
+  const email = modelSignup.value.account
+  loading.value = false
   // await $recaptcha.reset()
   if (result !== null && result.errorCode === 201) {
-    signupForm.value.reset();
+    signupForm.value.reset()
     // 註冊成功後進入成功提示頁面
-    router.push(`/signup-success?email=${email}`);
+    router.push(`/signup-success?email=${email}`)
   } else {
     $alert.showMessage({
       message: result.message,
-      type: "error",
-    });
+      type: 'error',
+    })
   }
-};
+}
 
-const login = async () => {
-  loading.value = true;
+const login = handleSubmit(async (values) => {
+  loading.value = true
   // const success = await loginObserver.value.validate()
   // if (!success) {
   //     loading.value = false
@@ -535,86 +573,83 @@ const login = async () => {
 
   mainStore.rememberInfo({
     isRememberMe: isRememberMe.value,
-    account: modelLogin.value.account,
-  });
+    account: modelLogin.account.value,
+  })
 
   const postData = {
-    loginType: "PASSWORD",
-    account: modelLogin.value.account,
-    password: modelLogin.value.password,
-  };
+    loginType: 'PASSWORD',
+    account: modelLogin.account.value,
+    password: modelLogin.password.value,
+  }
 
   if (show2FAInput.value) {
-    postData.code = twoFactorAuthCode.value;
+    postData.code = twoFactorAuthCode.value
   }
 
-  const result = toRaw(await loginApi(postData));
+  const result = toRaw(await loginApi(postData))
 
-  loading.value = false;
+  loading.value = false
 
-  if (result !== null && result.errorCode === 200 && result.body !== null) {
-    // OAuth流程，導向redirectURL
-    await mainStore
-      .changeLogin(
-        {
-          isLogin: true,
-          token: result.body.token,
-          userInfo: result.body,
-          locale: $i18n.locale,
-        }
-      )
-      .then(async () => {
-        if (isOAuth.value) {
-          const codeResult = await $apiRepository($i18n.locale).user.oauth.post(
-            {
-              loginType: "PASSWORD",
-              account: modelLogin.value.account,
-              password: modelLogin.value.password,
-              clientId: clientId.value,
-            },
-          );
-          const param = `?code=${codeResult.body.code}&state=${state.value}`;
-          redirectURL.value += param;
-        }
-        if (redirectURL.value && redirectURL.value !== "") {
-          router.push({
-            redirect: (window.location.href = redirectURL.value),
-          });
-        } else if (action.value === "subscribe") {
-          checkPlanParamAndRedirect();
-        } else if (action.value === "close-tab") {
-          window.location.href = window.location.origin + "/close-tab";
-        } else {
-          router.push($i18n.localePath("/"));
-        }
-      });
-  }
-  // else if (
+  // if (result !== null && result.errorCode === 200 && result.body !== null) {
+  //   // OAuth流程，導向redirectURL
+  //   await mainStore
+  //     .changeLogin({
+  //       isLogin: true,
+  //       token: result.body.token,
+  //       userInfo: result.body,
+  //       locale: $i18n.locale,
+  //     })
+  //     .then(async () => {
+  //       if (isOAuth.value) {
+  //         const codeResult = await $apiRepository($i18n.locale).user.oauth.post(
+  //           {
+  //             loginType: 'PASSWORD',
+  //             account: modelLogin.account.value,
+  //             password: modelLogin.password.value,
+  //             clientId: clientId.value,
+  //           }
+  //         )
+  //         const param = `?code=${codeResult.body.code}&state=${state.value}`
+  //         redirectURL.value += param
+  //       }
+  //       if (redirectURL.value && redirectURL.value !== '') {
+  //         router.push({
+  //           redirect: (window.location.href = redirectURL.value),
+  //         })
+  //       } else if (action.value === 'subscribe') {
+  //         checkPlanParamAndRedirect()
+  //       } else if (action.value === 'close-tab') {
+  //         window.location.href = window.location.origin + '/close-tab'
+  //       } else {
+  //         router.push($i18n.localePath('/'))
+  //       }
+  //     })
+  // } else if (
   //   result !== null &&
   //   result.errorCode === 204 &&
   //   result.body !== null
   // ) {
-  //   mainStore.token = result.body.token;
-  //   changePasswordDialog.value = true;
+  //   mainStore.token = result.body.token
+  //   changePasswordDialog.value = true
   // } else if (
   //   result !== null &&
   //   result.errorCode === 409 &&
   //   result.body !== null
   // ) {
-  //   resendMailDialog.value = true;
+  //   resendMailDialog.value = true
   // } else if (
   //   result !== null &&
   //   result.errorCode === 417 &&
   //   result.body !== null
   // ) {
-  //   show2FAInput.value = true;
-  // } 
-};
+  //   show2FAInput.value = true
+  // }
+})
 
 const changePasswordOK = async () => {
   await changePasswordObserver.value.validate().then(async (success) => {
     if (!success) {
-      return;
+      return
     }
     await $apiRepository($i18n.locale)
       .user.myInfo.patch({
@@ -627,28 +662,26 @@ const changePasswordOK = async () => {
           result.errorCode === 200 &&
           result.body !== null
         ) {
-          changePasswordDialog.value = false;
-          changePasswordError.value = "";
-          changePasswordDialogForm.value.reset();
-          changePasswordObserver.value.reset();
+          changePasswordDialog.value = false
+          changePasswordError.value = ''
+          changePasswordDialogForm.value.reset()
+          changePasswordObserver.value.reset()
           await mainStore
-            .changeLogin(
-              {
-                isLogin: true,
-                token: mainStore.token,
-                userInfo: result.body,
-                locale: $i18n.locale,
-              }
-            )
+            .changeLogin({
+              isLogin: true,
+              token: mainStore.token,
+              userInfo: result.body,
+              locale: $i18n.locale,
+            })
             .then(async () => {
-              router.push($i18n.localePath("/"));
-            });
+              router.push($i18n.localePath('/'))
+            })
         } else {
-          changePasswordError.value = result.message;
+          changePasswordError.value = result.message
         }
-      });
-  });
-};
+      })
+  })
+}
 </script>
 
 <style scoped lang="scss">
@@ -674,12 +707,12 @@ const changePasswordOK = async () => {
   height: 120px;
 }
 
-.logo-area>.svg-container {
+.logo-area > .svg-container {
   margin: 0 auto;
   padding: 8px 0;
 }
 
-.logo-area>p {
+.logo-area > p {
   color: #ffffff;
   margin-top: 8px;
   font-size: 20px;
@@ -711,7 +744,7 @@ div.v-card.main-card {
 }
 
 @media (max-width: 1280px) {
-  :v-deep div.v-text-field__slot>input {
+  :v-deep div.v-text-field__slot > input {
     font-size: 18px;
   }
 }
@@ -722,12 +755,12 @@ div.v-card.main-card {
     padding-bottom: 25px;
   }
 
-  .logo-area>img {
+  .logo-area > img {
     width: 180px;
     height: 32px;
   }
 
-  .logo-area>p {
+  .logo-area > p {
     margin-top: 10px;
     font-size: 16px;
   }

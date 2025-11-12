@@ -9,7 +9,8 @@ export function useUserApi() {
   // const userList = async (data) => await $fetch(`/${$i18n.locale}/user/list`, { method: 'POST', body: data })
   // const userListAll = async (data) => await $fetch(`/${$i18n.locale}/user/listAll`, { method: 'POST', body: data })
   const myInfoApi = async () => await useMyFetch(`/user/myInfo`)
-  const patchMyInfoApi = async (data) => await useMyFetch(`/user/myInfo`, { method: 'PATCH', body: data })
+  const patchMyInfoApi = async (data) =>
+    await useMyFetch(`/user/myInfo`, { method: 'PATCH', body: data })
   // const verifyUser = async (data) => await $fetch(`/${$i18n.locale}/user/verify`, { method: 'POST', body: data })
   // const resendMail = async (data) => await $fetch(`/${$i18n.locale}/user/resend`, { method: 'POST', body: data })
   // const invite = async (data) => await $fetch(`/${$i18n.locale}/user/sendInviteMail`, { method: 'POST', body: data })
@@ -28,7 +29,7 @@ export function useUserApi() {
   // const submitAnswer = async (data) => await $fetch(`/${$i18n.locale}/onboarding/complete`, { method: 'POST', body: data })
   // const login = async (data) => await $fetch(`/${locale.value}/user/jwt`, { method: 'POST', body: data })
   const loginApi = async (data) =>
-    await useMyFetch(`/user/jwt`, { method: "POST", body: data });
+    await useMyFetch(`/user/jwt`, { method: 'POST', body: data })
 
-  return { loginApi, myInfoApi, patchMyInfoApi };
+  return { loginApi, myInfoApi, patchMyInfoApi }
 }
