@@ -30,20 +30,19 @@
               <v-form class="pt-15" @submit.prevent="login">
                 <v-text-field
                   id="email"
-                  v-model="modelLogin.account.value"
+                  v-model="modelLogin.account[0].value"
+                  :error-messages="loginErrors.account"
                   type="email"
-                  :error-messages="modelLogin.account.errorMessage"
                   :label="autofill ? null : $t('label.email')"
                   placeholder="E-mail"
                   variant="outlined"
                   required
                   class="rounded-lg"
                 ></v-text-field>
-
                 <v-text-field
                   id="password"
-                  v-model="modelLogin.password.value"
-                  :error-messages="modelLogin.password.errorMessage"
+                  v-model="modelLogin.password[0].value"
+                  :error-messages="loginErrors.password"
                   :label="autofill ? null : $t('label.password')"
                   :type="showPassword ? 'text' : 'password'"
                   placeholder="Password"
@@ -80,40 +79,6 @@
                   >{{ $t('button.login') }}</v-btn
                 >
               </v-form>
-              <!-- <validation-observer ref="loginObserver" vid="login">
-                                <v-form ref="loginForm" class="pt-15" @submit.prevent="login">
-                                    <validation-provider v-slot="{ errors }" vid="email" :name="$t('label.email')"
-                                        rules="required|email">
-                                        <v-text-field id="email" v-model="modelLogin.account" type="email"
-                                            :error-messages="errors" :label="autofill ? null : $t('label.email')"
-                                            placeholder="E-mail" outlined required class="rounded-lg"></v-text-field>
-                                    </validation-provider>
-                                    <validation-provider v-slot="{ errors }" vid="password" :name="$t('label.password')"
-                                        rules="required">
-                                        <v-text-field id="password" v-model="modelLogin.password"
-                                            :error-messages="errors" :label="autofill ? null : $t('label.password')"
-                                            :type="showPassword ? 'text' : 'password'" placeholder="Password" outlined
-                                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" required
-                                            class="rounded-lg"
-                                            @click:append="showPassword = !showPassword"></v-text-field>
-                                    </validation-provider>
-                                    <div class="d-flex flex-column align-center mt-n2 mb-3">
-                                        <div style="margin-left: auto" class="mb-3">
-                                            <a class="ml-auto text-decoration-none"
-                                                @click="$router.push(localePath('/forget-password'))">{{
-                                                    $t('label.forgotPassword') }}</a>
-                                        </div>
-                                        <div style="margin-right: auto">
-                                            <v-checkbox v-model="isRememberMe"
-                                                :label="$t('label.rememberMe')"></v-checkbox>
-                                        </div>
-                                    </div>
-                                    <v-btn block :x-large="$vuetify.breakpoint.smAndUp"
-                                        :large="$vuetify.breakpoint.xsOnly" color="primary" :loading="loading"
-                                        class="rounded-lg text-subtitle-1 text-sm-h6" type="submit">{{
-                                            $t('button.login') }}</v-btn>
-                                </v-form>
-                            </validation-observer> -->
               <div class="d-flex flex-row align-center py-5">
                 <v-divider color="#aaaaaa" class="opacity-100"></v-divider>
                 <div
@@ -172,66 +137,99 @@
               </div>
             </v-tabs-window-item>
             <v-tabs-window-item key="signup">
-              <!-- <validation-observer ref="signupObserver" vid="signup">
-                                <v-form ref="signupForm" class="pt-8" @submit.prevent="signup">
-                                    <validation-provider v-slot="{ errors }" vid="userName" :name="$t('label.fullName')"
-                                        rules="required">
-                                        <v-text-field id="userName" v-model="modelSignup.userName" type="text"
-                                            :error-messages="errors" :label="$t('label.fullName')"
-                                            :placeholder="$t('placeholder.fullName')" outlined required
-                                            class="rounded-lg" autocomplete="off"></v-text-field>
-                                    </validation-provider>
-                                    <validation-provider v-slot="{ errors }" vid="email" :name="$t('label.email')"
-                                        rules="required|email">
-                                        <v-text-field id="email" v-model="modelSignup.account" type="email"
-                                            :error-messages="errors" :label="$t('label.email')" placeholder="E-mail"
-                                            outlined required class="rounded-lg" autocomplete="off"></v-text-field>
-                                    </validation-provider>
-                                    <validation-provider v-slot="{ errors }" vid="new-password"
-                                        :name="$t('label.password')" rules="required|max:30|min:8">
-                                        <v-text-field id="new-password" v-model="modelSignup.password"
-                                            :error-messages="errors" :label="$t('label.password')"
-                                            :hint="$t('label.passwordHint')" persistent-hint
-                                            :type="showPassword ? 'text' : 'password'" placeholder="Password" outlined
-                                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" required
-                                            class="rounded-lg" autocomplete="new-password"
-                                            @click:append="showPassword = !showPassword"></v-text-field>
-                                    </validation-provider>
-                                    <div class="d-flex flex-column mb-4 mt-4">
-                                        <div>
-                                            <v-checkbox v-model="modelSignup.agreeMarketing" dense hide-details>
-                                                <template #label>
-                                                    {{ $t('label.agreeMarketing') }}
-                                                </template>
-</v-checkbox>
-</div>
-<div>
-  <validation-provider v-slot="{ errors }" vid="agreePrivacy" :name="$t('label.agreePrivacy')"
-    :rules="{ required: { allowFalse: false } }">
-    <v-checkbox v-model="modelSignup.agreePrivacy" dense required :error-messages="errors">
-      <template #label>
-                                                        <span>
-                                                            {{ $t('text.signUpNotice') }}
-                                                            <a target="_blank"
-                                                                href="https://www.breezysign.com/terms_of_service"
-                                                                style="text-decoration: none" @click.stop>{{
-                                                                    $t('link.terms') }}</a>
-                                                            {{ $t('text.and') }}
-                                                            <a target="_blank"
-                                                                href="https://www.breezysign.com/privacy_policy"
-                                                                style="text-decoration: none" @click.stop>{{
-                                                                    $t('link.privacy') }}</a>
-                                                        </span>
-                                                    </template>
-    </v-checkbox>
-  </validation-provider>
-</div>
-</div>
-<v-btn block :x-large="$vuetify.breakpoint.smAndUp" :large="$vuetify.breakpoint.xsOnly" color="primary"
-  :loading="loading" class="rounded-lg text-subtitle-1 text-sm-h6" type="submit">{{
-  $t('button.signUp') }}</v-btn>
-</v-form>
-</validation-observer> -->
+              <v-form class="pt-8" @submit.prevent="signup">
+                <v-text-field
+                  id="userName"
+                  v-model="modelSignup.userName[0].value"
+                  :error-messages="signupErrors.userName"
+                  type="text"
+                  :label="$t('label.fullName')"
+                  :placeholder="$t('placeholder.fullName')"
+                  variant="outlined"
+                  required
+                  class="rounded-lg"
+                  autocomplete="off"
+                ></v-text-field>
+
+                <v-text-field
+                  id="email"
+                  v-model="modelSignup.account[0].value"
+                  type="email"
+                  :error-messages="signupErrors.account"
+                  :label="autofill ? null : $t('label.email')"
+                  placeholder="E-mail"
+                  variant="outlined"
+                  required
+                  class="rounded-lg"
+                ></v-text-field>
+
+                <v-text-field
+                  id="new-password"
+                  v-model="modelSignup.password[0].value"
+                  :error-messages="signupErrors.password"
+                  :label="$t('label.password')"
+                  :type="showPassword ? 'text' : 'password'"
+                  :hint="$t('label.passwordHint')"
+                  persistent-hint
+                  placeholder="Password"
+                  variant="outlined"
+                  :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  required
+                  class="rounded-lg"
+                  autocomplete="new-password"
+                  @click:append-inner="showPassword = !showPassword"
+                ></v-text-field>
+
+                <div class="d-flex flex-column mb-4 mt-4">
+                  <div>
+                    <v-checkbox
+                      v-model="modelSignup.agreeMarketing"
+                      dense
+                      hide-details
+                    >
+                      <template #label>
+                        {{ $t('label.agreeMarketing') }}
+                      </template>
+                    </v-checkbox>
+                  </div>
+                  <div>
+                    <v-checkbox
+                      v-model="modelSignup.agreePrivacy[0].value"
+                      dense
+                      required
+                      :error-messages="signupErrors.agreePrivacy"
+                    >
+                      <template #label>
+                        <span>
+                          {{ $t('text.signUpNotice') }}
+                          <NuxtLink
+                            to="https://www.breezysign.com/terms_of_service"
+                            target="_blank"
+                            class="text-primary text-decoration-none"
+                            >{{ $t('link.terms') }}</NuxtLink
+                          >
+                          {{ $t('text.and') }}
+                          <NuxtLink
+                            to="https://www.breezysign.com/privacy_policy"
+                            target="_blank"
+                            class="text-primary text-decoration-none"
+                            >{{ $t('link.privacy') }}</NuxtLink
+                          >
+                        </span>
+                      </template>
+                    </v-checkbox>
+                  </div>
+                </div>
+                <v-btn
+                  block
+                  :size="smAndUp ? 'x-large' : xs ? 'large' : 'medium'"
+                  color="primary"
+                  :loading="loading"
+                  class="rounded-lg text-subtitle-1 text-sm-h6"
+                  type="submit"
+                  >{{ $t('button.signUp') }}</v-btn
+                >
+              </v-form>
             </v-tabs-window-item>
           </v-tabs-window>
         </v-card-text>
@@ -386,9 +384,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { useNuxtApp } from '#app'
 import { useReCaptcha } from 'vue-recaptcha-v3'
 import { useDisplay } from 'vuetify'
-import { useForm, useField } from 'vee-validate'
+import { useForm } from 'vee-validate'
 
-const { loginApi } = useUserApi()
+const { loginApi, oauthApi } = useUserApi()
 const { smAndUp, xs } = useDisplay()
 const route = useRoute()
 const router = useRouter()
@@ -401,11 +399,32 @@ definePageMeta({
   layout: 'empty',
 })
 
-const { handleSubmit, handleReset } = useForm({
+const {
+  handleSubmit: loginSubmit,
+  handleReset: loginReset,
+  errors: loginErrors,
+  values: loginValues,
+  defineField: defineLoginField,
+} = useForm({
   validationSchema: {
     // 不可多出未使用的，submit會沒反應
     account: 'required|email',
     password: 'required',
+  },
+})
+const {
+  handleSubmit: signupSubmit,
+  handleReset: signupReset,
+  errors: signupErrors,
+  values: signupValues,
+  defineField: defineSignupField,
+} = useForm({
+  validationSchema: {
+    // 不可多出未使用的，submit會沒反應
+    userName: 'required',
+    account: 'required|email',
+    password: 'required',
+    agreePrivacy: 'required',
   },
 })
 const tab = ref(null)
@@ -419,11 +438,11 @@ const searchAutoFillCount = ref(0)
 const action = ref('')
 const showCloseTabMessage = ref(false)
 const showPassword = ref(false)
-const modelSignup = ref({
-  userName: '',
-  account: '',
-  password: '',
-  agreePrivacy: false,
+const modelSignup = reactive({
+  userName: defineSignupField('userName'),
+  account: defineSignupField('account'),
+  password: defineSignupField('password'),
+  agreePrivacy: defineSignupField('agreePrivacy'),
   agreeMarketing: false,
 })
 const redirectURL = ref('')
@@ -434,8 +453,8 @@ const resendMailDialogLoading = ref(false)
 const clientId = ref('')
 const state = ref('')
 const modelLogin = reactive({
-  account: useField('account'),
-  password: useField('password'),
+  account: defineLoginField('account'),
+  password: defineLoginField('password'),
   oldPassword: '',
   newPassword: '',
   newPasswordCheck: '',
@@ -443,9 +462,6 @@ const modelLogin = reactive({
 const show2FAInput = ref(false)
 const twoFactorAuthCode = ref('')
 const thirdParty2FALogin = ref(false)
-const loginObserver = ref(null)
-const signupObserver = ref(null)
-const changePasswordObserver = ref(null)
 
 action.value = route.query.action
 clientId.value = route.query.client_id
@@ -458,24 +474,30 @@ const isOAuth = computed(() => {
 })
 
 watch(tab, (value) => {
-  if (value === 0 && loginObserver.value) {
-    loginObserver.value.reset()
-  } else if (value === 1 && signupObserver.value) {
-    signupObserver.value.reset()
+  if (value === 0) {
+    loginReset()
+  } else if (value === 1) {
+    signupReset()
   }
 })
 
-watch('modelLogin.account', (value) => {
-  if (value === '') {
-    autofill.value = false
+watch(
+  () => modelLogin.account[0].value,
+  (value) => {
+    if (value === '') {
+      autofill.value = false
+    }
   }
-})
+)
 
-watch('modelLogin.password', (value) => {
-  if (value === '') {
-    autofill.value = false
+watch(
+  () => modelLogin.password[0].value,
+  (value) => {
+    if (value === '') {
+      autofill.value = false
+    }
   }
-})
+)
 
 onMounted(() => {
   if (
@@ -516,8 +538,11 @@ onMounted(() => {
   mainStore.pageTitle = $i18n.t('title.login')
 })
 
-const signup = async () => {
+const signup = signupSubmit(async (values) => {
   loading.value = true
+  console.log(values)
+  return
+
   const success = await signupObserver.value.validate()
   if (!success) {
     loading.value = false
@@ -561,25 +586,19 @@ const signup = async () => {
       type: 'error',
     })
   }
-}
+})
 
-const login = handleSubmit(async (values) => {
+const login = loginSubmit(async (values) => {
   loading.value = true
-  // const success = await loginObserver.value.validate()
-  // if (!success) {
-  //     loading.value = false
-  //     return
-  // }
-
   mainStore.rememberInfo({
     isRememberMe: isRememberMe.value,
-    account: modelLogin.account.value,
+    account: modelLogin.account[0].value,
   })
 
   const postData = {
     loginType: 'PASSWORD',
-    account: modelLogin.account.value,
-    password: modelLogin.password.value,
+    account: modelLogin.account[0].value,
+    password: modelLogin.password[0].value,
   }
 
   if (show2FAInput.value) {
@@ -590,60 +609,53 @@ const login = handleSubmit(async (values) => {
 
   loading.value = false
 
-  // if (result !== null && result.errorCode === 200 && result.body !== null) {
-  //   // OAuth流程，導向redirectURL
-  //   await mainStore
-  //     .changeLogin({
-  //       isLogin: true,
-  //       token: result.body.token,
-  //       userInfo: result.body,
-  //       locale: $i18n.locale,
-  //     })
-  //     .then(async () => {
-  //       if (isOAuth.value) {
-  //         const codeResult = await $apiRepository($i18n.locale).user.oauth.post(
-  //           {
-  //             loginType: 'PASSWORD',
-  //             account: modelLogin.account.value,
-  //             password: modelLogin.password.value,
-  //             clientId: clientId.value,
-  //           }
-  //         )
-  //         const param = `?code=${codeResult.body.code}&state=${state.value}`
-  //         redirectURL.value += param
-  //       }
-  //       if (redirectURL.value && redirectURL.value !== '') {
-  //         router.push({
-  //           redirect: (window.location.href = redirectURL.value),
-  //         })
-  //       } else if (action.value === 'subscribe') {
-  //         checkPlanParamAndRedirect()
-  //       } else if (action.value === 'close-tab') {
-  //         window.location.href = window.location.origin + '/close-tab'
-  //       } else {
-  //         router.push($i18n.localePath('/'))
-  //       }
-  //     })
-  // } else if (
-  //   result !== null &&
-  //   result.errorCode === 204 &&
-  //   result.body !== null
-  // ) {
-  //   mainStore.token = result.body.token
-  //   changePasswordDialog.value = true
-  // } else if (
-  //   result !== null &&
-  //   result.errorCode === 409 &&
-  //   result.body !== null
-  // ) {
-  //   resendMailDialog.value = true
-  // } else if (
-  //   result !== null &&
-  //   result.errorCode === 417 &&
-  //   result.body !== null
-  // ) {
-  //   show2FAInput.value = true
-  // }
+  if (result === null || result.body === null) {
+    return
+  }
+
+  if (result.errorCode === 204 && result.body !== null) {
+    mainStore.token = result.body.token
+    changePasswordDialog.value = true
+  } else if (result.errorCode === 409 && result.body !== null) {
+    resendMailDialog.value = true
+  } else if (result.errorCode === 417 && result.body !== null) {
+    show2FAInput.value = true
+  }
+
+  if (result.errorCode !== 200) {
+    return
+  }
+
+  await mainStore
+    .changeLogin({
+      isLogin: true,
+      token: result.body.token,
+      userInfo: result.body,
+      locale: $i18n.locale,
+    })
+    .then(async () => {
+      if (isOAuth.value) {
+        const codeResult = await oauthApi({
+          loginType: 'PASSWORD',
+          account: modelLogin.account[0].value,
+          password: modelLogin.password[0].value,
+          clientId: clientId.value,
+        })
+        const param = `?code=${codeResult.body.code}&state=${state.value}`
+        redirectURL.value += param
+      }
+      if (redirectURL.value && redirectURL.value !== '') {
+        router.push({
+          redirect: (window.location.href = redirectURL.value),
+        })
+      } else if (action.value === 'subscribe') {
+        checkPlanParamAndRedirect()
+      } else if (action.value === 'close-tab') {
+        window.location.href = window.location.origin + '/close-tab'
+      } else {
+        router.push('/')
+      }
+    })
 })
 
 const changePasswordOK = async () => {
@@ -681,6 +693,289 @@ const changePasswordOK = async () => {
         }
       })
   })
+}
+
+const resendMailOK = async () => {
+  this.resendMailDialogLoading = true
+  await this.$apiRepository(this.$i18n.locale)
+    .user.resendMail.postItem(this.modelLogin.account, {})
+    .then((result) => {
+      this.resendMailDialogLoading = false
+      if (result !== null && result.errorCode === 200 && result.body !== null) {
+        this.resendMailDialog = false
+        this.$messageDialog.showMessage({
+          message: this.$t('message.reVerifyMailSuccess'),
+          width: 450,
+        })
+      } else {
+        this.resendMailDialog = false
+        this.$alert.showMessage({
+          message: this.$t('message.reVerifyMailError'),
+          type: 'error',
+        })
+      }
+    })
+}
+const socialSignin = (platform) => {
+  try {
+    const googleClientId = this.$config.GOOGLE_CLIENT_ID
+    const self = this
+    switch (platform) {
+      case 'google':
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          use_fedcm_for_prompt: true,
+          callback: async (response) => {
+            const accessToken = response.credential
+            const postData = {
+              loginType: 'GOOGLE',
+              token: accessToken,
+            }
+            if (this.show2FAInput) {
+              postData.code = this.twoFactorAuthCode
+            }
+            const result = await self
+              .$apiRepository(self.$i18n.locale)
+              .user.login.post(postData)
+            if (
+              result !== null &&
+              result.errorCode === 200 &&
+              result.body !== null
+            ) {
+              await self.$store
+                .dispatch('changeLogin', {
+                  isLogin: true,
+                  token: result.body.token,
+                  userInfo: result.body,
+                  locale: this.$i18n.locale,
+                })
+                .then(async () => {
+                  if (self.isOAuth) {
+                    const codeResult = await self
+                      .$apiRepository(self.$i18n.locale)
+                      .user.oauth.post({
+                        loginType: 'GOOGLE',
+                        token: accessToken,
+                        clientId: self.clientId,
+                      })
+                    const param = `?code=${codeResult.body.code}&state=${self.state}`
+                    self.redirectURL += param
+                  }
+                  if (result.body.newUser) {
+                    self.$router.push(self.localePath('/signupthankyou'))
+                  } else if (self.redirectURL && self.redirectURL !== '') {
+                    self.$router.push({
+                      redirect: (window.location.href = self.redirectURL),
+                    })
+                  } else if (this.action === 'subscribe') {
+                    self.checkPlanParamAndRedirect()
+                  } else if (this.action === 'close-tab') {
+                    window.location.href = window.location.origin + '/close-tab'
+                  } else {
+                    self.$router.push(self.localePath('/'))
+                  }
+                })
+            } else if (result.errorCode === 417) {
+              self.thirdParty2FALogin = true
+              self.show2FAInput = true
+            } else {
+              self.$alert.showMessage({
+                message: result.message,
+                type: 'error',
+              })
+            }
+          },
+        })
+        window.google.accounts.id.prompt(() => {
+          const client = window.google.accounts.oauth2.initTokenClient({
+            client_id: googleClientId,
+            scope:
+              'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+            callback: async (tokenResponse) => {
+              const postData = {
+                loginType: 'GOOGLE',
+                token: tokenResponse.access_token,
+              }
+              if (this.show2FAInput) {
+                postData.code = this.twoFactorAuthCode
+              }
+              const result = await self
+                .$apiRepository(self.$i18n.locale)
+                .user.login.post(postData)
+              if (
+                result !== null &&
+                result.errorCode === 200 &&
+                result.body !== null
+              ) {
+                await self.$store
+                  .dispatch('changeLogin', {
+                    isLogin: true,
+                    token: result.body.token,
+                    userInfo: result.body,
+                    locale: this.$i18n.locale,
+                  })
+                  .then(async () => {
+                    if (self.isOAuth) {
+                      const codeResult = await self
+                        .$apiRepository(self.$i18n.locale)
+                        .user.oauth.post({
+                          loginType: 'GOOGLE',
+                          token: tokenResponse.access_token,
+                          clientId: self.clientId,
+                        })
+                      const param = `?code=${codeResult.body.code}&state=${self.state}`
+                      self.redirectURL += param
+                    }
+                    if (result.body.newUser) {
+                      self.$router.push(self.localePath('/signupthankyou'))
+                    } else if (self.redirectURL && self.redirectURL !== '') {
+                      self.$router.push({
+                        redirect: (window.location.href = self.redirectURL),
+                      })
+                    } else if (this.action === 'subscribe') {
+                      self.checkPlanParamAndRedirect()
+                    } else {
+                      self.$router.push(self.localePath('/'))
+                    }
+                  })
+              } else if (result.errorCode === 417) {
+                self.thirdParty2FALogin = true
+                self.show2FAInput = true
+              } else {
+                self.$alert.showMessage({
+                  message: result.message,
+                  type: 'error',
+                })
+              }
+            },
+          })
+          client.requestAccessToken()
+        })
+        break
+      case 'facebook':
+        window.FB.login(
+          async function (response) {
+            if (response.status === 'connected') {
+              const accessToken = response.authResponse.accessToken
+              const result = await self
+                .$apiRepository(self.$i18n.locale)
+                .user.login.post({
+                  loginType: 'FACEBOOK',
+                  token: accessToken,
+                })
+              if (
+                result !== null &&
+                result.errorCode === 200 &&
+                result.body !== null
+              ) {
+                await self.$store
+                  .dispatch('changeLogin', {
+                    isLogin: true,
+                    token: result.body.token,
+                    userInfo: result.body,
+                    locale: this.$i18n.locale,
+                  })
+                  .then(() => {
+                    if (result.body.newUser) {
+                      self.$router.push(self.localePath('/signupthankyou'))
+                    } else if (self.redirectURL && self.redirectURL !== '') {
+                      self.$router.push({
+                        redirect: (window.location.href = self.redirectURL),
+                      })
+                    } else if (this.action === 'subscribe') {
+                      self.checkPlanParamAndRedirect()
+                    } else {
+                      self.$router.push(self.localePath('/'))
+                    }
+                  })
+              } else {
+                self.$alert.showMessage({
+                  message: result.message,
+                  type: 'error',
+                })
+              }
+            }
+          },
+          { scope: 'email' }
+        )
+        break
+      case 'apple':
+        window.AppleID.auth.signIn()
+        break
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+const initialFacebookSignin = () => {
+  const facebookId = this.$config.FACEBOOK_ID
+  const self = this
+  window.fbAsyncInit = function () {
+    window.FB.init({
+      appId: facebookId,
+      cookie: true,
+      xfbml: true,
+      version: 'v16.0',
+    })
+    self.fabookLogout()
+  }
+}
+const fabookLogout = () => {
+  try {
+    if (window.FB.getAccessToken() !== null) {
+      window.FB.logout(function (response) {
+        this.$store.dispatch('logout')
+      })
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+const initialAppleSignin = () => {
+  const appleClientId = this.$config.APPLE_CLIENT_ID
+  const appleRedirectURI = this.$config.APPLE_RETURN_URI
+  window.AppleID.auth.init({
+    clientId: appleClientId,
+    scope: 'name email',
+    redirectURI: appleRedirectURI,
+  })
+}
+const cancel2FA = () => {
+  show2FAInput.value = false
+  thirdParty2FALogin.value = false
+  twoFactorAuthCode.value = ''
+  modelLogin.value.password = ''
+  modelLogin.value.account = ''
+  loginReset()
+}
+const login2FA = () => {
+  if (thirdParty2FALogin.value) {
+    socialSignin('google')
+  } else {
+    login()
+  }
+}
+const checkPlanParamAndRedirect = () => {
+  const { plan } = this.$route.query
+  if (!plan) {
+    return null
+  }
+
+  const [tier, period, count] = plan.split(',')
+  const validTiers = ['enterprise', 'pro']
+  const validPeriods = ['monthly', 'yearly']
+  const validCounts = ['1', '5', '10', '20', '30', '40']
+
+  if (
+    !validTiers.includes(tier) ||
+    !validPeriods.includes(period) ||
+    !validCounts.includes(count)
+  ) {
+    console.log('invalid plan')
+    this.$router.push({ path: '/' })
+    return
+  }
+  this.$router.push({ path: '/settings/subscription', query: { plan } })
 }
 </script>
 

@@ -15,7 +15,11 @@ export function useUserApi() {
   // const resendMail = async (data) => await $fetch(`/${$i18n.locale}/user/resend`, { method: 'POST', body: data })
   // const invite = async (data) => await $fetch(`/${$i18n.locale}/user/sendInviteMail`, { method: 'POST', body: data })
   // const inviteResult = async (data) => await $fetch(`/${$i18n.locale}/user/inviteResult`, { method: 'POST', body: data })
-  // const oauth = async (data) => await $fetch(`/${$i18n.locale}/oauth2/auth`, { method: 'POST', body: data })
+  const oauthApi = async (data) =>
+    await useMyFetch(`/${$i18n.locale}/oauth2/auth`, {
+      method: 'POST',
+      body: data,
+    })
   // const tourEventInfo = async (data) => await $fetch(`/${$i18n.locale}/user/userTutorial`, { method: 'POST', body: data })
   // const updateTourEvent = async (data) => await $fetch(`/${$i18n.locale}/user/userTutorialEvent`, { method: 'POST', body: data })
   // const tourDialogStatus = async (data) => await $fetch(`/${$i18n.locale}/user/userTutorialDialogStatus`, { method: 'POST', body: data })
@@ -31,5 +35,5 @@ export function useUserApi() {
   const loginApi = async (data) =>
     await useMyFetch(`/user/jwt`, { method: 'POST', body: data })
 
-  return { loginApi, myInfoApi, patchMyInfoApi }
+  return { loginApi, myInfoApi, patchMyInfoApi, oauthApi }
 }

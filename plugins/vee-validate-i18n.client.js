@@ -16,8 +16,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     ...en,
     names: {
       ...en.fields,
-      account: enUS.label.email.loc.source, // <--- 英文的 "account" 翻譯
-      password: enUS.label.password.loc.source, // <--- 英文的 "password" 翻譯
+      account: enUS.label.email.loc.source,
+      password: enUS.label.password.loc.source,
+      userName: enUS.label.name.loc.source,
+      agreePrivacy: enUS.label.agreePrivacy.loc.source,
     },
   }
 
@@ -26,8 +28,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     ...zh_TW,
     names: {
       ...zh_TW.fields,
-      account: zhTW.label.email.loc.source, // <--- 中文的 "account" 翻譯
-      password: zhTW.label.password.loc.source, // <--- 中文的 "password" 翻譯
+      account: zhTW.label.email.loc.source,
+      password: zhTW.label.password.loc.source,
+      userName: zhTW.label.name.loc.source,
+      agreePrivacy: zhTW.label.agreePrivacy.loc.source,
     },
   }
 
@@ -35,8 +39,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     ...zh_CN,
     names: {
       ...zh_CN.fields,
-      account: zhCN.label.email.loc.source, // <--- 中文的 "account" 翻譯
-      password: zhCN.label.password.loc.source, // <--- 中文的 "password" 翻譯
+      account: zhCN.label.email.loc.source,
+      password: zhCN.label.password.loc.source,
+      userName: zhCN.label.name.loc.source,
+      agreePrivacy: zhCN.label.agreePrivacy.loc.source,
     },
   }
 
