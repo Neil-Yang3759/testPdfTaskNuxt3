@@ -4,7 +4,6 @@ export async function useMyFetch(request, opts) {
   const { $i18n } = useNuxtApp()
 
   const token = useCookie('PDF_JWT_TOKEN')
-  console.log(token.value)
 
   const reactiveBaseURL = computed(() => {
     return config.public.apiBase + '/' + $i18n.locale.value
@@ -20,57 +19,55 @@ export async function useMyFetch(request, opts) {
     options.headers.set('Authorization', 'Bearer ' + token.value)
   }
 
-  const { data, error } = await useFetch(request, {
-    baseURL: reactiveBaseURL,
-    body: options.body,
-    method: options.method,
-    headers: options.headers,
-  })
-  if (error.value) {
-    if (error.value.statusCode === 401) {
-      alertStore.showAlert({
-        message: `${error.value.statusCode} Unauthorized`,
-        type: 'error',
-      })
-      await navigateTo('/login')
-
-      return error.value.statusCode
-    }
-    if (error.value.statusCode === 403) {
-      alertStore.showAlert({
-        message: `${error.value.statusCode} Forbidden`,
-        type: 'error',
-      })
-      return error.value.statusCode
-    }
-    if (error.value.statusCode === 404) {
-      alertStore.showAlert({
-        message: `${error.value.statusCode} Not Found`,
-        type: 'error',
-      })
-      return error.value.statusCode
-    }
-    if (error.value.statusCode === 500) {
-      alertStore.showAlert({
-        message: `${error.value.statusCode} Internal Server Error`,
-        type: 'error',
-      })
-      return error.value.statusCode
-    }
-    alertStore.showAlert({
-      message: error.value.message,
-      type: 'error',
+  try {
+    const data = await $fetch(request, {
+      baseURL: reactiveBaseURL.value,
+      body: options.body,
+      method: options.method,
+      headers: options.headers,
     })
-    return error.value
+    if (data.errorCode !== 200) {
+      alertStore.showAlert({
+        message: `${data.errorCode} ${data.message}`,
+        type: 'error',
+      })
+    }
+    return data
+  } catch (error) {
+    if (error) {
+      switch (error.statusCode) {
+        case 401:
+          alertStore.showAlert({
+            message: `${error.statusCode} Unauthorized`,
+            type: 'error',
+          })
+          await navigateTo('/login')
+          return error.statusCode
+        case 403:
+          alertStore.showAlert({
+            message: `${error.statusCode} Forbidden`,
+            type: 'error',
+          })
+          return error.statusCode
+        case 404:
+          alertStore.showAlert({
+            message: `${error.statusCode} Not Found`,
+            type: 'error',
+          })
+          return error.statusCode
+        case 500:
+          alertStore.showAlert({
+            message: `${error.statusCode} Internal Server Error`,
+            type: 'error',
+          })
+          return error.statusCode
+        default:
+          alertStore.showAlert({
+            message: error.message,
+            type: 'error',
+          })
+          return error
+      }
+    }
   }
-
-  if (data.value.errorCode === 200) {
-    return data.value
-  }
-
-  alertStore.showAlert({
-    message: `${data.value.errorCode} ${data.value.message}`,
-    type: 'error',
-  })
-  return data.value
 }

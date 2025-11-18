@@ -73,6 +73,7 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     "@pinia/nuxt",
     "pinia-plugin-persistedstate",
+    '@vueuse/nuxt'
   ],
   runtimeConfig: {
     // The private keys which are only available server-side
@@ -81,8 +82,6 @@ export default defineNuxtConfig({
     googleClientId: "123",
     appleClientId: "123",
     turnServerCredential: "123",
-    // 追蹤相關
-    clevertapProjectId: "123",
     // Keys within public are also exposed client-side
     public: {
       version: "1.0.0",
@@ -102,6 +101,8 @@ export default defineNuxtConfig({
       stunServerUrl: "http://localhost:3000",
       turnServerUrl: "http://localhost:3000",
       turnServerUserName: "123",
+      // 追蹤相關
+      clevertapProjectId: "123",
     },
   },
   appConfig: {

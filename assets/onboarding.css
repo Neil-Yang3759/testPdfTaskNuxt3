@@ -1,0 +1,64 @@
+.driver-popover.onboarding-popover {
+    background-color: #000437;
+    color: #ffffff;
+}
+
+.driver-popover.onboarding-popover .driver-popover-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.driver-popover.onboarding-popover .driver-popover-title,
+.driver-popover.onboarding-popover .driver-popover-description,
+.driver-popover.onboarding-popover .driver-popover-progress-text {
+    color: #ffffff;
+}
+
+.driver-popover.onboarding-popover button {
+    background-color: #000437;
+    color: #ffffff;
+    border: 2px solid #000437;
+    text-shadow: none;
+    font-size: 14px;
+    padding: 5px 8px;
+    border-radius: 6px;
+}
+
+.driver-popover.onboarding-popover button:hover {
+    background-color: #000437;
+    color: #ffffff;
+}
+
+.driver-popover.onboarding-popover button:focus {
+    background-color: #000437;
+    color: #ffffff;
+}
+
+.driver-popover.onboarding-popover .driver-popover-navigation-btns {
+    justify-content: flex-end;
+    gap: 3px;
+}
+
+.driver-popover.onboarding-popover .driver-popover-close-btn {
+    color: #9b9b9b;
+}
+
+.driver-popover.onboarding-popover .driver-popover-close-btn:hover {
+    color: #000;
+}
+
+.driver-popover.onboarding-popover .driver-popover-arrow-side-left.driver-popover-arrow {
+    border-left-color: #000437;
+}
+
+.driver-popover.onboarding-popover .driver-popover-arrow-side-right.driver-popover-arrow {
+    border-right-color: #000437;
+}
+
+.driver-popover.onboarding-popover .driver-popover-arrow-side-top.driver-popover-arrow {
+    border-top-color: #000437;
+}
+
+.driver-popover.onboarding-popover .driver-popover-arrow-side-bottom.driver-popover-arrow {
+    border-bottom-color: #000437;
+}

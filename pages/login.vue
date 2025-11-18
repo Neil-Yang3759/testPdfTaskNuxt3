@@ -13,7 +13,7 @@
         </a>
         <p>{{ $t('heading.loginSlogan') }}</p>
       </div>
-      <v-card class="main-card" flat>
+      <v-card class="main-card" width="100%" flat>
         <v-card-text v-if="!show2FAInput" class="pa-0">
           <v-tabs
             v-model="tab"
@@ -409,7 +409,7 @@ const {
   validationSchema: {
     // 不可多出未使用的，submit會沒反應
     account: 'required|email',
-    password: 'required',
+    password: 'required|min:8|max:30',
   },
 })
 const {
@@ -423,7 +423,7 @@ const {
     // 不可多出未使用的，submit會沒反應
     userName: 'required',
     account: 'required|email',
-    password: 'required',
+    password: 'required|min:8|max:30',
     agreePrivacy: 'required',
   },
 })

@@ -1,0 +1,19 @@
+<template>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="13.5"
+    height="1.5"
+    viewBox="0 0 13.5 1.5"
+  >
+    <line
+      id="Line_1304"
+      data-name="Line 1304"
+      x2="12"
+      transform="translate(0.75 0.75)"
+      fill="none"
+      stroke="#008145"
+      stroke-linecap="round"
+      stroke-width="1.5"
+    />
+  </svg>
+</template>
