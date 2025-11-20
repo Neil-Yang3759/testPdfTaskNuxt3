@@ -1,4 +1,5 @@
 export function usePlanApi() {
-    const restrictApi = async () => await useMyFetch(`/plan/restrict`)
-    return { restrictApi };
+  const getRestrictApi = async () => await useMyFetch(`/plan/restrict`)
+
+  return { getRestrictApi }
 }

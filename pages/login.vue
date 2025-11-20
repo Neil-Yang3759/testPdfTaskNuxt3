@@ -13,7 +13,7 @@
         </a>
         <p>{{ $t('heading.loginSlogan') }}</p>
       </div>
-      <v-card class="main-card" width="100%" flat>
+      <v-card class="main-card" max-width="480" width="100%" flat>
         <v-card-text v-if="!show2FAInput" class="pa-0">
           <v-tabs
             v-model="tab"

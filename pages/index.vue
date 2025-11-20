@@ -2,21 +2,34 @@
 definePageMeta({
   layout: 'default',
 })
-import { useWindowScroll } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 
-const { x, y } = useWindowScroll({ behavior: 'smooth' })
+const { t } = useI18n()
+
+const alertStore = useAlertStore()
+const snackbarStore = useSnackbarStore()
 </script>
 
 <template>
-  <div>
-    <div>See scroll values in the lower right corner of the screen.</div>
-    <div class="scroller" />
-    <div class="float">
-      <note class="mb-2"> Scroll value </note>
-      x: {{ x }}<br />
-      y: {{ y }}
-    </div>
-  </div>
-
   <v-btn href="/tasks/create-task">create task</v-btn>
+  <v-btn href="/drawing">drawing</v-btn>
+
+  <v-btn
+    @click="
+      alertStore.showAlert({
+        message: t('message.createTask'),
+        type: 'error',
+      })
+    "
+    >show alert</v-btn
+  >
+  <v-btn
+    @click="
+      snackbarStore.showSnackbar({
+        message: t('message.createTask'),
+        type: 'warning',
+      })
+    "
+    >show snackbar</v-btn
+  >
 </template>

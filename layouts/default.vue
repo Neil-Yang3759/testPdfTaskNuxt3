@@ -438,33 +438,62 @@
     </v-main>
 
     <!-- alert -->
-    <v-snackbar
+    <v-alert
       v-model="alertStore.show"
-      location="top"
       :color="alertStore.type"
-      :timeout="alertStore.timeout"
+      :icon="alertStore.icon"
+      border
+      style="
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        justify-content: center;
+        z-index: 999999;
+      "
+    >
+      {{ alertStore.message }}
+      <v-icon medium class="ml-4" @click="alertStore.closeMessage()">
+        mdi-close
+      </v-icon>
+    </v-alert>
+
+    <!-- snackbar -->
+    <v-snackbar
+      v-model="snackbarStore.show"
+      :timeout="snackbarStore.timeout"
       rounded="lg"
       multi-line
       style="word-break: break-all"
     >
       <v-icon
-        :icon="alertStore.icon"
-        color="white"
+        :icon="snackbarStore.icon"
+        :color="snackbarStore.type"
         variant="text"
         class="mr-2"
       ></v-icon>
-      {{ alertStore.message }}
+      {{ snackbarStore.message }}
 
       <template v-slot:actions>
         <v-btn
+          :color="snackbarStore.type"
+          text
+          @click="snackbarStore.closeMessage()"
+        >
+          {{ $t('button.close') }}
+        </v-btn>
+        <!-- <v-btn
           icon="mdi-close"
           color="white"
           variant="text"
-          @click="alertStore.closeMessage()"
+          @click="snackbarStore.closeMessage()"
         >
-        </v-btn>
+          Close
+        </v-btn> -->
       </template>
     </v-snackbar>
+
+    <messageDialog></messageDialog>
   </v-app>
 </template>
 
@@ -473,7 +502,7 @@ import { useDisplay } from 'vuetify'
 import { useAlertStore } from '@/stores/alert'
 import { useTourStore } from '@/stores/tour'
 
-const { myInfoApi, patchMyInfoApi } = useUserApi()
+const { getMyInfoApi, patchMyInfoApi } = useUserApi()
 const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
@@ -483,6 +512,7 @@ const { smAndDown, mdAndUp } = useDisplay()
 const alertStore = useAlertStore()
 const mainStore = useMainStore()
 const tourStore = useTourStore()
+const snackbarStore = useSnackbarStore()
 
 const showLoading = ref(true)
 const drawer = ref(false)
@@ -624,7 +654,7 @@ async function logout() {
   })
 }
 async function updateMyInfo() {
-  const result = await myInfoApi()
+  const result = await getMyInfoApi()
   if (result && result.body !== null) {
     mainStore.setUserInfo(result.body)
   }

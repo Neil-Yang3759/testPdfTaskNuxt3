@@ -3,8 +3,8 @@ import { ref, computed } from 'vue'
 
 export const useMainStore = defineStore('main', () => {
   // ==================== State ====================
-  const { myInfoApi, patchMyInfoApi } = useUserApi()
-  const { restrictApi } = usePlanApi()
+  const { getMyInfoApi, patchMyInfoApi } = useUserApi()
+  const { getRestrictApi } = usePlanApi()
   const { $i18n } = useNuxtApp()
   const account = ref('')
   const token = ref(null)
@@ -248,12 +248,12 @@ export const useMainStore = defineStore('main', () => {
       token.value = tokenValue.value
       if (!userInfo.value) {
         try {
-          const result = await myInfoApi()
+          const result = await getMyInfoApi()
           setUserInfo(result.body)
           loginSurveyFinished.value = result.body.finishOnboarding
 
           if (!planInfo.value) {
-            const planResult = await restrictApi()
+            const planResult = await getRestrictApi()
             if (planResult.body) {
               planInfo.value = planResult.body
             }
@@ -285,11 +285,11 @@ export const useMainStore = defineStore('main', () => {
       token.value = tokenValue.value
       if (!userInfo.value) {
         try {
-          const result = await myInfoApi()
+          const result = await getMyInfoApi()
           setUserInfo(result.body)
 
           if (!planInfo.value) {
-            const planResult = await restrictApi()
+            const planResult = await getRestrictApi()
             if (planResult.body) {
               planInfo.value = planResult.body
             }
@@ -326,7 +326,7 @@ export const useMainStore = defineStore('main', () => {
         }
 
         if (!planInfo.value) {
-          const result = await restrictApi()
+          const result = await getRestrictApi()
           if (result.body) {
             planInfo.value = result.body
           }

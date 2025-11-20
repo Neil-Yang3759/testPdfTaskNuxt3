@@ -1,4 +1,5 @@
 export async function useMyFetch(request, opts) {
+  const mainStore = useMainStore()
   const alertStore = useAlertStore()
   const config = useRuntimeConfig()
   const { $i18n } = useNuxtApp()
@@ -37,6 +38,7 @@ export async function useMyFetch(request, opts) {
     if (error) {
       switch (error.statusCode) {
         case 401:
+          mainStore.logout()
           alertStore.showAlert({
             message: `${error.statusCode} Unauthorized`,
             type: 'error',
