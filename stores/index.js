@@ -168,11 +168,6 @@ export const useMainStore = defineStore('main', () => {
       useSignerGroup: planInfo.value && planInfo.value.signingGroupCount > 0,
     }
 
-    // return accountDrawerItems.value.map((item) => ({
-    //   ...item,
-    //   disable: item.check.some((c) => c !== '' && !checkRules[c]),
-    // }))
-    console.log(accountDrawerItems.value)
     return accountDrawerItems.value.map((item) => {
       const newItem = { ...item }
       newItem.disable = item.check.some((c) => c !== '' && !checkRules[c])

@@ -1,85 +1,40 @@
 <template>
   <v-app id="appContainer">
-    <v-app-bar
-      id="appToolbar"
-      :clipped-left="true"
-      :clipped-right="true"
-      absolute
-      app
-      dense
-      elevation="0"
-      color="#f8f9fa"
-      :extended="(mode === 0 || mode === 5) && $vuetify.breakpoint.mdAndDown"
-      extension-height="72"
-      outlined
-      style="border: 0; border-bottom: 1px solid #e0e0e0; z-index: 50"
-      :style="{
+    <v-app-bar id="appToolbar" :clipped-left="true" :clipped-right="true" absolute app dense elevation="0"
+      color="#f8f9fa" :extended="(mode === 0 || mode === 5) && $vuetify.breakpoint.mdAndDown" extension-height="72"
+      outlined style="border: 0; border-bottom: 1px solid #e0e0e0; z-index: 50" :style="{
         'box-shadow': mode === 4 ? '0px 3px 6px #00000029 !important' : 'none',
         'z-index': mode === 4 ? '200' : '50',
-      }"
-    >
+      }">
       <v-slide-group class="d-flex align-center" style="width: 100%">
         <!-- show-arrows -->
-        <v-select
-          v-if="mode === 0"
-          v-model="selectId"
-          :items="peopleNames"
-          item-text="name"
-          item-value="id"
-          height="32"
-          background-color="white"
-          solo
-          flat
-          single-line
-          hide-details
-          class="peopleSelect tour-create-task-7"
+        <v-select v-if="mode === 0" v-model="selectId" :items="peopleNames" item-text="name" item-value="id" height="32"
+          background-color="white" solo flat single-line hide-details class="peopleSelect tour-create-task-7"
           :menu-props="{
             auto: true,
             bottom: true,
             offsetY: true,
             zIndex: 200,
             maxHeight: '100%',
-          }"
-        >
+          }">
           <template v-slot:[`selection`]="{ item }">
-            <v-icon :color="getPersonColor(item)" class="mr-2"
-              >mdi-circle-medium</v-icon
-            >
-            <div
-              class="text-body-2 text-truncate"
-              style="max-width: 240px; overflow: hidden"
-            >
+            <v-icon :color="getPersonColor(item)" class="mr-2">mdi-circle-medium</v-icon>
+            <div class="text-body-2 text-truncate" style="max-width: 240px; overflow: hidden">
               {{ item.name }}
             </div>
           </template>
           <template v-slot:[`item`]="{ item }">
-            <v-icon :color="getPersonColor(item)" class="mr-2"
-              >mdi-circle-medium</v-icon
-            >
-            <div
-              class="text-body-2 text-truncate"
-              style="max-width: 240px; overflow: hidden"
-            >
+            <v-icon :color="getPersonColor(item)" class="mr-2">mdi-circle-medium</v-icon>
+            <div class="text-body-2 text-truncate" style="max-width: 240px; overflow: hidden">
               {{ item.name }}
             </div>
           </template>
         </v-select>
         <!-- mode 4 outline -->
-        <v-btn-toggle
-          v-if="mode === 4"
-          v-model="rightDrawerToggle"
-          dense
-          group
-          multiple
-        >
+        <v-btn-toggle v-if="mode === 4" v-model="rightDrawerToggle" dense group multiple>
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                :value="1"
-                text
-                class="toolbarButton collaborate-outline-icon"
-                @click="toggleRightDrawer()"
-              >
+              <v-btn :value="1" text class="toolbarButton collaborate-outline-icon" @click="toggleRightDrawer()">
                 <v-icon size="22"></v-icon>
               </v-btn>
             </template>
@@ -93,43 +48,26 @@
         <v-spacer></v-spacer>
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="previous"
-              text
-              class="toolbarButton d-none d-lg-flex"
-              :class="{
-                'd-flex': mode === 4,
-                'mode4-prev-page': mode === 4,
-              }"
-              :style="mode === 4 ? mode4AppBar : ''"
-            >
-              <v-icon v-if="mode !== 4" size="22"
-                >mdi-arrow-up-circle-outline</v-icon
-              >
+            <v-btn id="previous" text class="toolbarButton d-none d-lg-flex" :class="{
+              'd-flex': mode === 4,
+              'mode4-prev-page': mode === 4,
+            }" :style="mode === 4 ? mode4AppBar : ''">
+              <v-icon v-if="mode !== 4" size="22">mdi-arrow-up-circle-outline</v-icon>
             </v-btn>
           </template>
           <span>
-            <span style="font-size: 12px; color: white"
-              >{{ $t('tooltip.prevPage') }}
+            <span style="font-size: 12px; color: white">{{ $t('tooltip.prevPage') }}
             </span>
             <span style="font-size: 12px; color: #9f9f9f">(Left Arrow)</span>
           </span>
         </tippy>
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="next"
-              text
-              class="toolbarButton d-none d-lg-flex"
-              :class="{
-                'd-flex': mode === 4,
-                'mode4-next-page': mode === 4,
-              }"
-              :style="mode === 4 ? mode4AppBar : ''"
-            >
-              <v-icon v-if="mode !== 4" size="22"
-                >mdi-arrow-down-circle-outline</v-icon
-              >
+            <v-btn id="next" text class="toolbarButton d-none d-lg-flex" :class="{
+              'd-flex': mode === 4,
+              'mode4-next-page': mode === 4,
+            }" :style="mode === 4 ? mode4AppBar : ''">
+              <v-icon v-if="mode !== 4" size="22">mdi-arrow-down-circle-outline</v-icon>
             </v-btn>
           </template>
           <span>
@@ -139,58 +77,31 @@
             <span style="font-size: 12px; color: #9f9f9f">(Right Arrow)</span>
           </span>
         </tippy>
-        <input
-          id="pageNumber"
-          type="number"
-          class="toolbarField pageNumber d-none d-lg-flex ml-1"
-          :class="{
-            'd-flex': mode === 4,
-          }"
-          value="1"
-          size="4"
-          min="1"
-          autocomplete="off"
-          :style="{
+        <input id="pageNumber" type="number" class="toolbarField pageNumber d-none d-lg-flex ml-1" :class="{
+          'd-flex': mode === 4,
+        }" value="1" size="4" min="1" autocomplete="off" :style="{
             width: mode === 4 ? 'auto' : '40px',
-          }"
-        />
-        <span
-          id="numPages"
-          class="toolbarLabel d-none d-lg-flex"
-          :class="{
-            'd-flex': mode === 4,
-          }"
-        ></span>
-        <v-divider
-          v-if="(mode === 0 && $vuetify.breakpoint.lgAndUp) || mode === 4"
-          inset
-          vertical
-          class="mx-1"
-        ></v-divider>
-        <tippy
-          v-if="
-            (mode === 0 && $vuetify.breakpoint.lgAndUp) ||
-            mode === 4 ||
-            mode === 1
-          "
-        >
+          }" />
+        <span id="numPages" class="toolbarLabel d-none d-lg-flex" :class="{
+          'd-flex': mode === 4,
+        }"></span>
+        <v-divider v-if="(mode === 0 && $vuetify.breakpoint.lgAndUp) || mode === 4" inset vertical
+          class="mx-1"></v-divider>
+        <tippy v-if="
+          (mode === 0 && $vuetify.breakpoint.lgAndUp) ||
+          mode === 4 ||
+          mode === 1
+        ">
           <template v-slot:trigger>
-            <v-btn
-              id="undo"
-              text
-              disabled
-              class="toolbarButton rounded-lg mr-1"
-              :class="{
-                'd-none':
-                  (mode !== 0 && mode !== 4) || $vuetify.breakpoint.mdAndDown,
-                'd-flex':
-                  (mode === 0 && $vuetify.breakpoint.lgAndUp) ||
-                  mode === 4 ||
-                  (mode === 1 && showDrawTool),
-                'mode4-undo': mode === 4,
-              }"
-              :style="mode === 4 ? mode4AppBar : ''"
-            >
+            <v-btn id="undo" text disabled class="toolbarButton rounded-lg mr-1" :class="{
+              'd-none':
+                (mode !== 0 && mode !== 4) || $vuetify.breakpoint.mdAndDown,
+              'd-flex':
+                (mode === 0 && $vuetify.breakpoint.lgAndUp) ||
+                mode === 4 ||
+                (mode === 1 && showDrawTool),
+              'mode4-undo': mode === 4,
+            }" :style="mode === 4 ? mode4AppBar : ''">
               <v-icon v-if="mode !== 4" size="22">mdi-undo</v-icon>
             </v-btn>
           </template>
@@ -201,30 +112,21 @@
             <span style="font-size: 12px; color: #9f9f9f">(Ctrl Z)</span>
           </span>
         </tippy>
-        <tippy
-          v-if="
-            (mode === 0 && $vuetify.breakpoint.lgAndUp) ||
-            mode === 4 ||
-            mode === 1
-          "
-        >
+        <tippy v-if="
+          (mode === 0 && $vuetify.breakpoint.lgAndUp) ||
+          mode === 4 ||
+          mode === 1
+        ">
           <template v-slot:trigger>
-            <v-btn
-              id="redo"
-              text
-              disabled
-              class="toolbarButton rounded-lg mr-1"
-              :class="{
-                'd-none':
-                  (mode !== 0 && mode !== 4) || $vuetify.breakpoint.mdAndDown,
-                'd-flex':
-                  (mode === 0 && $vuetify.breakpoint.lgAndUp) ||
-                  mode === 4 ||
-                  (mode === 1 && showDrawTool),
-                'mode4-redo': mode === 4,
-              }"
-              :style="mode === 4 ? mode4AppBar : ''"
-            >
+            <v-btn id="redo" text disabled class="toolbarButton rounded-lg mr-1" :class="{
+              'd-none':
+                (mode !== 0 && mode !== 4) || $vuetify.breakpoint.mdAndDown,
+              'd-flex':
+                (mode === 0 && $vuetify.breakpoint.lgAndUp) ||
+                mode === 4 ||
+                (mode === 1 && showDrawTool),
+              'mode4-redo': mode === 4,
+            }" :style="mode === 4 ? mode4AppBar : ''">
               <v-icon v-if="mode !== 4" size="22">mdi-redo</v-icon>
             </v-btn>
           </template>
@@ -239,15 +141,9 @@
         <v-btn-toggle v-model="eraserToggle" dense group>
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="eraser"
-                text
-                :value="1"
-                class="toolbarButton rounded-lg mr-1 d-none"
-                :class="{
-                  'd-flex': mode === 0 && $vuetify.breakpoint.lgAndUp,
-                }"
-              >
+              <v-btn id="eraser" text :value="1" class="toolbarButton rounded-lg mr-1 d-none" :class="{
+                'd-flex': mode === 0 && $vuetify.breakpoint.lgAndUp,
+              }">
                 <v-icon size="22">mdi-eraser</v-icon>
               </v-btn>
             </template>
@@ -259,23 +155,13 @@
             </span>
           </tippy>
         </v-btn-toggle>
-        <v-divider
-          v-if="(mode === 0 || mode === 5) && $vuetify.breakpoint.lgAndUp"
-          inset
-          vertical
-          class="mx-1"
-        ></v-divider>
+        <v-divider v-if="(mode === 0 || mode === 5) && $vuetify.breakpoint.lgAndUp" inset vertical
+          class="mx-1"></v-divider>
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="copy"
-              text
-              disabled
-              class="toolbarButton rounded-lg mr-1 d-none"
-              :class="{
-                'd-flex': mode === 0 || mode === 5,
-              }"
-            >
+            <v-btn id="copy" text disabled class="toolbarButton rounded-lg mr-1 d-none" :class="{
+              'd-flex': mode === 0 || mode === 5,
+            }">
               <v-icon size="22">mdi-content-copy</v-icon>
             </v-btn>
           </template>
@@ -288,15 +174,9 @@
         </tippy>
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="paste"
-              text
-              disabled
-              class="toolbarButton rounded-lg mr-1 d-none"
-              :class="{
-                'd-flex': mode === 0 || mode === 5,
-              }"
-            >
+            <v-btn id="paste" text disabled class="toolbarButton rounded-lg mr-1 d-none" :class="{
+              'd-flex': mode === 0 || mode === 5,
+            }">
               <v-icon size="22">mdi-content-paste</v-icon>
             </v-btn>
           </template>
@@ -307,26 +187,14 @@
             <span style="font-size: 12px; color: #9f9f9f">(Ctrl V)</span>
           </span>
         </tippy>
-        <v-divider
-          v-if="(mode === 0 || mode === 5) && $vuetify.breakpoint.lgAndUp"
-          inset
-          vertical
-          class="mx-1"
-        ></v-divider>
+        <v-divider v-if="(mode === 0 || mode === 5) && $vuetify.breakpoint.lgAndUp" inset vertical
+          class="mx-1"></v-divider>
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="zoomOut"
-              text
-              class="toolbarButton d-none d-md-block"
-              :class="{
-                'mode4-zoomOut': mode === 4,
-              }"
-              :style="mode === 4 ? mode4AppBar : ''"
-            >
-              <v-icon v-if="mode !== 4" size="22"
-                >mdi-minus-circle-outline</v-icon
-              >
+            <v-btn id="zoomOut" text class="toolbarButton d-none d-md-block" :class="{
+              'mode4-zoomOut': mode === 4,
+            }" :style="mode === 4 ? mode4AppBar : ''">
+              <v-icon v-if="mode !== 4" size="22">mdi-minus-circle-outline</v-icon>
             </v-btn>
           </template>
           <span>
@@ -338,18 +206,10 @@
         </tippy>
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="zoomIn"
-              text
-              class="toolbarButton d-none d-md-block"
-              :class="{
-                'mode4-zoomIn': mode === 4,
-              }"
-              :style="mode === 4 ? mode4AppBar : ''"
-            >
-              <v-icon v-if="mode !== 4" size="22"
-                >mdi-plus-circle-outline</v-icon
-              >
+            <v-btn id="zoomIn" text class="toolbarButton d-none d-md-block" :class="{
+              'mode4-zoomIn': mode === 4,
+            }" :style="mode === 4 ? mode4AppBar : ''">
+              <v-icon v-if="mode !== 4" size="22">mdi-plus-circle-outline</v-icon>
             </v-btn>
           </template>
           <span>
@@ -359,51 +219,30 @@
             <span style="font-size: 12px; color: #9f9f9f">(Ctrl +)</span>
           </span>
         </tippy>
-        <span
-          id="scaleSelectContainer"
-          class="dropdownToolbarButton ml-1"
-          :class="{
-            'd-none': mode === 0 && $vuetify.breakpoint.xsOnly,
-            'd-flex': mode !== 0 || $vuetify.breakpoint.smAndUp,
-          }"
-        >
+        <span id="scaleSelectContainer" class="dropdownToolbarButton ml-1" :class="{
+          'd-none': mode === 0 && $vuetify.breakpoint.xsOnly,
+          'd-flex': mode !== 0 || $vuetify.breakpoint.smAndUp,
+        }">
           <select id="scaleSelect" :style="mode4ScaleSelect">
             <template>
               <!-- pc maximum scale to 400% -->
               <!-- mobile maximum scale to 200% -->
-              <option
-                v-for="(item, index) in scaleOptions.slice(
-                  0,
-                  $vuetify.breakpoint.mdAndDown ? -2 : scaleOptions.length
-                )"
-                :key="`scaleOptions-` + index"
-                :value="item.value"
-              >
-                <div
-                  class="text-body-2 text-truncate"
-                  style="max-width: 100px; overflow: hidden"
-                >
+              <option v-for="(item, index) in scaleOptions.slice(
+                0,
+                $vuetify.breakpoint.mdAndDown ? -2 : scaleOptions.length
+              )" :key="`scaleOptions-` + index" :value="item.value">
+                <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                   {{ item.text }}
                 </div>
               </option>
             </template>
-            <option
-              id="customScaleOption"
-              value="custom"
-              disabled="disabled"
-              hidden="true"
-            ></option>
+            <option id="customScaleOption" value="custom" disabled="disabled" hidden="true"></option>
           </select>
         </span>
         <v-spacer v-if="mode !== 4"></v-spacer>
         <tippy v-show="mode === 3 && canDownload === true">
           <template v-slot:trigger>
-            <v-btn
-              id="download"
-              text
-              class="toolbarButton"
-              @click="downloadFiles()"
-            >
+            <v-btn id="download" text class="toolbarButton" @click="downloadFiles()">
               <v-icon size="22">mdi-download</v-icon>
             </v-btn>
           </template>
@@ -413,36 +252,19 @@
             }}</span>
           </span>
         </tippy>
-        <v-btn
-          v-if="(mode === 0 || mode === 5) && $vuetify.breakpoint.lgAndUp"
-          text
-          class="toolbarButton rounded-lg mr-1 d-none"
-        >
+        <v-btn v-if="(mode === 0 || mode === 5) && $vuetify.breakpoint.lgAndUp" text
+          class="toolbarButton rounded-lg mr-1 d-none">
           <v-icon size="22">mdi-keyboard-outline</v-icon>
         </v-btn>
         <v-spacer v-if="mode === 4"></v-spacer>
-        <v-btn-toggle
-          v-if="(mode === 1 || mode === 3) && !hideAttachment"
-          v-model="attachmentDrawerToggle"
-          dense
-          group
-          multiple
-        >
-          <v-btn
-            :value="1"
-            text
-            class="toolbarButton rounded-lg"
-            @click="toggleAttachmentDrawer()"
-          >
+        <v-btn-toggle v-if="(mode === 1 || mode === 3) && !hideAttachment" v-model="attachmentDrawerToggle" dense group
+          multiple>
+          <v-btn :value="1" text class="toolbarButton rounded-lg" @click="toggleAttachmentDrawer()">
             <img src="/images/tasks/paperclip.png" />
           </v-btn>
-          <div
-            v-show="attachmentTotalCount"
-            class="d-flex align-center justify-center"
-            :style="{
-              'font-size': attachmentTotalCount > 99 ? '11px' : '12px',
-            }"
-            style="
+          <div v-show="attachmentTotalCount" class="d-flex align-center justify-center" :style="{
+            'font-size': attachmentTotalCount > 99 ? '11px' : '12px',
+          }" style="
               position: absolute;
               right: 0px;
               top: 0px;
@@ -455,32 +277,17 @@
               user-select: none; /* standard syntax */
               -webkit-user-select: none; /* for Chrome、Safari */
               -moz-user-select: none; /* for Mozilla、Firefox */
-            "
-            @click="toggleAttachmentDrawer()"
-          >
+            " @click="toggleAttachmentDrawer()">
             {{ attachmentTotalCount > 99 ? '99+' : attachmentTotalCount }}
           </div>
         </v-btn-toggle>
-        <v-btn-toggle
-          v-if="(mode === 1 || mode === 3) && !hideComment"
-          v-model="commentDrawerToggle"
-          dense
-          group
-          multiple
-        >
-          <v-btn
-            :value="1"
-            text
-            class="toolbarButton rounded-lg"
-            @click="toggleCommentDrawer()"
-          >
+        <v-btn-toggle v-if="(mode === 1 || mode === 3) && !hideComment" v-model="commentDrawerToggle" dense group
+          multiple>
+          <v-btn :value="1" text class="toolbarButton rounded-lg" @click="toggleCommentDrawer()">
             <img width="22" height="22" src="/icon/comment.svg" />
           </v-btn>
-          <div
-            v-show="commentTotalCount"
-            class="d-flex align-center justify-center"
-            :style="{ 'font-size': commentTotalCount > 99 ? '11px' : '12px' }"
-            style="
+          <div v-show="commentTotalCount" class="d-flex align-center justify-center"
+            :style="{ 'font-size': commentTotalCount > 99 ? '11px' : '12px' }" style="
               position: absolute;
               right: 0px;
               top: 0px;
@@ -493,113 +300,54 @@
               user-select: none; /* standard syntax */
               -webkit-user-select: none; /* for Chrome、Safari */
               -moz-user-select: none; /* for Mozilla、Firefox */
-            "
-            @click="toggleCommentDrawer()"
-          >
+            " @click="toggleCommentDrawer()">
             {{ commentTotalCount > 99 ? '99+' : commentTotalCount }}
           </div>
         </v-btn-toggle>
-        <v-divider
-          v-if="mode === 0 || mode === 5"
-          inset
-          vertical
-          class="mx-1"
-        ></v-divider>
+        <v-divider v-if="mode === 0 || mode === 5" inset vertical class="mx-1"></v-divider>
         <!-- streaming panel button -->
-        <v-btn-toggle
-          v-if="mode === 4"
-          v-model="streamingDrawerToggle"
-          dense
-          group
-          multiple
-          style="pointer-events: all; cursor: pointer; display: none"
-        >
-          <v-btn
-            :value="1"
-            text
-            class="toolbarButton rounded-sm streaming-icon"
-            style="min-width: auto !important; width: 36px; height: 36px"
-            @click="toggleStreamingDrawer()"
-          >
+        <v-btn-toggle v-if="mode === 4" v-model="streamingDrawerToggle" dense group multiple
+          style="pointer-events: all; cursor: pointer; display: none">
+          <v-btn :value="1" text class="toolbarButton rounded-sm streaming-icon"
+            style="min-width: auto !important; width: 36px; height: 36px" @click="toggleStreamingDrawer()">
           </v-btn>
         </v-btn-toggle>
         <!-- outline panel button -->
-        <span
-          v-if="mode !== 4 && fileList.length > 1"
-          :class="{ 'small-text': $vuetify.breakpoint.mdAndDown }"
-        >
+        <span v-if="mode !== 4 && fileList.length > 1" :class="{ 'small-text': $vuetify.breakpoint.mdAndDown }">
           {{ $t('text.pdfFile', { countText: currentFileIndexText }) }}
         </span>
-        <v-btn-toggle
-          v-if="mode !== 4"
-          v-model="rightDrawerToggle"
-          dense
-          group
-          multiple
-        >
-          <v-btn
-            :value="1"
-            text
-            class="toolbarButton rounded-lg"
-            @click="toggleRightDrawer()"
-          >
+        <v-btn-toggle v-if="mode !== 4" v-model="rightDrawerToggle" dense group multiple>
+          <v-btn :value="1" text class="toolbarButton rounded-lg" @click="toggleRightDrawer()">
             <v-icon size="22">mdi-book-open-outline</v-icon>
           </v-btn>
         </v-btn-toggle>
         <!-- mode 4 control switcher -->
-        <div
-          v-if="mode === 4 && role === 'HOST'"
-          class="d-flex flex-row align-center"
-        >
+        <div v-if="mode === 4 && role === 'HOST'" class="d-flex flex-row align-center">
           <div class="text-subtitle-1 mr-2">
             {{ $t('text.controlby') }}
           </div>
-          <v-select
-            v-model="control"
-            :items="controlOptions"
-            item-text="text"
-            item-value="id"
-            background-color="white"
-            solo
-            flat
-            single-line
-            hide-details
-            height="26"
-            :menu-props="{
+          <v-select v-model="control" :items="controlOptions" item-text="text" item-value="id" background-color="white"
+            solo flat single-line hide-details height="26" :menu-props="{
               auto: true,
               bottom: true,
               offsetY: true,
               zIndex: 200,
-            }"
-            style="
+            }" style="
               pointer-events: all;
               cursor: pointer;
               border: 1px solid #e3e3e3;
               max-width: 108px;
               width: 108px;
-            "
-            @change="$emit('changeControl', control)"
-          >
+            " @change="$emit('changeControl', control)">
           </v-select>
         </div>
       </v-slide-group>
-      <template
-        v-if="(mode === 0 || mode === 5) && $vuetify.breakpoint.mdAndDown"
-        v-slot:extension
-      >
+      <template v-if="(mode === 0 || mode === 5) && $vuetify.breakpoint.mdAndDown" v-slot:extension>
         <div style="max-width: calc(100% - 85px); height: 64px">
-          <v-slide-group
-            v-model="activeMobileButton"
-            show-arrows
-            style="height: 100%"
-          >
+          <v-slide-group v-model="activeMobileButton" show-arrows style="height: 100%">
             <v-slide-item :key="0">
-              <v-btn
-                id="annotateBtn1"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(1)"
-              >
+              <v-btn id="annotateBtn1" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(1)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-signature</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -609,12 +357,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item :key="1">
-              <v-btn
-                id="annotateBtn4"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(4)"
-              >
+              <v-btn id="annotateBtn4" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(4)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-stamper</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -624,12 +368,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item v-show="mode === 0" :key="13">
-              <v-btn
-                id="annotateBtn14"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(14)"
-              >
+              <v-btn id="annotateBtn14" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(14)">
                 <div class="d-flex flex-column align-center">
                   <i class="custom-icon icon-signatureAndStamp"></i>
                   <div class="mobile-toolbar-button-text">
@@ -639,12 +379,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item :key="2">
-              <v-btn
-                id="annotateBtn9"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(9)"
-              >
+              <v-btn id="annotateBtn9" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(9)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-image</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -654,12 +390,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item :key="3">
-              <v-btn
-                id="annotateBtn5"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(5)"
-              >
+              <v-btn id="annotateBtn5" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(5)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-calendar-month</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -669,12 +401,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item :key="4">
-              <v-btn
-                id="annotateBtn2"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(2)"
-              >
+              <v-btn id="annotateBtn2" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(2)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-format-text</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -684,12 +412,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item :key="5">
-              <v-btn
-                id="annotateBtn3"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(3)"
-              >
+              <v-btn id="annotateBtn3" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(3)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-checkbox-marked</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -699,12 +423,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item :key="6">
-              <v-btn
-                id="annotateBtn6"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(6)"
-              >
+              <v-btn id="annotateBtn6" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(6)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-radiobox-marked</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -714,12 +434,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item v-show="mode === 0" :key="7">
-              <v-btn
-                id="annotateBtn7"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(7)"
-              >
+              <v-btn id="annotateBtn7" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(7)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-form-dropdown</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -729,12 +445,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item :key="8">
-              <v-btn
-                id="annotateBtn8"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(8)"
-              >
+              <v-btn id="annotateBtn8" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(8)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-paperclip</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -744,12 +456,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item v-if="!hideB2b2c()" :key="9">
-              <v-btn
-                id="annotateBtn10"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(10)"
-              >
+              <v-btn id="annotateBtn10" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(10)">
                 <div class="d-flex flex-column align-center">
                   <i class="custom-icon icon-signatureBP"></i>
                   <div class="mobile-toolbar-button-text">
@@ -759,12 +467,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item v-if="!hideB2b2c()" :key="10">
-              <v-btn
-                id="annotateBtn11"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(11)"
-              >
+              <v-btn id="annotateBtn11" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(11)">
                 <div class="d-flex flex-column align-center">
                   <i class="custom-icon icon-signatureBO"></i>
                   <div class="mobile-toolbar-button-text">
@@ -774,12 +478,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item v-if="!hideB2b2c()" :key="11">
-              <v-btn
-                id="annotateBtn12"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(12)"
-              >
+              <v-btn id="annotateBtn12" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(12)">
                 <div class="d-flex flex-column align-center">
                   <i class="custom-icon icon-stampBP"></i>
                   <div class="mobile-toolbar-button-text">
@@ -789,12 +489,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item v-if="!hideB2b2c()" :key="12">
-              <v-btn
-                id="annotateBtn13"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(13)"
-              >
+              <v-btn id="annotateBtn13" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(13)">
                 <div class="d-flex flex-column align-center">
                   <i class="custom-icon icon-stampBO"></i>
                   <div class="mobile-toolbar-button-text">
@@ -804,12 +500,8 @@
               </v-btn>
             </v-slide-item>
             <v-slide-item v-show="mode === 0" :key="15">
-              <v-btn
-                id="annotateBtn15"
-                text
-                class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
-                @click="addAnnotateMB(15)"
-              >
+              <v-btn id="annotateBtn15" text class="toolbarButton mobile-toolbar-button rounded-lg mr-2"
+                @click="addAnnotateMB(15)">
                 <div class="d-flex flex-column align-center">
                   <v-icon size="22">mdi-message-draw</v-icon>
                   <div class="mobile-toolbar-button-text">
@@ -821,46 +513,20 @@
           </v-slide-group>
         </div>
         <v-divider v-show="mode !== 5" inset vertical class="mx-1"></v-divider>
-        <v-btn
-          v-show="mode !== 5"
-          id="undo-mobile"
-          text
-          disabled
-          class="toolbarButton rounded-lg mr-1"
-        >
+        <v-btn v-show="mode !== 5" id="undo-mobile" text disabled class="toolbarButton rounded-lg mr-1">
           <v-icon size="22">mdi-undo</v-icon>
         </v-btn>
-        <v-btn
-          v-show="mode !== 5"
-          id="redo-mobile"
-          text
-          disabled
-          class="toolbarButton rounded-lg mr-1"
-        >
+        <v-btn v-show="mode !== 5" id="redo-mobile" text disabled class="toolbarButton rounded-lg mr-1">
           <v-icon size="22">mdi-redo</v-icon>
         </v-btn>
       </template>
     </v-app-bar>
 
     <!-- mode 0 left -->
-    <v-navigation-drawer
-      v-if="mode === 0 || mode === 5"
-      id="leftDrawerContainer"
-      v-model="leftDrawer"
-      :clipped="true"
-      absolute
-      app
-      color="#f8f9fa"
-      touchless
-      floating
-      style="height: 100%; border-right: 1px solid #e0e0e0; z-index: 200"
-    >
-      <v-tabs
-        v-model="toolSet"
-        background-color="rgb(248, 249, 250)"
-        vertical
-        style="height: 100%"
-      >
+    <v-navigation-drawer v-if="mode === 0 || mode === 5" id="leftDrawerContainer" v-model="leftDrawer" :clipped="true"
+      absolute app color="#f8f9fa" touchless floating
+      style="height: 100%; border-right: 1px solid #e0e0e0; z-index: 200">
+      <v-tabs v-model="toolSet" background-color="rgb(248, 249, 250)" vertical style="height: 100%">
         <tippy placement="right">
           <template v-slot:trigger>
             <v-tab style="padding: 0 8px; min-width: 48px; max-width: 48px">
@@ -876,10 +542,7 @@
         <v-divider class="mx-2"></v-divider>
         <tippy placement="right">
           <template v-slot:trigger>
-            <v-tab
-              :hidden="hideB2b2c()"
-              style="padding: 0 8px; min-width: 48px; max-width: 48px"
-            >
+            <v-tab :hidden="hideB2b2c()" style="padding: 0 8px; min-width: 48px; max-width: 48px">
               <SvgIconCloudCertificate :active="toolSet === 1" />
             </v-tab>
           </template>
@@ -892,10 +555,7 @@
         <v-divider v-if="mode === 0" class="mx-2"></v-divider>
         <tippy placement="right">
           <template v-slot:trigger>
-            <v-tab
-              :hidden="mode !== 0"
-              style="padding: 0 8px; min-width: 48px; max-width: 48px"
-            >
+            <v-tab :hidden="mode !== 0" style="padding: 0 8px; min-width: 48px; max-width: 48px">
               <v-icon> mdi-square-edit-outline </v-icon>
             </v-tab>
           </template>
@@ -932,11 +592,7 @@
                   }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item
-                v-show="mode === 0"
-                id="signatureAndStampButton"
-                class="mx-2"
-              >
+              <v-list-item v-show="mode === 0" id="signatureAndStampButton" class="mx-2">
                 <v-list-item-action class="mr-6">
                   <i class="custom-icon icon-signatureAndStamp"></i>
                 </v-list-item-action>
@@ -1070,11 +726,8 @@
                   <i class="custom-icon icon-signatureBP"></i>
                 </v-list-item-action>
                 <v-list-item-content>
-                  <v-list-item-title
-                    class="drawerListItem"
-                    :class="{ 'small-text': isEn }"
-                    >{{ $t('button.signatureBP') }}</v-list-item-title
-                  >
+                  <v-list-item-title class="drawerListItem" :class="{ 'small-text': isEn }">{{ $t('button.signatureBP')
+                    }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item id="signatureBOButton" class="mx-2">
@@ -1082,11 +735,8 @@
                   <i class="custom-icon icon-signatureBO"></i>
                 </v-list-item-action>
                 <v-list-item-content>
-                  <v-list-item-title
-                    class="drawerListItem"
-                    :class="{ 'small-text': isEn }"
-                    >{{ $t('button.signatureBO') }}</v-list-item-title
-                  >
+                  <v-list-item-title class="drawerListItem" :class="{ 'small-text': isEn }">{{ $t('button.signatureBO')
+                    }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item id="stampBPButton" class="mx-2">
@@ -1094,11 +744,8 @@
                   <i class="custom-icon icon-stampBP"></i>
                 </v-list-item-action>
                 <v-list-item-content>
-                  <v-list-item-title
-                    class="drawerListItem"
-                    :class="{ 'small-text': isEn }"
-                    >{{ $t('button.stampBP') }}</v-list-item-title
-                  >
+                  <v-list-item-title class="drawerListItem" :class="{ 'small-text': isEn }">{{ $t('button.stampBP')
+                    }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item id="stampBOButton" class="mx-2">
@@ -1106,11 +753,8 @@
                   <i class="custom-icon icon-stampBO"></i>
                 </v-list-item-action>
                 <v-list-item-content>
-                  <v-list-item-title
-                    class="drawerListItem"
-                    :class="{ 'small-text': isEn }"
-                    >{{ $t('button.stampBO') }}</v-list-item-title
-                  >
+                  <v-list-item-title class="drawerListItem" :class="{ 'small-text': isEn }">{{ $t('button.stampBO')
+                    }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
@@ -1179,52 +823,25 @@
     </v-navigation-drawer>
 
     <!-- mode 0-3 right -->
-    <v-navigation-drawer
-      v-if="mode !== 4"
-      id="rightDrawerContainer"
-      v-model="rightDrawer"
-      :clipped="true"
-      :absolute="!$vuetify.breakpoint.mdAndDown"
-      :fixed="$vuetify.breakpoint.mdAndDown"
-      app
-      right
-      width="240"
-      color="#f8f9fa"
-      touchless
-      floating
-      hide-overlay
-      style="height: 100%; border-left: 1px solid #e0e0e0; z-index: 200"
-    >
-      <div
-        style="display: flex; flex-direction: column; width: 100%; height: 100%"
-      >
+    <v-navigation-drawer v-if="mode !== 4" id="rightDrawerContainer" v-model="rightDrawer" :clipped="true"
+      :absolute="!$vuetify.breakpoint.mdAndDown" :fixed="$vuetify.breakpoint.mdAndDown" app right width="240"
+      color="#f8f9fa" touchless floating hide-overlay
+      style="height: 100%; border-left: 1px solid #e0e0e0; z-index: 200">
+      <div style="display: flex; flex-direction: column; width: 100%; height: 100%">
         <div v-if="fileList !== null && fileList.length > 1" id="multifileView">
           <v-list-item>
             <v-list-item-content>
               <v-subheader class="text-subtitle-2">
                 {{ $t('heading.document') }}
               </v-subheader>
-              <v-select
-                v-model="selectedFile"
-                :items="fileList"
-                item-text="name"
-                item-value="id"
-                height="32"
-                background-color="white"
-                solo
-                flat
-                single-line
-                hide-details
-                class="peopleSelect"
-                :menu-props="{
+              <v-select v-model="selectedFile" :items="fileList" item-text="name" item-value="id" height="32"
+                background-color="white" solo flat single-line hide-details class="peopleSelect" :menu-props="{
                   auto: true,
                   bottom: true,
                   offsetY: true,
                   zIndex: '203 !important',
                   maxHeight: '100%',
-                }"
-                @change="changeFile"
-              >
+                }" @change="changeFile">
               </v-select>
             </v-list-item-content>
           </v-list-item>
@@ -1236,19 +853,12 @@
             <v-list height="100%" width="100%">
               <v-list-item dense>
                 <v-list-item-content style="flex: none">
-                  <div
-                    id="selectionViewTitle"
-                    class="text-subtitle-1 align-center d-flex"
-                  ></div>
+                  <div id="selectionViewTitle" class="text-subtitle-1 align-center d-flex"></div>
                 </v-list-item-content>
                 <v-spacer></v-spacer>
                 <tippy>
                   <template v-slot:trigger>
-                    <v-btn
-                      id="deleteButton"
-                      text
-                      style="padding: 0 8px; min-width: 48px"
-                    >
+                    <v-btn id="deleteButton" text style="padding: 0 8px; min-width: 48px">
                       <v-icon size="18">mdi-delete</v-icon>
                     </v-btn>
                   </template>
@@ -1256,101 +866,52 @@
                     <span style="font-size: 12px; color: white">{{
                       $t('tooltip.deleteFields')
                     }}</span>
-                    <span style="font-size: 12px; color: #9f9f9f"
-                      >(Delete)</span
-                    >
+                    <span style="font-size: 12px; color: #9f9f9f">(Delete)</span>
                   </span>
                 </tippy>
               </v-list-item>
               <v-divider></v-divider>
-              <v-expansion-panels
-                :value="[
-                  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-                ]"
-                accordion
-                multiple
-              >
-                <v-expansion-panel
-                  id="assgineeContainer"
-                  :key="0"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.signers') }}</v-expansion-panel-header
-                  >
+              <v-expansion-panels :value="[
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+              ]" accordion multiple>
+                <v-expansion-panel id="assgineeContainer" :key="0" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.signers')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-select
-                      v-model="annotateSelectId"
-                      :items="peopleNames"
-                      item-text="name"
-                      item-value="id"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 240px; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select v-model="annotateSelectId" :items="peopleNames" item-text="name" item-value="id"
+                      height="32" background-color="white" solo flat single-line hide-details
+                      style="max-width: 240px; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      :disabled="!!selection.prefill"
-                      @change="onAnnotateSelectIdChange"
-                    >
+                      }" :disabled="!!selection.prefill" @change="onAnnotateSelectIdChange">
                       <template v-slot:[`selection`]="{ item }">
-                        <v-icon :color="getPersonColor(item)" class="mr-2"
-                          >mdi-circle-medium</v-icon
-                        >
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 240px; overflow: hidden"
-                        >
+                        <v-icon :color="getPersonColor(item)" class="mr-2">mdi-circle-medium</v-icon>
+                        <div class="text-body-2 text-truncate" style="max-width: 240px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <v-icon :color="getPersonColor(item)" class="mr-2"
-                          >mdi-circle-medium</v-icon
-                        >
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 240px; overflow: hidden"
-                        >
+                        <v-icon :color="getPersonColor(item)" class="mr-2">mdi-circle-medium</v-icon>
+                        <div class="text-body-2 text-truncate" style="max-width: 240px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
-                    <v-checkbox
-                      v-model="selection.required"
-                      hide-details
-                      dense
-                      class="requiredButton text-body-2 mt-4"
-                      :disabled="[9, 10, 11, 12, 14].includes(selection.type)"
-                      @change="changeRequired()"
-                    >
+                    <v-checkbox v-model="selection.required" hide-details dense class="requiredButton text-body-2 mt-4"
+                      :disabled="[9, 10, 11, 12, 14].includes(selection.type)" @change="changeRequired()">
                       <template v-slot:label>
                         <div class="text-subtitle-2 black--text">
                           {{ $t('label.requiredField') }}
                         </div>
                       </template>
                     </v-checkbox>
-                    <v-checkbox
-                      v-model="selection.readonly"
-                      class="readonlyButton text-body-2 mt-2"
-                      hide-details
-                      dense
-                      :disabled="
-                        selection.type === 4 &&
+                    <v-checkbox v-model="selection.readonly" class="readonlyButton text-body-2 mt-2" hide-details dense
+                      :disabled="selection.type === 4 &&
                         selection.dateRange === 'signDay'
-                      "
-                      @change="changeReadOnly()"
-                    >
+                        " @change="changeReadOnly()">
                       <template v-slot:label>
                         <div class="text-subtitle-2 black--text">
                           {{ $t('label.readOnly') }}
@@ -1359,117 +920,62 @@
                     </v-checkbox>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="formatContainer"
-                  :key="1"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.format') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="formatContainer" :key="1" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.format')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-select
-                      id="fontFamilySelect"
-                      v-model="selection.fontFamily"
-                      :items="fontFamilyList"
-                      item-text="name"
-                      item-value="value"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select id="fontFamilySelect" v-model="selection.fontFamily" :items="fontFamilyList"
+                      item-text="name" item-value="value" height="32" background-color="white" solo flat single-line
+                      hide-details style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      @change="changeSelectionFont"
-                    >
+                      }" @change="changeSelectionFont">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 140px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 140px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 140px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 140px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
                     <v-row class="mt-2" no-gutters>
                       <v-col cols="5" class="d-flex">
-                        <v-select
-                          id="fontSizeSelect"
-                          v-model="selection.fontSize"
-                          :items="fontSizeList"
-                          item-text="name"
-                          item-value="value"
-                          height="36"
-                          background-color="white"
-                          solo
-                          flat
-                          single-line
-                          hide-details
-                          style="max-width: 100px; border: 1px solid #dfe1e6"
-                          :menu-props="{
+                        <v-select id="fontSizeSelect" v-model="selection.fontSize" :items="fontSizeList"
+                          item-text="name" item-value="value" height="36" background-color="white" solo flat single-line
+                          hide-details style="max-width: 100px; border: 1px solid #dfe1e6" :menu-props="{
                             auto: true,
                             bottom: true,
                             offsetY: true,
                             zIndex: 200,
                             maxHeight: '100%',
-                          }"
-                          @change="changeSelectionFont"
-                        >
+                          }" @change="changeSelectionFont">
                           <template v-slot:[`selection`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item.name }}
                             </div>
                           </template>
                           <template v-slot:[`item`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item.name }}
                             </div>
                           </template>
                         </v-select>
                       </v-col>
                       <v-col cols="7" class="d-flex px-1">
-                        <v-btn-toggle
-                          id="fontWeightToggle"
-                          v-model="selection.fontWeight"
-                          dense
-                          group
-                          @change="changeSelectionFont"
-                        >
+                        <v-btn-toggle id="fontWeightToggle" v-model="selection.fontWeight" dense group
+                          @change="changeSelectionFont">
                           <v-btn value="bold" text small>
                             <v-icon>mdi-format-bold</v-icon>
                           </v-btn>
                         </v-btn-toggle>
-                        <v-btn-toggle
-                          id="fontStyleToggle"
-                          v-model="selection.fontStyle"
-                          dense
-                          group
-                          @change="changeSelectionFont"
-                        >
+                        <v-btn-toggle id="fontStyleToggle" v-model="selection.fontStyle" dense group
+                          @change="changeSelectionFont">
                           <v-btn value="italic" text small>
                             <v-icon>mdi-format-italic</v-icon>
                           </v-btn>
@@ -1479,30 +985,15 @@
                     <v-row class="mt-2" no-gutters>
                       <v-col cols="12" class="d-flex">
                         <!-- text align -->
-                        <v-btn-toggle
-                          id="textAlignToggle"
-                          v-model="selection.textAlign"
-                          mandatory
-                          dense
-                          class="textAlignButton text-body-2"
-                          @change="changeTextAlign()"
-                        >
-                          <v-btn
-                            value="left"
-                            :disabled="selection?.textDirection"
-                          >
+                        <v-btn-toggle id="textAlignToggle" v-model="selection.textAlign" mandatory dense
+                          class="textAlignButton text-body-2" @change="changeTextAlign()">
+                          <v-btn value="left" :disabled="selection?.textDirection">
                             <v-icon>mdi-format-align-left</v-icon>
                           </v-btn>
-                          <v-btn
-                            value="center"
-                            :disabled="selection?.textDirection"
-                          >
+                          <v-btn value="center" :disabled="selection?.textDirection">
                             <v-icon>mdi-format-align-center</v-icon>
                           </v-btn>
-                          <v-btn
-                            value="right"
-                            :disabled="selection?.textDirection"
-                          >
+                          <v-btn value="right" :disabled="selection?.textDirection">
                             <v-icon>mdi-format-align-right</v-icon>
                           </v-btn>
                         </v-btn-toggle>
@@ -1510,33 +1001,17 @@
                     </v-row>
                     <v-menu offset-y min-width="auto" z-index="201">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          height="36"
-                          text
-                          class="mt-2"
-                          style="
+                        <v-btn height="36" text class="mt-2" style="
                             max-width: 100%;
                             border: 1px solid #dfe1e6;
                             background: white;
-                          "
-                          v-bind="attrs"
-                          v-on="on"
-                        >
-                          <v-row
-                            align="center"
-                            class="flex-column pa-2"
-                            justify="center"
-                          >
+                          " v-bind="attrs" v-on="on">
+                          <v-row align="center" class="flex-column pa-2" justify="center">
                             <v-icon class="cols 12">
                               mdi-format-color-text
                             </v-icon>
-                            <v-sheet
-                              tile
-                              style="margin-top: -4px"
-                              height="4"
-                              width="26"
-                              :color="selection.textColor"
-                            ></v-sheet>
+                            <v-sheet tile style="margin-top: -4px" height="4" width="26"
+                              :color="selection.textColor"></v-sheet>
                           </v-row>
                           <div class="text-body-2 ml-4">
                             {{ $t('text.textColor') }}
@@ -1545,79 +1020,43 @@
                           <v-icon class="ml-2"> mdi-menu-down </v-icon>
                         </v-btn>
                       </template>
-                      <div
-                        id="textColorPanel"
-                        class="d-flex flex-column justify-center align-center"
-                        style="
+                      <div id="textColorPanel" class="d-flex flex-column justify-center align-center" style="
                           padding: 9px;
                           background-color: white;
                           box-shadow: 0px 3px 6px #00000029;
-                        "
-                      >
+                        ">
                         <p class="text-body-2">{{ $t('text.textColor') }}</p>
                         <div class="color" style="margin: unset">
-                          <div
-                            v-for="(row, index) in colorArr"
-                            :key="'row' + index"
-                            class="d-flex"
-                          >
-                            <v-btn
-                              v-for="(color, idx) in row"
-                              :key="'color' + idx"
-                              style="
+                          <div v-for="(row, index) in colorArr" :key="'row' + index" class="d-flex">
+                            <v-btn v-for="(color, idx) in row" :key="'color' + idx" style="
                                 width: 40px;
                                 height: 35px;
                                 cursor: pointer;
                                 border-radius: 0px;
-                              "
-                              :style="{ 'background-color': color }"
-                              @click="changeTextColor(color)"
-                            ></v-btn>
+                              " :style="{ 'background-color': color }" @click="changeTextColor(color)"></v-btn>
                           </div>
                         </div>
                       </div>
                     </v-menu>
                     <!-- select text input direction , default false as horizontal , true as vertical -->
                     <!-- text direction -->
-                    <v-row
-                      v-show="
-                        selection.type === 1 ||
-                        (selection.type === 4 && selection.dateEra === 'roc')
-                      "
-                      class="mt-2"
-                      no-gutters
-                    >
+                    <v-row v-show="selection.type === 1 ||
+                      (selection.type === 4 && selection.dateEra === 'roc')
+                      " class="mt-2" no-gutters>
                       <v-col cols="12" class="d-flex">
-                        <v-btn-toggle
-                          v-model="selection.textDirection"
-                          mandatory
-                          dense
-                          class="textDirectionButton text-body-2"
-                          @change="changeTextDirection()"
-                        >
-                          <v-btn
-                            v-for="item in directionList"
-                            :key="item.name"
-                            :value="item.value"
-                          >
+                        <v-btn-toggle v-model="selection.textDirection" mandatory dense
+                          class="textDirectionButton text-body-2" @change="changeTextDirection()">
+                          <v-btn v-for="item in directionList" :key="item.name" :value="item.value">
                             <v-icon>{{ item.icon }}</v-icon>
                           </v-btn>
                         </v-btn-toggle>
                       </v-col>
                     </v-row>
                     <!-- select text input single line or multiple, not for prefill and text input only -->
-                    <v-checkbox
-                      v-show="selection.type === 1"
-                      v-model="selection.singleLine"
-                      hide-details
-                      dense
-                      class="singleLineButton text-body-2 mt-4"
-                      :disabled="
-                        [9, 10, 11, 12].includes(selection.type) ||
+                    <v-checkbox v-show="selection.type === 1" v-model="selection.singleLine" hide-details dense
+                      class="singleLineButton text-body-2 mt-4" :disabled="[9, 10, 11, 12].includes(selection.type) ||
                         selection.textDirection
-                      "
-                      @change="changeSingleLine()"
-                    >
+                        " @change="changeSingleLine()">
                       <template v-slot:label>
                         <div class="text-subtitle-2 black--text">
                           {{ $t('label.singleLine') }}
@@ -1626,58 +1065,29 @@
                     </v-checkbox>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dateFormatContainer"
-                  :key="2"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.dateFormat') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dateFormatContainer" :key="2" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.dateFormat')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
                     <v-tooltip bottom z-index="200">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-select
-                          id="dateFormatSelect"
-                          v-model="selection.dateFormat"
-                          :items="dateFormatListFilter"
-                          item-text="name"
-                          item-value="name"
-                          height="32"
-                          background-color="white"
-                          solo
-                          flat
-                          single-line
-                          hide-details
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          :menu-props="{
+                        <v-select id="dateFormatSelect" v-model="selection.dateFormat" :items="dateFormatListFilter"
+                          item-text="name" item-value="name" height="32" background-color="white" solo flat single-line
+                          hide-details style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                             auto: true,
                             bottom: true,
                             offsetY: true,
                             zIndex: 200,
                             maxHeight: '100%',
-                          }"
-                          v-bind="attrs"
-                          v-on="on"
-                          @change="changeDateFormat"
-                        >
+                          }" v-bind="attrs" v-on="on" @change="changeDateFormat">
                           <template v-slot:[`selection`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                              v-bind="attrs"
-                              v-on="on"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden"
+                              v-bind="attrs" v-on="on">
                               {{ item.name }}
                             </div>
                           </template>
                           <template v-slot:[`item`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item.name }}
                             </div>
                           </template>
@@ -1691,114 +1101,51 @@
                     </v-tooltip>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="textContainer"
-                  :key="3"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.textDefault') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="textContainer" :key="3" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.textDefault')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-textarea
-                      v-if="!selection.singleLine"
-                      v-model="selection.text"
-                      min-height="80"
-                      label=""
-                      background-color="white"
-                      solo
-                      flat
-                      hide-details
-                      :placeholder="$t('placeholder.addText')"
-                      class="text-subtitle-2 text-input"
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      @input="changeTextarea"
-                    ></v-textarea>
-                    <v-textarea
-                      v-else
-                      v-model="selection.text"
-                      min-height="80"
-                      label=""
-                      background-color="white"
-                      solo
-                      flat
-                      hide-details
-                      :placeholder="$t('placeholder.addText')"
-                      class="text-subtitle-2 text-input"
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      @input="changeTextarea"
-                      @keydown.enter.prevent
-                    ></v-textarea>
+                    <v-textarea v-if="!selection.singleLine" v-model="selection.text" min-height="80" label=""
+                      background-color="white" solo flat hide-details :placeholder="$t('placeholder.addText')"
+                      class="text-subtitle-2 text-input" style="max-width: 100%; border: 1px solid #dfe1e6"
+                      @input="changeTextarea"></v-textarea>
+                    <v-textarea v-else v-model="selection.text" min-height="80" label="" background-color="white" solo
+                      flat hide-details :placeholder="$t('placeholder.addText')" class="text-subtitle-2 text-input"
+                      style="max-width: 100%; border: 1px solid #dfe1e6" @input="changeTextarea"
+                      @keydown.enter.prevent></v-textarea>
                     <div class="d-flex flex-row align-center mt-2">
-                      <v-text-field
-                        v-model.number="selection.maxlength"
-                        type="number"
-                        label=""
-                        background-color="white"
-                        solo
-                        flat
-                        hide-details
-                        class="text-subtitle-2 mr-2"
-                        style="max-width: 100px; border: 1px solid #dfe1e6"
-                        @keydown.stop
-                        @change="changeMaxlength"
-                      ></v-text-field>
+                      <v-text-field v-model.number="selection.maxlength" type="number" label="" background-color="white"
+                        solo flat hide-details class="text-subtitle-2 mr-2"
+                        style="max-width: 100px; border: 1px solid #dfe1e6" @keydown.stop
+                        @change="changeMaxlength"></v-text-field>
                       <div class="text-subtitle-2">
                         {{ $t('label.charLimit') }}
                       </div>
                     </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="checkboxSizeContainer"
-                  key="15"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.checkboxSize') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="checkboxSizeContainer" key="15" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.checkboxSize')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
                     <template>
                       <div class="d-flex flex-row align-center">
-                        <v-select
-                          id="checkboxSizeSelect"
-                          v-model="selection.originFontSize"
-                          :items="boxSizeList"
-                          item-text="name"
-                          item-value="value"
-                          height="32"
-                          background-color="white"
-                          solo
-                          flat
-                          single-line
-                          hide-details
-                          style="max-width: 120px; border: 1px solid #dfe1e6"
-                          :menu-props="{
+                        <v-select id="checkboxSizeSelect" v-model="selection.originFontSize" :items="boxSizeList"
+                          item-text="name" item-value="value" height="32" background-color="white" solo flat single-line
+                          hide-details style="max-width: 120px; border: 1px solid #dfe1e6" :menu-props="{
                             auto: true,
                             bottom: true,
                             offsetY: true,
                             zIndex: 200,
                             maxHeight: '100%',
-                          }"
-                          @change="changeSelectionFont"
-                        >
+                          }" @change="changeSelectionFont">
                           <template v-slot:[`selection`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item.name }}
                             </div>
                           </template>
                           <template v-slot:[`item`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item.name }}
                             </div>
                           </template>
@@ -1807,225 +1154,115 @@
                     </template>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="checkboxContainer"
-                  :key="4"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.checkboxValue') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="checkboxContainer" :key="4" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.checkboxValue')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
                     <template>
-                      <div
-                        v-for="(item, index) in checkboxGroup"
-                        :key="index"
-                        class="d-flex flex-row align-center mt-2"
-                      >
-                        <v-checkbox
-                          v-model="item.selected"
-                          hide-details
-                          dense
-                          class="mr-2 mt-0"
-                          @change="changeCheckboxSelected"
-                        ></v-checkbox>
-                        <v-text-field
-                          v-model="item.label"
-                          label=""
-                          background-color="white"
-                          solo
-                          flat
-                          hide-details
-                          maxlength="40"
-                          :placeholder="$t('placeholder.addText')"
-                          class="text-subtitle-2"
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          @keydown.stop
-                          @focus="focusCheckboxLabel(index)"
-                          @blur="blurCheckboxLabel(index)"
-                        ></v-text-field>
+                      <div v-for="(item, index) in checkboxGroup" :key="index"
+                        class="d-flex flex-row align-center mt-2">
+                        <v-checkbox v-model="item.selected" hide-details dense class="mr-2 mt-0"
+                          @change="changeCheckboxSelected"></v-checkbox>
+                        <v-text-field v-model="item.label" label="" background-color="white" solo flat hide-details
+                          maxlength="40" :placeholder="$t('placeholder.addText')" class="text-subtitle-2"
+                          style="max-width: 100%; border: 1px solid #dfe1e6" @keydown.stop
+                          @focus="focusCheckboxLabel(index)" @blur="blurCheckboxLabel(index)"></v-text-field>
                       </div>
                     </template>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="checkboxRuleContainer"
-                  :key="5"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{
-                      $t('heading.checkboxGrpRules')
-                    }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="checkboxRuleContainer" :key="5" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{
+                    $t('heading.checkboxGrpRules')
+                  }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-select
-                      v-model="ruleId"
-                      :items="ruleList"
-                      item-text="name"
-                      item-value="id"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select v-model="ruleId" :items="ruleList" item-text="name" item-value="id" height="32"
+                      background-color="white" solo flat single-line hide-details
+                      style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      class="mt-2"
-                      @change="changeRule"
-                    >
+                      }" class="mt-2" @change="changeRule">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 110px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 110px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 110px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 110px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
                     <div v-if="ruleId === 0">
-                      <v-select
-                        v-model="minimum"
-                        :items="
-                          Array(checkboxGroup.length + 1)
-                            .fill()
-                            .map((x, index) => index)
-                        "
-                        height="32"
-                        background-color="white"
-                        solo
-                        flat
-                        single-line
-                        hide-details
-                        style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :menu-props="{
+                      <v-select v-model="minimum" :items="Array(checkboxGroup.length + 1)
+                          .fill()
+                          .map((x, index) => index)
+                        " height="32" background-color="white" solo flat single-line hide-details
+                        style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                           auto: true,
                           bottom: true,
                           offsetY: true,
                           zIndex: 200,
                           maxHeight: '100%',
-                        }"
-                        class="mt-2"
-                        @change="setAtLeastRule"
-                      >
+                        }" class="mt-2" @change="setAtLeastRule">
                         <template v-slot:[`selection`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                         <template v-slot:[`item`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                       </v-select>
                     </div>
                     <div v-else-if="ruleId === 1">
-                      <v-select
-                        v-model="maximum"
-                        :items="
-                          Array(checkboxGroup.length)
-                            .fill()
-                            .map((x, index) => index + 1)
-                        "
-                        height="32"
-                        background-color="white"
-                        solo
-                        flat
-                        single-line
-                        hide-details
-                        style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :menu-props="{
+                      <v-select v-model="maximum" :items="Array(checkboxGroup.length)
+                          .fill()
+                          .map((x, index) => index + 1)
+                        " height="32" background-color="white" solo flat single-line hide-details
+                        style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                           auto: true,
                           bottom: true,
                           offsetY: true,
                           zIndex: 200,
                           maxHeight: '100%',
-                        }"
-                        class="mt-2"
-                        @change="setAtMostRule"
-                      >
+                        }" class="mt-2" @change="setAtMostRule">
                         <template v-slot:[`selection`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                         <template v-slot:[`item`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                       </v-select>
                     </div>
                     <div v-else-if="ruleId === 2">
-                      <v-select
-                        v-model="maximum"
-                        :items="
-                          Array(checkboxGroup.length)
-                            .fill()
-                            .map((x, index) => index + 1)
-                        "
-                        height="32"
-                        background-color="white"
-                        solo
-                        flat
-                        single-line
-                        hide-details
-                        style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :menu-props="{
+                      <v-select v-model="maximum" :items="Array(checkboxGroup.length)
+                          .fill()
+                          .map((x, index) => index + 1)
+                        " height="32" background-color="white" solo flat single-line hide-details
+                        style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                           auto: true,
                           bottom: true,
                           offsetY: true,
                           zIndex: 200,
                           maxHeight: '100%',
-                        }"
-                        class="mt-2"
-                        @change="setExactlyRule"
-                      >
+                        }" class="mt-2" @change="setExactlyRule">
                         <template v-slot:[`selection`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                         <template v-slot:[`item`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
@@ -2036,42 +1273,24 @@
                         <div class="text-subtitle-2" style="min-width: 100px">
                           {{ $t('label.minimum') }}
                         </div>
-                        <v-select
-                          v-model="minimum"
-                          :items="
-                            Array(checkboxGroup.length + 1)
-                              .fill()
-                              .map((x, index) => index)
-                          "
-                          height="32"
-                          background-color="white"
-                          solo
-                          flat
-                          single-line
-                          hide-details
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          :menu-props="{
+                        <v-select v-model="minimum" :items="Array(checkboxGroup.length + 1)
+                            .fill()
+                            .map((x, index) => index)
+                          " height="32" background-color="white" solo flat single-line hide-details
+                          style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                             auto: true,
                             bottom: true,
                             offsetY: true,
                             zIndex: 200,
                             maxHeight: '100%',
-                          }"
-                          @change="setRangeRule"
-                        >
+                          }" @change="setRangeRule">
                           <template v-slot:[`selection`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item }}
                             </div>
                           </template>
                           <template v-slot:[`item`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item }}
                             </div>
                           </template>
@@ -2081,42 +1300,24 @@
                         <div class="text-subtitle-2" style="min-width: 100px">
                           {{ $t('label.maximum') }}
                         </div>
-                        <v-select
-                          v-model="maximum"
-                          :items="
-                            Array(checkboxGroup.length - minimum + 1)
-                              .fill()
-                              .map((x, index) => index + minimum)
-                          "
-                          height="32"
-                          background-color="white"
-                          solo
-                          flat
-                          single-line
-                          hide-details
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          :menu-props="{
+                        <v-select v-model="maximum" :items="Array(checkboxGroup.length - minimum + 1)
+                            .fill()
+                            .map((x, index) => index + minimum)
+                          " height="32" background-color="white" solo flat single-line hide-details
+                          style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                             auto: true,
                             bottom: true,
                             offsetY: true,
                             zIndex: 200,
                             maxHeight: '100%',
-                          }"
-                          @change="setRangeRule"
-                        >
+                          }" @change="setRangeRule">
                           <template v-slot:[`selection`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item }}
                             </div>
                           </template>
                           <template v-slot:[`item`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item }}
                             </div>
                           </template>
@@ -2125,54 +1326,28 @@
                     </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="radioSizeContainer"
-                  key="16"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.radioBtnSize') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="radioSizeContainer" key="16" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.radioBtnSize')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
                     <template>
                       <div class="d-flex flex-row align-center">
-                        <v-select
-                          id="radioSizeSelect"
-                          v-model="selection.originFontSize"
-                          :items="boxSizeList"
-                          item-text="name"
-                          item-value="value"
-                          height="32"
-                          background-color="white"
-                          solo
-                          flat
-                          single-line
-                          hide-details
-                          style="max-width: 120px; border: 1px solid #dfe1e6"
-                          :menu-props="{
+                        <v-select id="radioSizeSelect" v-model="selection.originFontSize" :items="boxSizeList"
+                          item-text="name" item-value="value" height="32" background-color="white" solo flat single-line
+                          hide-details style="max-width: 120px; border: 1px solid #dfe1e6" :menu-props="{
                             auto: true,
                             bottom: true,
                             offsetY: true,
                             zIndex: 200,
                             maxHeight: '100%',
-                          }"
-                          @change="changeSelectionFont"
-                        >
+                          }" @change="changeSelectionFont">
                           <template v-slot:[`selection`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item.name }}
                             </div>
                           </template>
                           <template v-slot:[`item`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item.name }}
                             </div>
                           </template>
@@ -2181,465 +1356,206 @@
                     </template>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="radioContainer"
-                  :key="6"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.radioBtnValue') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="radioContainer" :key="6" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.radioBtnValue')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
                     <template>
-                      <div
-                        v-for="(item, index) in radioGroup"
-                        :key="index"
-                        class="d-flex flex-row align-center mt-2"
-                      >
-                        <v-checkbox
-                          v-model="item.selected"
-                          hide-details
-                          dense
-                          class="mr-2 mt-0"
-                          @change="changeRadioSelected(item)"
-                        ></v-checkbox>
-                        <v-text-field
-                          v-model="item.label"
-                          label=""
-                          background-color="white"
-                          solo
-                          flat
-                          hide-details
-                          maxlength="40"
-                          :placeholder="$t('placeholder.addText')"
-                          class="text-subtitle-2"
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          @keydown.stop
-                          @focus="focusRadioLabel(index)"
-                          @blur="blurRadioLabel(index)"
-                        ></v-text-field>
+                      <div v-for="(item, index) in radioGroup" :key="index" class="d-flex flex-row align-center mt-2">
+                        <v-checkbox v-model="item.selected" hide-details dense class="mr-2 mt-0"
+                          @change="changeRadioSelected(item)"></v-checkbox>
+                        <v-text-field v-model="item.label" label="" background-color="white" solo flat hide-details
+                          maxlength="40" :placeholder="$t('placeholder.addText')" class="text-subtitle-2"
+                          style="max-width: 100%; border: 1px solid #dfe1e6" @keydown.stop
+                          @focus="focusRadioLabel(index)" @blur="blurRadioLabel(index)"></v-text-field>
                       </div>
                     </template>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dropdownContainer"
-                  :key="7"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.options') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dropdownContainer" :key="7" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.options')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
                     <template v-for="(item, index) in selection.options">
-                      <div
-                        :key="index"
-                        class="d-flex flex-row align-center mt-2"
-                      >
-                        <v-text-field
-                          v-model="item.name"
-                          label=""
-                          background-color="white"
-                          solo
-                          flat
-                          hide-details
-                          maxlength="40"
-                          :placeholder="$t('placeholder.addText')"
-                          class="text-subtitle-2"
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          @keydown.stop
-                          @input="checkOptionWidth"
-                          @change="changeSelectOption"
-                        ></v-text-field>
-                        <v-icon
-                          v-if="item.id !== null"
-                          medium
-                          class="ml-4"
-                          @click="deleteSelectionOption(item.id)"
-                        >
+                      <div :key="index" class="d-flex flex-row align-center mt-2">
+                        <v-text-field v-model="item.name" label="" background-color="white" solo flat hide-details
+                          maxlength="40" :placeholder="$t('placeholder.addText')" class="text-subtitle-2"
+                          style="max-width: 100%; border: 1px solid #dfe1e6" @keydown.stop @input="checkOptionWidth"
+                          @change="changeSelectOption"></v-text-field>
+                        <v-icon v-if="item.id !== null" medium class="ml-4" @click="deleteSelectionOption(item.id)">
                           mdi-close
                         </v-icon>
                       </div>
                     </template>
-                    <v-btn
-                      color="black"
-                      text
-                      class="mt-2"
-                      @click="addSelectionOption()"
-                    >
+                    <v-btn color="black" text class="mt-2" @click="addSelectionOption()">
                       <v-icon left> mdi-plus </v-icon>
                       {{ $t('button.addOption') }}
                     </v-btn>
                     <v-subheader class="text-body-2 mt-2">{{
                       $t('heading.defaultValue')
                     }}</v-subheader>
-                    <v-select
-                      v-model="selection.selectOptionId"
-                      :items="selectionOptions"
-                      item-text="name"
-                      item-value="id"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select v-model="selection.selectOptionId" :items="selectionOptions" item-text="name"
+                      item-value="id" height="32" background-color="white" solo flat single-line hide-details
+                      style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      @change="changeSelectOptionId"
-                    >
+                      }" @change="changeSelectOptionId">
                       <template v-slot:[`selection`]="{ item }">
                         <div class="text-body-2 text-truncate">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 160px"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 160px">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="validationContainer"
-                  :key="8"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.verification') }}</v-expansion-panel-header
-                  >
-                  <v-expansion-panel-content
-                    v-if="selection.validation"
-                    color="#f8f9fa"
-                  >
-                    <v-select
-                      id="validationSelect"
-                      v-model="selection.validation.type"
-                      :items="validationList"
-                      item-text="name"
-                      item-value="value"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                <v-expansion-panel id="validationContainer" :key="8" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.verification')
+                    }}</v-expansion-panel-header>
+                  <v-expansion-panel-content v-if="selection.validation" color="#f8f9fa">
+                    <v-select id="validationSelect" v-model="selection.validation.type" :items="validationList"
+                      item-text="name" item-value="value" height="32" background-color="white" solo flat single-line
+                      hide-details style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      @change="changeValidation"
-                    >
+                      }" @change="changeValidation">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
-                    <div
-                      v-if="
-                        selection.validation.type &&
-                        selection.validation.type === 'custom'
-                      "
-                      class="d-flex flex-column mt-4"
-                    >
-                      <div
-                        class="text-subtitle-2 mb-2"
-                        style="min-width: 100px"
-                      >
+                    <div v-if="
+                      selection.validation.type &&
+                      selection.validation.type === 'custom'
+                    " class="d-flex flex-column mt-4">
+                      <div class="text-subtitle-2 mb-2" style="min-width: 100px">
                         {{ $t('label.regex') }}
                       </div>
-                      <v-text-field
-                        v-model="selection.validation.regex"
-                        autocapitalize="none"
-                        label=""
-                        background-color="white"
-                        solo
-                        flat
-                        hide-details
-                        class="text-subtitle-2"
-                        style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :placeholder="$t('placeholder.regexExample')"
-                        @keydown.stop
-                        @change="changeValidation"
-                      ></v-text-field>
-                      <div
-                        class="text-subtitle-2 my-2"
-                        style="min-width: 100px"
-                      >
+                      <v-text-field v-model="selection.validation.regex" autocapitalize="none" label=""
+                        background-color="white" solo flat hide-details class="text-subtitle-2"
+                        style="max-width: 100%; border: 1px solid #dfe1e6" :placeholder="$t('placeholder.regexExample')"
+                        @keydown.stop @change="changeValidation"></v-text-field>
+                      <div class="text-subtitle-2 my-2" style="min-width: 100px">
                         {{ $t('label.errorMessage') }}
                       </div>
-                      <v-text-field
-                        v-model="selection.validation.errorMessage"
-                        label=""
-                        background-color="white"
-                        solo
-                        flat
-                        hide-details
-                        maxlength="40"
-                        class="text-subtitle-2"
+                      <v-text-field v-model="selection.validation.errorMessage" label="" background-color="white" solo
+                        flat hide-details maxlength="40" class="text-subtitle-2"
                         style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :placeholder="$t('placeholder.errorMsgExample')"
-                        @keydown.stop
-                        @change="changeValidation"
-                      ></v-text-field>
+                        :placeholder="$t('placeholder.errorMsgExample')" @keydown.stop
+                        @change="changeValidation"></v-text-field>
                     </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dateEraContainer"
-                  :key="9"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.dateEra') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dateEraContainer" :key="9" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.dateEra')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-select
-                      id="dateEraSelect"
-                      v-model="selection.dateEra"
-                      :items="dateEraList"
-                      item-text="name"
-                      item-value="value"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select id="dateEraSelect" v-model="selection.dateEra" :items="dateEraList" item-text="name"
+                      item-value="value" height="32" background-color="white" solo flat single-line hide-details
+                      style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      @change="changeDateEra"
-                    >
+                      }" @change="changeDateEra">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dateRangeContainer"
-                  :key="10"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.dateRange') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dateRangeContainer" :key="10" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.dateRange')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-radio-group
-                      id="dateRangeSelect"
-                      v-model="selection.dateRange"
-                      column
-                      class="mt-0"
-                      @change="changeDateRange"
-                    >
-                      <v-radio
-                        v-for="(item, index) in dateRangeList"
-                        :key="index"
-                        class="mt-1"
-                        :label="item.name"
-                        :value="item.value"
-                      ></v-radio>
+                    <v-radio-group id="dateRangeSelect" v-model="selection.dateRange" column class="mt-0"
+                      @change="changeDateRange">
+                      <v-radio v-for="(item, index) in dateRangeList" :key="index" class="mt-1" :label="item.name"
+                        :value="item.value"></v-radio>
                     </v-radio-group>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dateTextContainer"
-                  :key="11"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.dateDeflt') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dateTextContainer" :key="11" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.dateDeflt')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-dialog
-                      ref="dateDialog"
-                      v-model="dateDialog"
-                      :close-on-content-click="false"
-                      :return-value.sync="selection.text"
-                      max-width="290px"
-                      min-width="auto"
-                    >
+                    <v-dialog ref="dateDialog" v-model="dateDialog" :close-on-content-click="false"
+                      :return-value.sync="selection.text" max-width="290px" min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          id="dateText"
-                          v-model="formatDateValue"
-                          :label="$t('label.date')"
-                          v-bind="attrs"
-                          readonly
-                          background-color="white"
-                          solo
-                          flat
-                          hide-details
-                          maxlength="40"
-                          class="text-subtitle-2 date-text-field"
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          :disabled="selection.dateRange === 'signDay'"
-                          v-on="on"
-                        >
+                        <v-text-field id="dateText" v-model="formatDateValue" :label="$t('label.date')" v-bind="attrs"
+                          readonly background-color="white" solo flat hide-details maxlength="40"
+                          class="text-subtitle-2 date-text-field" style="max-width: 100%; border: 1px solid #dfe1e6"
+                          :disabled="selection.dateRange === 'signDay'" v-on="on">
                           <template v-slot:prepend>
                             <v-icon size="22"> mdi-calendar </v-icon>
                           </template>
                         </v-text-field>
                       </template>
-                      <v-date-picker
-                        v-if="selection.type === 4"
-                        v-model="selection.text"
-                        color="primaryCustom"
-                        :locale="$i18n.locale"
-                        scrollable
-                        :allowed-dates="getAllowedDates"
-                        :disabled="selection.dateRange === 'signDay'"
-                        style="z-index: 70"
-                      >
+                      <v-date-picker v-if="selection.type === 4" v-model="selection.text" color="primaryCustom"
+                        :locale="$i18n.locale" scrollable :allowed-dates="getAllowedDates"
+                        :disabled="selection.dateRange === 'signDay'" style="z-index: 70">
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primaryCustom"
-                          @click="clearDateValue"
-                        >
+                        <v-btn text color="primaryCustom" @click="clearDateValue">
                           {{ $t('button.clear') }}
                         </v-btn>
-                        <v-btn
-                          text
-                          color="primaryCustom"
-                          @click="changeDateValue"
-                        >
+                        <v-btn text color="primaryCustom" @click="changeDateValue">
                           {{ $t('button.confirm') }}
                         </v-btn>
                       </v-date-picker>
                     </v-dialog>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="uploadAttachmentContainer"
-                  :key="12"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.uploadAttach') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="uploadAttachmentContainer" :key="12" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.uploadAttach')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-btn
-                      outlined
-                      color="#D8D8D8"
-                      width="190"
-                      height="44"
-                      @click="prefillAttachment(selection)"
-                      ><span style="color: black">{{
-                        $t('button.uploadFile')
-                      }}</span></v-btn
-                    >
+                    <v-btn outlined color="#D8D8D8" width="190" height="44" @click="prefillAttachment(selection)"><span
+                        style="color: black">{{
+                          $t('button.uploadFile')
+                        }}</span></v-btn>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="labelContainer"
-                  :key="13"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.label') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="labelContainer" :key="13" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.label')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-text-field
-                      v-model="selection.label"
-                      label=""
-                      background-color="white"
-                      solo
-                      flat
-                      hide-details
-                      maxlength="40"
-                      class="text-subtitle-2"
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      @keydown.stop
-                      @change="changeLabel"
-                    ></v-text-field>
+                    <v-text-field v-model="selection.label" label="" background-color="white" solo flat hide-details
+                      maxlength="40" class="text-subtitle-2" style="max-width: 100%; border: 1px solid #dfe1e6"
+                      @keydown.stop @change="changeLabel"></v-text-field>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="groupLabelContainer"
-                  :key="14"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.groupLabel') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="groupLabelContainer" :key="14" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.groupLabel')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-text-field
-                      v-model="selection.groupLabel"
-                      label=""
-                      background-color="white"
-                      solo
-                      flat
-                      hide-details
-                      maxlength="40"
-                      class="text-subtitle-2"
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      @keydown.stop
-                      @change="changeGroupLabel"
-                    ></v-text-field>
+                    <v-text-field v-model="selection.groupLabel" label="" background-color="white" solo flat
+                      hide-details maxlength="40" class="text-subtitle-2"
+                      style="max-width: 100%; border: 1px solid #dfe1e6" @keydown.stop
+                      @change="changeGroupLabel"></v-text-field>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -2650,59 +1566,30 @@
     </v-navigation-drawer>
 
     <!-- mode 4 left outline -->
-    <v-navigation-drawer
-      v-if="mode === 4"
-      id="leftDrawerContainer"
-      v-model="rightDrawer"
-      :clipped="true"
-      absolute
-      app
-      left
-      width="200"
-      color="#f8f9fa"
-      touchless
-      floating
-      hide-overlay
-      style="
+    <v-navigation-drawer v-if="mode === 4" id="leftDrawerContainer" v-model="rightDrawer" :clipped="true" absolute app
+      left width="200" color="#f8f9fa" touchless floating hide-overlay style="
         height: 100%;
         border-left: 1px solid #e0e0e0;
         z-index: 199;
         left: 65px;
         top: 48px;
         max-height: calc(100% - 48px);
-      "
-      :style="mode4Outline"
-    >
-      <div
-        style="display: flex; flex-direction: column; width: 100%; height: 100%"
-      >
+      " :style="mode4Outline">
+      <div style="display: flex; flex-direction: column; width: 100%; height: 100%">
         <div v-if="fileList !== null && fileList.length > 1" id="multifileView">
           <v-list-item>
             <v-list-item-content>
               <v-subheader class="text-subtitle-2">
                 {{ $t('heading.document') }}
               </v-subheader>
-              <v-select
-                v-model="selectedFile"
-                :items="fileList"
-                item-text="name"
-                item-value="id"
-                height="32"
-                background-color="white"
-                solo
-                flat
-                single-line
-                hide-details
-                class="peopleSelect"
-                :menu-props="{
+              <v-select v-model="selectedFile" :items="fileList" item-text="name" item-value="id" height="32"
+                background-color="white" solo flat single-line hide-details class="peopleSelect" :menu-props="{
                   auto: true,
                   bottom: true,
                   offsetY: true,
                   zIndex: '203 !important',
                   maxHeight: '100%',
-                }"
-                @change="changeFile"
-              >
+                }" @change="changeFile">
               </v-select>
             </v-list-item-content>
           </v-list-item>
@@ -2714,19 +1601,12 @@
             <v-list height="100%" width="100%">
               <v-list-item dense>
                 <v-list-item-content style="flex: none">
-                  <div
-                    id="selectionViewTitle"
-                    class="text-subtitle-1 align-center d-flex"
-                  ></div>
+                  <div id="selectionViewTitle" class="text-subtitle-1 align-center d-flex"></div>
                 </v-list-item-content>
                 <v-spacer></v-spacer>
                 <tippy>
                   <template v-slot:trigger>
-                    <v-btn
-                      id="deleteButton"
-                      text
-                      style="padding: 0 8px; min-width: 48px"
-                    >
+                    <v-btn id="deleteButton" text style="padding: 0 8px; min-width: 48px">
                       <v-icon size="18">mdi-delete</v-icon>
                     </v-btn>
                   </template>
@@ -2734,99 +1614,50 @@
                     <span style="font-size: 12px; color: white">{{
                       $t('tooltip.deleteFields')
                     }}</span>
-                    <span style="font-size: 12px; color: #9f9f9f"
-                      >(Delete)</span
-                    >
+                    <span style="font-size: 12px; color: #9f9f9f">(Delete)</span>
                   </span>
                 </tippy>
               </v-list-item>
               <v-divider></v-divider>
-              <v-expansion-panels
-                :value="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]"
-                accordion
-                multiple
-              >
-                <v-expansion-panel
-                  id="assgineeContainer"
-                  :key="0"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.signers') }}</v-expansion-panel-header
-                  >
+              <v-expansion-panels :value="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]" accordion multiple>
+                <v-expansion-panel id="assgineeContainer" :key="0" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.signers')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-select
-                      v-model="annotateSelectId"
-                      :items="peopleNames"
-                      item-text="name"
-                      item-value="id"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 240px; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select v-model="annotateSelectId" :items="peopleNames" item-text="name" item-value="id"
+                      height="32" background-color="white" solo flat single-line hide-details
+                      style="max-width: 240px; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      :disabled="!!selection.prefill"
-                      @change="onAnnotateSelectIdChange"
-                    >
+                      }" :disabled="!!selection.prefill" @change="onAnnotateSelectIdChange">
                       <template v-slot:[`selection`]="{ item }">
-                        <v-icon :color="getPersonColor(item)" class="mr-2"
-                          >mdi-circle-medium</v-icon
-                        >
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 240px; overflow: hidden"
-                        >
+                        <v-icon :color="getPersonColor(item)" class="mr-2">mdi-circle-medium</v-icon>
+                        <div class="text-body-2 text-truncate" style="max-width: 240px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <v-icon :color="getPersonColor(item)" class="mr-2"
-                          >mdi-circle-medium</v-icon
-                        >
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 240px; overflow: hidden"
-                        >
+                        <v-icon :color="getPersonColor(item)" class="mr-2">mdi-circle-medium</v-icon>
+                        <div class="text-body-2 text-truncate" style="max-width: 240px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
-                    <v-checkbox
-                      v-model="selection.required"
-                      hide-details
-                      dense
-                      class="requiredButton text-body-2 mt-4"
-                      :disabled="[9, 10, 11, 12].includes(selection.type)"
-                      @change="changeRequired()"
-                    >
+                    <v-checkbox v-model="selection.required" hide-details dense class="requiredButton text-body-2 mt-4"
+                      :disabled="[9, 10, 11, 12].includes(selection.type)" @change="changeRequired()">
                       <template v-slot:label>
                         <div class="text-subtitle-2 black--text">
                           {{ $t('label.requiredField') }}
                         </div>
                       </template>
                     </v-checkbox>
-                    <v-checkbox
-                      v-model="selection.readonly"
-                      class="readonlyButton text-body-2 mt-2"
-                      hide-details
-                      dense
-                      :disabled="
-                        selection.type === 4 &&
+                    <v-checkbox v-model="selection.readonly" class="readonlyButton text-body-2 mt-2" hide-details dense
+                      :disabled="selection.type === 4 &&
                         selection.dateRange === 'signDay'
-                      "
-                      @change="changeReadOnly()"
-                    >
+                        " @change="changeReadOnly()">
                       <template v-slot:label>
                         <div class="text-subtitle-2 black--text">
                           {{ $t('label.readOnly') }}
@@ -2835,429 +1666,210 @@
                     </v-checkbox>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="formatContainer"
-                  :key="1"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.format') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="formatContainer" :key="1" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.format')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-select
-                      id="fontFamilySelect"
-                      v-model="selection.fontFamily"
-                      :items="fontFamilyList"
-                      item-text="name"
-                      item-value="value"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select id="fontFamilySelect" v-model="selection.fontFamily" :items="fontFamilyList"
+                      item-text="name" item-value="value" height="32" background-color="white" solo flat single-line
+                      hide-details style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      @change="changeSelectionFont"
-                    >
+                      }" @change="changeSelectionFont">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 140px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 140px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 140px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 140px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
-                    <v-select
-                      id="fontSizeSelect"
-                      v-model="selection.fontSize"
-                      :items="fontSizeList"
-                      item-text="name"
-                      item-value="value"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 120px; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select id="fontSizeSelect" v-model="selection.fontSize" :items="fontSizeList" item-text="name"
+                      item-value="value" height="32" background-color="white" solo flat single-line hide-details
+                      style="max-width: 120px; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      class="mt-2"
-                      @change="changeSelectionFont"
-                    >
+                      }" class="mt-2" @change="changeSelectionFont">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dateFormatContainer"
-                  :key="2"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.dateFormat') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dateFormatContainer" :key="2" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.dateFormat')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-select
-                      id="dateFormatSelect"
-                      v-model="selection.dateFormat"
-                      :items="dateFormatListFilter"
-                      item-text="name"
-                      item-value="name"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select id="dateFormatSelect" v-model="selection.dateFormat" :items="dateFormatListFilter"
+                      item-text="name" item-value="name" height="32" background-color="white" solo flat single-line
+                      hide-details style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      @change="changeDateFormat"
-                    >
+                      }" @change="changeDateFormat">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="textContainer"
-                  :key="3"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.textDefault') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="textContainer" :key="3" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.textDefault')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-textarea
-                      v-if="!selection.singleLine"
-                      v-model="selection.text"
-                      min-height="80"
-                      label=""
-                      background-color="white"
-                      solo
-                      flat
-                      hide-details
-                      :placeholder="$t('placeholder.addText')"
-                      class="text-subtitle-2 text-input"
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      @input="changeTextarea"
-                    ></v-textarea>
-                    <v-textarea
-                      v-else
-                      v-model="selection.text"
-                      min-height="80"
-                      label=""
-                      background-color="white"
-                      solo
-                      flat
-                      hide-details
-                      :placeholder="$t('placeholder.addText')"
-                      class="text-subtitle-2 text-input"
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      @input="changeTextarea"
-                      @keydown.enter.prevent
-                    ></v-textarea>
+                    <v-textarea v-if="!selection.singleLine" v-model="selection.text" min-height="80" label=""
+                      background-color="white" solo flat hide-details :placeholder="$t('placeholder.addText')"
+                      class="text-subtitle-2 text-input" style="max-width: 100%; border: 1px solid #dfe1e6"
+                      @input="changeTextarea"></v-textarea>
+                    <v-textarea v-else v-model="selection.text" min-height="80" label="" background-color="white" solo
+                      flat hide-details :placeholder="$t('placeholder.addText')" class="text-subtitle-2 text-input"
+                      style="max-width: 100%; border: 1px solid #dfe1e6" @input="changeTextarea"
+                      @keydown.enter.prevent></v-textarea>
                     <div class="d-flex flex-row align-center mt-2">
-                      <v-text-field
-                        v-model.number="selection.maxlength"
-                        type="number"
-                        label=""
-                        background-color="white"
-                        solo
-                        flat
-                        hide-details
-                        class="text-subtitle-2 mr-2"
-                        style="max-width: 100px; border: 1px solid #dfe1e6"
-                        @keydown.stop
-                        @change="changeMaxlength"
-                      ></v-text-field>
+                      <v-text-field v-model.number="selection.maxlength" type="number" label="" background-color="white"
+                        solo flat hide-details class="text-subtitle-2 mr-2"
+                        style="max-width: 100px; border: 1px solid #dfe1e6" @keydown.stop
+                        @change="changeMaxlength"></v-text-field>
                       <div class="text-subtitle-2">
                         {{ $t('label.charLimit') }}
                       </div>
                     </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="checkboxContainer"
-                  :key="4"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.checkboxValue') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="checkboxContainer" :key="4" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.checkboxValue')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
                     <template>
-                      <div
-                        v-for="(item, index) in checkboxGroup"
-                        :key="index"
-                        class="d-flex flex-row align-center mt-2"
-                      >
-                        <v-checkbox
-                          v-model="item.selected"
-                          hide-details
-                          dense
-                          class="mr-2 mt-0"
-                          @change="changeCheckboxSelected"
-                        ></v-checkbox>
-                        <v-text-field
-                          v-model="item.label"
-                          label=""
-                          background-color="white"
-                          solo
-                          flat
-                          hide-details
-                          maxlength="40"
-                          :placeholder="$t('placeholder.addText')"
-                          class="text-subtitle-2"
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          @keydown.stop
-                          @focus="focusCheckboxLabel(index)"
-                          @blur="blurCheckboxLabel(index)"
-                        ></v-text-field>
+                      <div v-for="(item, index) in checkboxGroup" :key="index"
+                        class="d-flex flex-row align-center mt-2">
+                        <v-checkbox v-model="item.selected" hide-details dense class="mr-2 mt-0"
+                          @change="changeCheckboxSelected"></v-checkbox>
+                        <v-text-field v-model="item.label" label="" background-color="white" solo flat hide-details
+                          maxlength="40" :placeholder="$t('placeholder.addText')" class="text-subtitle-2"
+                          style="max-width: 100%; border: 1px solid #dfe1e6" @keydown.stop
+                          @focus="focusCheckboxLabel(index)" @blur="blurCheckboxLabel(index)"></v-text-field>
                       </div>
                     </template>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="checkboxRuleContainer"
-                  :key="5"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{
-                      $t('heading.checkboxGrpRules')
-                    }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="checkboxRuleContainer" :key="5" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{
+                    $t('heading.checkboxGrpRules')
+                  }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-select
-                      v-model="ruleId"
-                      :items="ruleList"
-                      item-text="name"
-                      item-value="id"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select v-model="ruleId" :items="ruleList" item-text="name" item-value="id" height="32"
+                      background-color="white" solo flat single-line hide-details
+                      style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      class="mt-2"
-                      @change="changeRule"
-                    >
+                      }" class="mt-2" @change="changeRule">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 110px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 110px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 110px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 110px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
                     <div v-if="ruleId === 0">
-                      <v-select
-                        v-model="minimum"
-                        :items="
-                          Array(checkboxGroup.length + 1)
-                            .fill()
-                            .map((x, index) => index)
-                        "
-                        height="32"
-                        background-color="white"
-                        solo
-                        flat
-                        single-line
-                        hide-details
-                        style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :menu-props="{
+                      <v-select v-model="minimum" :items="Array(checkboxGroup.length + 1)
+                          .fill()
+                          .map((x, index) => index)
+                        " height="32" background-color="white" solo flat single-line hide-details
+                        style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                           auto: true,
                           bottom: true,
                           offsetY: true,
                           zIndex: 200,
                           maxHeight: '100%',
-                        }"
-                        class="mt-2"
-                        @change="setAtLeastRule"
-                      >
+                        }" class="mt-2" @change="setAtLeastRule">
                         <template v-slot:[`selection`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                         <template v-slot:[`item`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                       </v-select>
                     </div>
                     <div v-else-if="ruleId === 1">
-                      <v-select
-                        v-model="maximum"
-                        :items="
-                          Array(checkboxGroup.length)
-                            .fill()
-                            .map((x, index) => index + 1)
-                        "
-                        height="32"
-                        background-color="white"
-                        solo
-                        flat
-                        single-line
-                        hide-details
-                        style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :menu-props="{
+                      <v-select v-model="maximum" :items="Array(checkboxGroup.length)
+                          .fill()
+                          .map((x, index) => index + 1)
+                        " height="32" background-color="white" solo flat single-line hide-details
+                        style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                           auto: true,
                           bottom: true,
                           offsetY: true,
                           zIndex: 200,
                           maxHeight: '100%',
-                        }"
-                        class="mt-2"
-                        @change="setAtMostRule"
-                      >
+                        }" class="mt-2" @change="setAtMostRule">
                         <template v-slot:[`selection`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                         <template v-slot:[`item`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                       </v-select>
                     </div>
                     <div v-else-if="ruleId === 2">
-                      <v-select
-                        v-model="maximum"
-                        :items="
-                          Array(checkboxGroup.length)
-                            .fill()
-                            .map((x, index) => index + 1)
-                        "
-                        height="32"
-                        background-color="white"
-                        solo
-                        flat
-                        single-line
-                        hide-details
-                        style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :menu-props="{
+                      <v-select v-model="maximum" :items="Array(checkboxGroup.length)
+                          .fill()
+                          .map((x, index) => index + 1)
+                        " height="32" background-color="white" solo flat single-line hide-details
+                        style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                           auto: true,
                           bottom: true,
                           offsetY: true,
                           zIndex: 200,
                           maxHeight: '100%',
-                        }"
-                        class="mt-2"
-                        @change="setExactlyRule"
-                      >
+                        }" class="mt-2" @change="setExactlyRule">
                         <template v-slot:[`selection`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
                         <template v-slot:[`item`]="{ item }">
-                          <div
-                            class="text-body-2 text-truncate"
-                            style="max-width: 100px; overflow: hidden"
-                          >
+                          <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                             {{ item }}
                           </div>
                         </template>
@@ -3268,42 +1880,24 @@
                         <div class="text-subtitle-2" style="min-width: 100px">
                           {{ $t('label.minimum') }}
                         </div>
-                        <v-select
-                          v-model="minimum"
-                          :items="
-                            Array(checkboxGroup.length + 1)
-                              .fill()
-                              .map((x, index) => index)
-                          "
-                          height="32"
-                          background-color="white"
-                          solo
-                          flat
-                          single-line
-                          hide-details
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          :menu-props="{
+                        <v-select v-model="minimum" :items="Array(checkboxGroup.length + 1)
+                            .fill()
+                            .map((x, index) => index)
+                          " height="32" background-color="white" solo flat single-line hide-details
+                          style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                             auto: true,
                             bottom: true,
                             offsetY: true,
                             zIndex: 200,
                             maxHeight: '100%',
-                          }"
-                          @change="setRangeRule"
-                        >
+                          }" @change="setRangeRule">
                           <template v-slot:[`selection`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item }}
                             </div>
                           </template>
                           <template v-slot:[`item`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item }}
                             </div>
                           </template>
@@ -3313,42 +1907,24 @@
                         <div class="text-subtitle-2" style="min-width: 100px">
                           {{ $t('label.maximum') }}
                         </div>
-                        <v-select
-                          v-model="maximum"
-                          :items="
-                            Array(checkboxGroup.length - minimum + 1)
-                              .fill()
-                              .map((x, index) => index + minimum)
-                          "
-                          height="32"
-                          background-color="white"
-                          solo
-                          flat
-                          single-line
-                          hide-details
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          :menu-props="{
+                        <v-select v-model="maximum" :items="Array(checkboxGroup.length - minimum + 1)
+                            .fill()
+                            .map((x, index) => index + minimum)
+                          " height="32" background-color="white" solo flat single-line hide-details
+                          style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                             auto: true,
                             bottom: true,
                             offsetY: true,
                             zIndex: 200,
                             maxHeight: '100%',
-                          }"
-                          @change="setRangeRule"
-                        >
+                          }" @change="setRangeRule">
                           <template v-slot:[`selection`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item }}
                             </div>
                           </template>
                           <template v-slot:[`item`]="{ item }">
-                            <div
-                              class="text-body-2 text-truncate"
-                              style="max-width: 100px; overflow: hidden"
-                            >
+                            <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                               {{ item }}
                             </div>
                           </template>
@@ -3357,464 +1933,206 @@
                     </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="radioContainer"
-                  :key="6"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.radioBtnValue') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="radioContainer" :key="6" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.radioBtnValue')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
                     <template>
-                      <div
-                        v-for="(item, index) in radioGroup"
-                        :key="index"
-                        class="d-flex flex-row align-center mt-2"
-                      >
-                        <v-checkbox
-                          v-model="item.selected"
-                          hide-details
-                          dense
-                          class="mr-2 mt-0"
-                          @change="changeRadioSelected(item)"
-                        ></v-checkbox>
-                        <v-text-field
-                          v-model="item.label"
-                          label=""
-                          background-color="white"
-                          solo
-                          flat
-                          hide-details
-                          maxlength="40"
-                          :placeholder="$t('placeholder.addText')"
-                          class="text-subtitle-2"
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          @keydown.stop
-                          @focus="focusRadioLabel(index)"
-                          @blur="blurRadioLabel(index)"
-                        ></v-text-field>
+                      <div v-for="(item, index) in radioGroup" :key="index" class="d-flex flex-row align-center mt-2">
+                        <v-checkbox v-model="item.selected" hide-details dense class="mr-2 mt-0"
+                          @change="changeRadioSelected(item)"></v-checkbox>
+                        <v-text-field v-model="item.label" label="" background-color="white" solo flat hide-details
+                          maxlength="40" :placeholder="$t('placeholder.addText')" class="text-subtitle-2"
+                          style="max-width: 100%; border: 1px solid #dfe1e6" @keydown.stop
+                          @focus="focusRadioLabel(index)" @blur="blurRadioLabel(index)"></v-text-field>
                       </div>
                     </template>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dropdownContainer"
-                  :key="7"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.options') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dropdownContainer" :key="7" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.options')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
                     <template v-for="(item, index) in selection.options">
-                      <div
-                        :key="index"
-                        class="d-flex flex-row align-center mt-2"
-                      >
-                        <v-text-field
-                          v-model="item.name"
-                          label=""
-                          background-color="white"
-                          solo
-                          flat
-                          hide-details
-                          maxlength="40"
-                          :placeholder="$t('placeholder.addText')"
-                          class="text-subtitle-2"
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          @keydown.stop
-                          @input="checkOptionWidth"
-                          @change="changeSelectOption"
-                        ></v-text-field>
-                        <v-icon
-                          medium
-                          class="ml-4"
-                          @click="deleteSelectionOption(item.id)"
-                        >
+                      <div :key="index" class="d-flex flex-row align-center mt-2">
+                        <v-text-field v-model="item.name" label="" background-color="white" solo flat hide-details
+                          maxlength="40" :placeholder="$t('placeholder.addText')" class="text-subtitle-2"
+                          style="max-width: 100%; border: 1px solid #dfe1e6" @keydown.stop @input="checkOptionWidth"
+                          @change="changeSelectOption"></v-text-field>
+                        <v-icon medium class="ml-4" @click="deleteSelectionOption(item.id)">
                           mdi-close
                         </v-icon>
                       </div>
                     </template>
-                    <v-btn
-                      color="black"
-                      text
-                      class="mt-2"
-                      @click="addSelectionOption()"
-                    >
+                    <v-btn color="black" text class="mt-2" @click="addSelectionOption()">
                       <v-icon left> mdi-plus </v-icon>
                       {{ $t('button.addOption') }}
                     </v-btn>
                     <v-subheader class="text-body-2 mt-2">{{
                       $t('heading.defaultValue')
                     }}</v-subheader>
-                    <v-select
-                      v-model="selection.selectOptionId"
-                      :items="selectionOptions"
-                      item-text="name"
-                      item-value="id"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select v-model="selection.selectOptionId" :items="selectionOptions" item-text="name"
+                      item-value="id" height="32" background-color="white" solo flat single-line hide-details
+                      style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      @change="changeSelectOptionId"
-                    >
+                      }" @change="changeSelectOptionId">
                       <template v-slot:[`selection`]="{ item }">
                         <div class="text-body-2 text-truncate">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 160px"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 160px">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="validationContainer"
-                  :key="8"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.verification') }}</v-expansion-panel-header
-                  >
-                  <v-expansion-panel-content
-                    v-if="selection.validation"
-                    color="#f8f9fa"
-                  >
-                    <v-select
-                      id="validationSelect"
-                      v-model="selection.validation.type"
-                      :items="validationList"
-                      item-text="name"
-                      item-value="value"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                <v-expansion-panel id="validationContainer" :key="8" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.verification')
+                    }}</v-expansion-panel-header>
+                  <v-expansion-panel-content v-if="selection.validation" color="#f8f9fa">
+                    <v-select id="validationSelect" v-model="selection.validation.type" :items="validationList"
+                      item-text="name" item-value="value" height="32" background-color="white" solo flat single-line
+                      hide-details style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      @change="changeValidation"
-                    >
+                      }" @change="changeValidation">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
-                    <div
-                      v-if="
-                        selection.validation.type &&
-                        selection.validation.type === 'custom'
-                      "
-                      class="d-flex flex-column mt-4"
-                    >
-                      <div
-                        class="text-subtitle-2 mb-2"
-                        style="min-width: 100px"
-                      >
+                    <div v-if="
+                      selection.validation.type &&
+                      selection.validation.type === 'custom'
+                    " class="d-flex flex-column mt-4">
+                      <div class="text-subtitle-2 mb-2" style="min-width: 100px">
                         {{ $t('label.regex') }}
                       </div>
-                      <v-text-field
-                        v-model="selection.validation.regex"
-                        autocapitalize="none"
-                        label=""
-                        background-color="white"
-                        solo
-                        flat
-                        hide-details
-                        class="text-subtitle-2"
-                        style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :placeholder="$t('placeholder.regexExample')"
-                        @keydown.stop
-                        @change="changeValidation"
-                      ></v-text-field>
-                      <div
-                        class="text-subtitle-2 my-2"
-                        style="min-width: 100px"
-                      >
+                      <v-text-field v-model="selection.validation.regex" autocapitalize="none" label=""
+                        background-color="white" solo flat hide-details class="text-subtitle-2"
+                        style="max-width: 100%; border: 1px solid #dfe1e6" :placeholder="$t('placeholder.regexExample')"
+                        @keydown.stop @change="changeValidation"></v-text-field>
+                      <div class="text-subtitle-2 my-2" style="min-width: 100px">
                         {{ $t('label.errorMessage') }}
                       </div>
-                      <v-text-field
-                        v-model="selection.validation.errorMessage"
-                        label=""
-                        background-color="white"
-                        solo
-                        flat
-                        hide-details
-                        maxlength="40"
-                        class="text-subtitle-2"
+                      <v-text-field v-model="selection.validation.errorMessage" label="" background-color="white" solo
+                        flat hide-details maxlength="40" class="text-subtitle-2"
                         style="max-width: 100%; border: 1px solid #dfe1e6"
-                        :placeholder="$t('placeholder.errorMsgExample')"
-                        @keydown.stop
-                        @change="changeValidation"
-                      ></v-text-field>
+                        :placeholder="$t('placeholder.errorMsgExample')" @keydown.stop
+                        @change="changeValidation"></v-text-field>
                     </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dateEraContainer"
-                  :key="9"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.dateEra') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dateEraContainer" :key="9" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.dateEra')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-select
-                      id="dateEraSelect"
-                      v-model="selection.dateEra"
-                      :items="dateEraList"
-                      item-text="name"
-                      item-value="value"
-                      height="32"
-                      background-color="white"
-                      solo
-                      flat
-                      single-line
-                      hide-details
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      :menu-props="{
+                    <v-select id="dateEraSelect" v-model="selection.dateEra" :items="dateEraList" item-text="name"
+                      item-value="value" height="32" background-color="white" solo flat single-line hide-details
+                      style="max-width: 100%; border: 1px solid #dfe1e6" :menu-props="{
                         auto: true,
                         bottom: true,
                         offsetY: true,
                         zIndex: 200,
                         maxHeight: '100%',
-                      }"
-                      @change="changeDateEra"
-                    >
+                      }" @change="changeDateEra">
                       <template v-slot:[`selection`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                       <template v-slot:[`item`]="{ item }">
-                        <div
-                          class="text-body-2 text-truncate"
-                          style="max-width: 100px; overflow: hidden"
-                        >
+                        <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                           {{ item.name }}
                         </div>
                       </template>
                     </v-select>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dateRangeContainer"
-                  :key="10"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.dateRange') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dateRangeContainer" :key="10" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.dateRange')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-radio-group
-                      id="dateRangeSelect"
-                      v-model="selection.dateRange"
-                      column
-                      class="mt-0"
-                      @change="changeDateRange"
-                    >
-                      <v-radio
-                        v-for="(item, index) in dateRangeList"
-                        :key="index"
-                        class="mt-1"
-                        :label="item.name"
-                        :value="item.value"
-                      ></v-radio>
+                    <v-radio-group id="dateRangeSelect" v-model="selection.dateRange" column class="mt-0"
+                      @change="changeDateRange">
+                      <v-radio v-for="(item, index) in dateRangeList" :key="index" class="mt-1" :label="item.name"
+                        :value="item.value"></v-radio>
                     </v-radio-group>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="dateTextContainer"
-                  :key="11"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.dateDeflt') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="dateTextContainer" :key="11" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.dateDeflt')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-dialog
-                      ref="dateDialog"
-                      v-model="dateDialog"
-                      :close-on-content-click="false"
-                      :return-value.sync="selection.text"
-                      max-width="290px"
-                      min-width="auto"
-                    >
+                    <v-dialog ref="dateDialog" v-model="dateDialog" :close-on-content-click="false"
+                      :return-value.sync="selection.text" max-width="290px" min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          id="dateText"
-                          v-model="formatDateValue"
-                          :label="$t('label.date')"
-                          v-bind="attrs"
-                          readonly
-                          background-color="white"
-                          solo
-                          flat
-                          hide-details
-                          maxlength="40"
-                          class="text-subtitle-2"
-                          style="max-width: 100%; border: 1px solid #dfe1e6"
-                          :disabled="selection.dateRange === 'signDay'"
-                          v-on="on"
-                        >
+                        <v-text-field id="dateText" v-model="formatDateValue" :label="$t('label.date')" v-bind="attrs"
+                          readonly background-color="white" solo flat hide-details maxlength="40"
+                          class="text-subtitle-2" style="max-width: 100%; border: 1px solid #dfe1e6"
+                          :disabled="selection.dateRange === 'signDay'" v-on="on">
                           <template v-slot:prepend>
                             <v-icon size="22"> mdi-calendar </v-icon>
                           </template>
                         </v-text-field>
                       </template>
-                      <v-date-picker
-                        v-if="selection.type === 4"
-                        v-model="selection.text"
-                        color="primaryCustom"
-                        :locale="$i18n.locale"
-                        scrollable
-                        :allowed-dates="getAllowedDates"
-                        :disabled="selection.dateRange === 'signDay'"
-                        style="z-index: 70"
-                      >
+                      <v-date-picker v-if="selection.type === 4" v-model="selection.text" color="primaryCustom"
+                        :locale="$i18n.locale" scrollable :allowed-dates="getAllowedDates"
+                        :disabled="selection.dateRange === 'signDay'" style="z-index: 70">
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primaryCustom"
-                          @click="clearDateValue"
-                        >
+                        <v-btn text color="primaryCustom" @click="clearDateValue">
                           {{ $t('button.clear') }}
                         </v-btn>
-                        <v-btn
-                          text
-                          color="primaryCustom"
-                          @click="changeDateValue"
-                        >
+                        <v-btn text color="primaryCustom" @click="changeDateValue">
                           {{ $t('button.confirm') }}
                         </v-btn>
                       </v-date-picker>
                     </v-dialog>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="uploadAttachmentContainer"
-                  :key="12"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.uploadAttach') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="uploadAttachmentContainer" :key="12" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.uploadAttach')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-btn
-                      outlined
-                      color="#D8D8D8"
-                      width="190"
-                      height="44"
-                      @click="prefillAttachment(selection)"
-                      ><span style="color: black">{{
-                        $t('button.uploadFile')
-                      }}</span></v-btn
-                    >
+                    <v-btn outlined color="#D8D8D8" width="190" height="44" @click="prefillAttachment(selection)"><span
+                        style="color: black">{{
+                          $t('button.uploadFile')
+                        }}</span></v-btn>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="labelContainer"
-                  :key="13"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.label') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="labelContainer" :key="13" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.label')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-text-field
-                      v-model="selection.label"
-                      label=""
-                      background-color="white"
-                      solo
-                      flat
-                      hide-details
-                      maxlength="40"
-                      class="text-subtitle-2"
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      @keydown.stop
-                      @change="changeLabel"
-                    ></v-text-field>
+                    <v-text-field v-model="selection.label" label="" background-color="white" solo flat hide-details
+                      maxlength="40" class="text-subtitle-2" style="max-width: 100%; border: 1px solid #dfe1e6"
+                      @keydown.stop @change="changeLabel"></v-text-field>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel
-                  id="groupLabelContainer"
-                  :key="14"
-                  class="elevation-0"
-                >
-                  <v-expansion-panel-header
-                    color="#f8f9fa"
-                    class="text-subtitle-2"
-                    >{{ $t('heading.groupLabel') }}</v-expansion-panel-header
-                  >
+                <v-expansion-panel id="groupLabelContainer" :key="14" class="elevation-0">
+                  <v-expansion-panel-header color="#f8f9fa" class="text-subtitle-2">{{ $t('heading.groupLabel')
+                    }}</v-expansion-panel-header>
                   <v-expansion-panel-content color="#f8f9fa">
-                    <v-text-field
-                      v-model="selection.groupLabel"
-                      label=""
-                      background-color="white"
-                      solo
-                      flat
-                      hide-details
-                      maxlength="40"
-                      class="text-subtitle-2"
-                      style="max-width: 100%; border: 1px solid #dfe1e6"
-                      @keydown.stop
-                      @change="changeGroupLabel"
-                    ></v-text-field>
+                    <v-text-field v-model="selection.groupLabel" label="" background-color="white" solo flat
+                      hide-details maxlength="40" class="text-subtitle-2"
+                      style="max-width: 100%; border: 1px solid #dfe1e6" @keydown.stop
+                      @change="changeGroupLabel"></v-text-field>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -3825,47 +2143,22 @@
     </v-navigation-drawer>
 
     <!-- mode 4 right streaming -->
-    <v-navigation-drawer
-      v-if="mode === 4"
-      id="rightDrawerContainer"
-      v-model="streamingDrawer"
-      :clipped="true"
-      absolute
-      :mobile-breakpoint="$vuetify.breakpoint.thresholds.xs"
-      app
-      right
-      width="200"
-      color="#f8f9fa"
-      touchless
-      floating
-      hide-overlay
-      class="streamingDrawer"
-    >
+    <v-navigation-drawer v-if="mode === 4" id="rightDrawerContainer" v-model="streamingDrawer" :clipped="true" absolute
+      :mobile-breakpoint="$vuetify.breakpoint.thresholds.xs" app right width="200" color="#f8f9fa" touchless floating
+      hide-overlay class="streamingDrawer">
       <div id="streamContainer" class="streamContainer">
-        <div
-          style="
+        <div style="
             display: flex;
             flex-direction: column;
             width: 100%;
             height: 100%;
-          "
-        >
+          ">
           <div class="d-flex flex-column">
             <div class="videoContainer mt-6">
-              <video
-                v-show="videoParams.isRemoteVideoEnabled"
-                id="remote-video"
-                ref="remoteVideo"
-                class="videoContent"
-                autoplay
-                playsinline
-              ></video>
-              <div
-                v-show="!videoParams.isRemoteVideoEnabled"
-                id="remote-video-cover"
-                ref="remoteVideoCover"
-                class="videoCover"
-              >
+              <video v-show="videoParams.isRemoteVideoEnabled" id="remote-video" ref="remoteVideo" class="videoContent"
+                autoplay playsinline></video>
+              <div v-show="!videoParams.isRemoteVideoEnabled" id="remote-video-cover" ref="remoteVideoCover"
+                class="videoCover">
                 <v-icon color="white">mdi-video-off</v-icon>
               </div>
               <div v-if="videoParams.remoteName" class="videoNameChip">
@@ -3876,29 +2169,14 @@
           <v-spacer></v-spacer>
           <div class="d-flex flex-column">
             <div class="videoContainer">
-              <video
-                v-show="
-                  videoParams.isEnabledVideo &&
-                  videoParams.isUseCamera &&
-                  !videoParams.isNoCamera
-                "
-                id="local-video"
-                ref="localVideo"
-                class="videoContent"
-                autoplay
-                playsinline
-                muted
-              />
-              <div
-                v-show="
-                  !videoParams.isEnabledVideo ||
-                  !videoParams.isUseCamera ||
-                  videoParams.isNoCamera
-                "
-                id="local-video-cover"
-                ref="localVideoCover"
-                class="videoCover"
-              >
+              <video v-show="videoParams.isEnabledVideo &&
+                videoParams.isUseCamera &&
+                !videoParams.isNoCamera
+                " id="local-video" ref="localVideo" class="videoContent" autoplay playsinline muted />
+              <div v-show="!videoParams.isEnabledVideo ||
+                !videoParams.isUseCamera ||
+                videoParams.isNoCamera
+                " id="local-video-cover" ref="localVideoCover" class="videoCover">
                 <v-icon color="white">mdi-video-off</v-icon>
               </div>
               <div v-if="videoParams.localName" class="videoNameChip">
@@ -3906,53 +2184,26 @@
               </div>
             </div>
             <div class="streamSettingContainer mt-6 mb-4">
-              <v-btn
-                v-if="videoParams.isEnabledAudio"
-                color="#009149"
-                class="streamSettingBtn"
-                @click="onEnabledAudio(false)"
-              >
+              <v-btn v-if="videoParams.isEnabledAudio" color="#009149" class="streamSettingBtn"
+                @click="onEnabledAudio(false)">
                 <div class="stream-microphone-on"></div>
               </v-btn>
-              <v-btn
-                v-else-if="!videoParams.isEnabledAudio"
-                color="#D9E1DE"
-                class="streamSettingBtn"
-                @click="onEnabledAudio(true)"
-              >
+              <v-btn v-else-if="!videoParams.isEnabledAudio" color="#D9E1DE" class="streamSettingBtn"
+                @click="onEnabledAudio(true)">
                 <div class="stream-microphone-off"></div>
               </v-btn>
-              <v-btn
-                v-if="videoParams.isEnabledVideo"
-                color="#009149"
-                class="streamSettingBtn d-none"
-                :disabled="true"
-                @click="onEnabledVideo(false)"
-              >
+              <v-btn v-if="videoParams.isEnabledVideo" color="#009149" class="streamSettingBtn d-none" :disabled="true"
+                @click="onEnabledVideo(false)">
                 <div class="stream-camera-on"></div>
               </v-btn>
-              <v-btn
-                v-else-if="!videoParams.isEnabledVideo"
-                color="#D9E1DE"
-                class="streamSettingBtn d-none"
-                :disabled="videoParams.isNoCamera"
-                @click="onEnabledVideo(true)"
-              >
+              <v-btn v-else-if="!videoParams.isEnabledVideo" color="#D9E1DE" class="streamSettingBtn d-none"
+                :disabled="videoParams.isNoCamera" @click="onEnabledVideo(true)">
                 <v-icon size="22">mdi-video-off</v-icon>
               </v-btn>
-              <v-btn
-                outlined
-                color="#D9E1DE"
-                class="streamSettingBtn"
-                @click="setStreamSettingDialog"
-              >
+              <v-btn outlined color="#D9E1DE" class="streamSettingBtn" @click="setStreamSettingDialog">
                 <div class="stream-setting"></div>
               </v-btn>
-              <v-btn
-                color="#F56B4E"
-                class="streamSettingBtn d-none"
-                @click="onHangup"
-              >
+              <v-btn color="#F56B4E" class="streamSettingBtn d-none" @click="onHangup">
                 <div class="stream-hang-up"></div>
               </v-btn>
             </div>
@@ -3962,11 +2213,7 @@
     </v-navigation-drawer>
 
     <!-- mode 4 left drawing tool bar  -->
-    <div
-      v-if="mode === 4"
-      id="drawingToolBarContainer"
-      class="d-flex flex-column"
-      style="
+    <div v-if="mode === 4" id="drawingToolBarContainer" class="d-flex flex-column" style="
         height: 100%;
         top: 48px;
         width: 65px;
@@ -3974,32 +2221,19 @@
         background-color: rgb(255, 255, 255);
         position: absolute;
         box-shadow: 0px 3px 6px #00000029;
-      "
-      :style="{
+      " :style="{
         'z-index': $vuetify.breakpoint.mdAndDown ? 198 : 200,
         visibility:
           (mode === 4 && control === 0 && role === 'HOST') ||
-          (mode === 4 && control === 1 && role === 'SIGNER')
+            (mode === 4 && control === 1 && role === 'SIGNER')
             ? 'visible'
             : 'hidden',
-      }"
-      @click="listenDrawToolToggle"
-    >
-      <v-btn-toggle
-        v-model="drawToolToggle"
-        mandatory
-        style="display: flex; flex-direction: column"
-      >
+      }" @click="listenDrawToolToggle">
+      <v-btn-toggle v-model="drawToolToggle" mandatory style="display: flex; flex-direction: column">
         <!-- pointer -->
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="pointer"
-              text
-              :value="1"
-              color="primaryCustom"
-              class="toolbarButton draw-tool1"
-            >
+            <v-btn id="pointer" text :value="1" color="primaryCustom" class="toolbarButton draw-tool1">
             </v-btn>
           </template>
           <span>
@@ -4009,23 +2243,12 @@
           </span>
         </tippy>
         <!-- pointer option  -->
-        <v-btn-toggle
-          v-show="drawToolToggle === 1 && showPanel"
-          id="optionPanel1"
-          v-model="pointerOptionToggle"
-          class="option-panel"
-          mandatory
-        >
+        <v-btn-toggle v-show="drawToolToggle === 1 && showPanel" id="optionPanel1" v-model="pointerOptionToggle"
+          class="option-panel" mandatory>
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="pointer1"
-                text
-                :value="1"
-                color="primaryCustom"
-                class="toolbarButton draw-tool1-1"
-                @click="setIsAllowTouchScrolling(false)"
-              >
+              <v-btn id="pointer1" text :value="1" color="primaryCustom" class="toolbarButton draw-tool1-1"
+                @click="setIsAllowTouchScrolling(false)">
               </v-btn>
             </template>
             <span>
@@ -4036,14 +2259,8 @@
           </tippy>
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="pointer2"
-                text
-                :value="2"
-                color="primaryCustom"
-                class="toolbarButton draw-tool1-2"
-                @click="setIsAllowTouchScrolling(true)"
-              >
+              <v-btn id="pointer2" text :value="2" color="primaryCustom" class="toolbarButton draw-tool1-2"
+                @click="setIsAllowTouchScrolling(true)">
               </v-btn>
             </template>
             <span>
@@ -4056,13 +2273,7 @@
         <!-- pen -->
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="draw"
-              text
-              :value="2"
-              color="primaryCustom"
-              class="toolbarButton draw-tool2"
-            >
+            <v-btn id="draw" text :value="2" color="primaryCustom" class="toolbarButton draw-tool2">
             </v-btn>
           </template>
           <span>
@@ -4072,22 +2283,11 @@
           </span>
         </tippy>
         <!-- pen option  -->
-        <v-btn-toggle
-          v-show="drawToolToggle === 2 && showPanel"
-          id="optionPanel2"
-          v-model="penOptionToggle"
-          class="option-panel"
-          mandatory
-        >
+        <v-btn-toggle v-show="drawToolToggle === 2 && showPanel" id="optionPanel2" v-model="penOptionToggle"
+          class="option-panel" mandatory>
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="pen1"
-                text
-                :value="1"
-                color="primaryCustom"
-                class="toolbarButton draw-tool2-1"
-              >
+              <v-btn id="pen1" text :value="1" color="primaryCustom" class="toolbarButton draw-tool2-1">
               </v-btn>
             </template>
             <span>
@@ -4098,13 +2298,7 @@
           </tippy>
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="pen2"
-                text
-                :value="2"
-                color="primaryCustom"
-                class="toolbarButton draw-tool2-2"
-              >
+              <v-btn id="pen2" text :value="2" color="primaryCustom" class="toolbarButton draw-tool2-2">
               </v-btn>
             </template>
             <span>
@@ -4117,14 +2311,8 @@
         <!-- text box -->
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="annotateBtn92"
-              text
-              :value="3"
-              class="toolbarButton draw-tool3"
-              color="primaryCustom"
-              @click="addAnnotateMB(92)"
-            >
+            <v-btn id="annotateBtn92" text :value="3" class="toolbarButton draw-tool3" color="primaryCustom"
+              @click="addAnnotateMB(92)">
             </v-btn>
           </template>
           <span>
@@ -4136,13 +2324,7 @@
         <!-- eraser -->
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="eraser-draw"
-              text
-              :value="4"
-              color="primaryCustom"
-              class="toolbarButton draw-tool4"
-            >
+            <v-btn id="eraser-draw" text :value="4" color="primaryCustom" class="toolbarButton draw-tool4">
             </v-btn>
           </template>
           <span>
@@ -4154,13 +2336,7 @@
         <!-- geometry -->
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="annotateBtn91"
-              text
-              :value="5"
-              class="toolbarButton draw-tool5"
-              color="primaryCustom"
-            >
+            <v-btn id="annotateBtn91" text :value="5" class="toolbarButton draw-tool5" color="primaryCustom">
             </v-btn>
           </template>
           <span>
@@ -4170,22 +2346,11 @@
           </span>
         </tippy>
         <!-- geometry option  -->
-        <v-btn-toggle
-          v-show="drawToolToggle === 5 && showPanel"
-          id="optionPanel5"
-          v-model="geometryOptionToggle"
-          class="option-panel"
-          mandatory
-        >
+        <v-btn-toggle v-show="drawToolToggle === 5 && showPanel" id="optionPanel5" v-model="geometryOptionToggle"
+          class="option-panel" mandatory>
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="geometry1"
-                text
-                :value="1"
-                color="primaryCustom"
-                class="toolbarButton draw-tool5-1"
-              >
+              <v-btn id="geometry1" text :value="1" color="primaryCustom" class="toolbarButton draw-tool5-1">
               </v-btn>
             </template>
             <span>
@@ -4196,13 +2361,7 @@
           </tippy>
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="geometry2"
-                text
-                :value="2"
-                color="primaryCustom"
-                class="toolbarButton draw-tool5-2"
-              >
+              <v-btn id="geometry2" text :value="2" color="primaryCustom" class="toolbarButton draw-tool5-2">
               </v-btn>
             </template>
             <span>
@@ -4215,13 +2374,7 @@
         <!-- line -->
         <tippy>
           <template v-slot:trigger>
-            <v-btn
-              id="annotateBtn94"
-              text
-              :value="6"
-              class="toolbarButton draw-tool6"
-              color="primaryCustom"
-            >
+            <v-btn id="annotateBtn94" text :value="6" class="toolbarButton draw-tool6" color="primaryCustom">
             </v-btn>
           </template>
           <span>
@@ -4231,32 +2384,19 @@
           </span>
         </tippy>
       </v-btn-toggle>
-      <v-btn-toggle
-        v-model="drawOptionToggle"
-        style="display: flex; flex-direction: column"
-      >
+      <v-btn-toggle v-model="drawOptionToggle" style="display: flex; flex-direction: column">
         <!-- color picker  -->
         <tippy v-show="!disableSelectColor">
           <template v-slot:trigger>
-            <v-btn
-              text
-              :value="7"
-              class="toolbarButton draw-tool7"
-              color="primaryCustom"
-              :disabled="disableSelectColor"
-            >
+            <v-btn text :value="7" class="toolbarButton draw-tool7" color="primaryCustom"
+              :disabled="disableSelectColor">
             </v-btn>
-            <div
-              class="draw-tool7-inner"
-              :value="7"
-              :style="{
-                'background-color': disableSelectColor
-                  ? '#777777'
-                  : drawToolBarColor,
-                cursor: disableSelectColor ? 'auto' : 'pointer',
-              }"
-              :disabled="disableSelectColor"
-            ></div>
+            <div class="draw-tool7-inner" :value="7" :style="{
+              'background-color': disableSelectColor
+                ? '#777777'
+                : drawToolBarColor,
+              cursor: disableSelectColor ? 'auto' : 'pointer',
+            }" :disabled="disableSelectColor"></div>
           </template>
           <span>
             <span style="font-size: 12px; color: white">{{
@@ -4264,38 +2404,21 @@
             }}</span>
           </span>
         </tippy>
-        <div
-          v-show="drawOptionToggle === 7 && showOptionPanel"
-          id="optionPanel7"
-          class="option-panel"
-          style="padding: 9px"
-        >
+        <div v-show="drawOptionToggle === 7 && showOptionPanel" id="optionPanel7" class="option-panel"
+          style="padding: 9px">
           <p class="option-panel-title">{{ $t('text.color') }}</p>
           <div class="color" style="margin: unset">
-            <div
-              v-for="(row, index) in colorArr"
-              :key="'row' + index"
-              class="d-flex"
-            >
-              <div
-                v-for="(color, idx) in row"
-                :key="'color' + idx"
-                style="width: 25px; height: 25px; cursor: pointer"
-                :style="{ 'background-color': color }"
-              ></div>
+            <div v-for="(row, index) in colorArr" :key="'row' + index" class="d-flex">
+              <div v-for="(color, idx) in row" :key="'color' + idx" style="width: 25px; height: 25px; cursor: pointer"
+                :style="{ 'background-color': color }"></div>
             </div>
           </div>
         </div>
         <!-- thickness select -->
         <tippy v-show="!disableSelectWidth">
           <template v-slot:trigger>
-            <v-btn
-              text
-              :value="8"
-              class="toolbarButton draw-tool8"
-              color="primaryCustom"
-              :disabled="disableSelectWidth"
-            >
+            <v-btn text :value="8" class="toolbarButton draw-tool8" color="primaryCustom"
+              :disabled="disableSelectWidth">
             </v-btn>
           </template>
           <span>
@@ -4304,40 +2427,21 @@
             }}</span>
           </span>
         </tippy>
-        <div
-          v-show="drawOptionToggle === 8 && showOptionPanel"
-          id="optionPanel8"
-          class="option-panel"
-          style="padding: 9px"
-        >
+        <div v-show="drawOptionToggle === 8 && showOptionPanel" id="optionPanel8" class="option-panel"
+          style="padding: 9px">
           <p class="option-panel-title" style="margin: 0">
             {{ $t('text.thickness') }}
           </p>
-          <v-slider
-            v-model="drawToolBarWidth"
-            class="thickness-bar"
-            :label="drawToolBarWidth + $t('text.point')"
-            inverse-label
-            dense
-            hide-details
-            :step="drawToolToggle !== 6 && drawToolToggle !== 5 ? 2 : 1"
+          <v-slider v-model="drawToolBarWidth" class="thickness-bar" :label="drawToolBarWidth + $t('text.point')"
+            inverse-label dense hide-details :step="drawToolToggle !== 6 && drawToolToggle !== 5 ? 2 : 1"
             :max="drawToolToggle === 6 || drawToolToggle === 5 ? 10 : 60"
-            :min="drawToolToggle === 6 || drawToolToggle === 5 ? 1 : 2"
-            track-color="#eeeeee"
-            style="width: 100%; margin-top: -5px"
-            @change="showDrawOptionPanel"
-          ></v-slider>
+            :min="drawToolToggle === 6 || drawToolToggle === 5 ? 1 : 2" track-color="#eeeeee"
+            style="width: 100%; margin-top: -5px" @change="showDrawOptionPanel"></v-slider>
         </div>
         <!-- text size select -->
         <tippy v-show="!disableSelectSize">
           <template v-slot:trigger>
-            <v-btn
-              text
-              :value="9"
-              class="toolbarButton draw-tool9"
-              color="primaryCustom"
-              :disabled="disableSelectSize"
-            >
+            <v-btn text :value="9" class="toolbarButton draw-tool9" color="primaryCustom" :disabled="disableSelectSize">
             </v-btn>
           </template>
           <span>
@@ -4346,43 +2450,31 @@
             }}</span>
           </span>
         </tippy>
-        <v-btn-toggle
-          v-show="drawOptionToggle === 9 && showOptionPanel"
-          id="optionPanel9"
-          v-model="selectedWidth.text"
-          mandatory
-          class="option-panel"
-        >
-          <v-btn
-            v-for="(item, index) in textSizeOptions"
-            :key="item.label"
-            text
-            :value="item.value"
-            color="primaryCustom"
-            class="toolbarButton"
-            :style="{
+        <v-btn-toggle v-show="drawOptionToggle === 9 && showOptionPanel" id="optionPanel9" v-model="selectedWidth.text"
+          mandatory class="option-panel">
+          <v-btn v-for="(item, index) in textSizeOptions" :key="item.label" text :value="item.value"
+            color="primaryCustom" class="toolbarButton" :style="{
               'font-size':
                 index === 0
                   ? '50px'
                   : index === 1
-                  ? '40px'
-                  : index === 2
-                  ? '30px'
-                  : index === 3
-                  ? '20px'
-                  : '14px',
+                    ? '40px'
+                    : index === 2
+                      ? '30px'
+                      : index === 3
+                        ? '20px'
+                        : '14px',
               height:
                 index === 0
                   ? '28%'
                   : index === 1
-                  ? '24%'
-                  : index === 2
-                  ? '20%'
-                  : index === 3
-                  ? '16%'
-                  : '12%',
-            }"
-            >{{ item.label }}
+                    ? '24%'
+                    : index === 2
+                      ? '20%'
+                      : index === 3
+                        ? '16%'
+                        : '12%',
+            }">{{ item.label }}
           </v-btn>
         </v-btn-toggle>
       </v-btn-toggle>
@@ -4391,11 +2483,7 @@
 
     <!-- mode 1 top drawing tool bar  -->
     <v-slide-y-transition v-if="mode === 1">
-      <div
-        v-show="showDrawTool"
-        id="drawingToolBarContainerRow"
-        class="align-center white"
-        style="
+      <div v-show="showDrawTool" id="drawingToolBarContainerRow" class="align-center white" style="
           display: flex;
           top: 48px;
           width: 100%;
@@ -4403,22 +2491,14 @@
           position: absolute;
           box-shadow: 0px 3px 6px #00000029;
           z-index: 41;
-        "
-        @click="listenDrawToolToggle"
-      >
+        " @click="listenDrawToolToggle">
         <v-spacer></v-spacer>
         <v-btn-toggle v-model="drawToolToggle" mandatory class="d-flex">
           <!-- pointer -->
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="pointer"
-                text
-                :value="1"
-                color="primaryCustom"
-                class="toolbarButton draw-tool1-1 draw-tool1"
-                @click="setIsAllowTouchScrolling(false)"
-              >
+              <v-btn id="pointer" text :value="1" color="primaryCustom" class="toolbarButton draw-tool1-1 draw-tool1"
+                @click="setIsAllowTouchScrolling(false)">
               </v-btn>
             </template>
             <span>
@@ -4475,13 +2555,7 @@
           <!-- pen -->
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="draw"
-                text
-                :value="2"
-                color="primaryCustom"
-                class="toolbarButton draw-tool2"
-              >
+              <v-btn id="draw" text :value="2" color="primaryCustom" class="toolbarButton draw-tool2">
               </v-btn>
             </template>
             <span>
@@ -4491,22 +2565,11 @@
             </span>
           </tippy>
           <!-- pen option  -->
-          <v-btn-toggle
-            v-show="drawToolToggle === 2 && showPanel"
-            id="optionPanel2"
-            v-model="penOptionToggle"
-            class="option-panel-row"
-            mandatory
-          >
+          <v-btn-toggle v-show="drawToolToggle === 2 && showPanel" id="optionPanel2" v-model="penOptionToggle"
+            class="option-panel-row" mandatory>
             <tippy>
               <template v-slot:trigger>
-                <v-btn
-                  id="pen1"
-                  text
-                  :value="1"
-                  color="primaryCustom"
-                  class="toolbarButton draw-tool2-1"
-                >
+                <v-btn id="pen1" text :value="1" color="primaryCustom" class="toolbarButton draw-tool2-1">
                 </v-btn>
               </template>
               <span>
@@ -4517,13 +2580,7 @@
             </tippy>
             <tippy>
               <template v-slot:trigger>
-                <v-btn
-                  id="pen2"
-                  text
-                  :value="2"
-                  color="primaryCustom"
-                  class="toolbarButton draw-tool2-2"
-                >
+                <v-btn id="pen2" text :value="2" color="primaryCustom" class="toolbarButton draw-tool2-2">
                 </v-btn>
               </template>
               <span>
@@ -4536,14 +2593,8 @@
           <!-- text box -->
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="annotateBtn92"
-                text
-                :value="3"
-                class="toolbarButton draw-tool3"
-                color="primaryCustom"
-                @click="addAnnotateMB(92)"
-              >
+              <v-btn id="annotateBtn92" text :value="3" class="toolbarButton draw-tool3" color="primaryCustom"
+                @click="addAnnotateMB(92)">
               </v-btn>
             </template>
             <span>
@@ -4555,13 +2606,7 @@
           <!-- eraser -->
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="eraser-draw"
-                text
-                :value="4"
-                color="primaryCustom"
-                class="toolbarButton draw-tool4"
-              >
+              <v-btn id="eraser-draw" text :value="4" color="primaryCustom" class="toolbarButton draw-tool4">
               </v-btn>
             </template>
             <span>
@@ -4573,13 +2618,7 @@
           <!-- geometry -->
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="annotateBtn91"
-                text
-                :value="5"
-                class="toolbarButton draw-tool5"
-                color="primaryCustom"
-              >
+              <v-btn id="annotateBtn91" text :value="5" class="toolbarButton draw-tool5" color="primaryCustom">
               </v-btn>
             </template>
             <span>
@@ -4589,22 +2628,11 @@
             </span>
           </tippy>
           <!-- geometry option  -->
-          <v-btn-toggle
-            v-show="drawToolToggle === 5 && showPanel"
-            id="optionPanel5"
-            v-model="geometryOptionToggle"
-            class="option-panel-row"
-            mandatory
-          >
+          <v-btn-toggle v-show="drawToolToggle === 5 && showPanel" id="optionPanel5" v-model="geometryOptionToggle"
+            class="option-panel-row" mandatory>
             <tippy>
               <template v-slot:trigger>
-                <v-btn
-                  id="geometry1"
-                  text
-                  :value="1"
-                  color="primaryCustom"
-                  class="toolbarButton draw-tool5-1"
-                >
+                <v-btn id="geometry1" text :value="1" color="primaryCustom" class="toolbarButton draw-tool5-1">
                 </v-btn>
               </template>
               <span>
@@ -4615,13 +2643,7 @@
             </tippy>
             <tippy>
               <template v-slot:trigger>
-                <v-btn
-                  id="geometry2"
-                  text
-                  :value="2"
-                  color="primaryCustom"
-                  class="toolbarButton draw-tool5-2"
-                >
+                <v-btn id="geometry2" text :value="2" color="primaryCustom" class="toolbarButton draw-tool5-2">
                 </v-btn>
               </template>
               <span>
@@ -4634,13 +2656,7 @@
           <!-- line -->
           <tippy>
             <template v-slot:trigger>
-              <v-btn
-                id="annotateBtn94"
-                text
-                :value="6"
-                class="toolbarButton draw-tool6"
-                color="primaryCustom"
-              >
+              <v-btn id="annotateBtn94" text :value="6" class="toolbarButton draw-tool6" color="primaryCustom">
               </v-btn>
             </template>
             <span>
@@ -4650,33 +2666,19 @@
             </span>
           </tippy>
         </v-btn-toggle>
-        <v-btn-toggle
-          v-model="drawOptionToggle"
-          class="drawTool-optionPanel"
-          style="display: flex"
-        >
+        <v-btn-toggle v-model="drawOptionToggle" class="drawTool-optionPanel" style="display: flex">
           <!-- color picker  -->
           <tippy v-show="!disableSelectColor">
             <template v-slot:trigger>
-              <v-btn
-                text
-                :value="7"
-                class="toolbarButton draw-tool7"
-                color="primaryCustom"
-                :disabled="disableSelectColor"
-              >
-                <div
-                  class="draw-tool7-inner draw-tool7"
-                  :style="{
-                    'background-color': disableSelectColor
-                      ? '#777777'
-                      : drawToolBarColor,
-                    cursor: disableSelectColor ? 'auto' : 'pointer',
-                  }"
-                  :value="7"
-                  :disabled="disableSelectColor"
-                  @click=";(showOptionPanel = true), (drawOptionToggle = 7)"
-                ></div>
+              <v-btn text :value="7" class="toolbarButton draw-tool7" color="primaryCustom"
+                :disabled="disableSelectColor">
+                <div class="draw-tool7-inner draw-tool7" :style="{
+                  'background-color': disableSelectColor
+                    ? '#777777'
+                    : drawToolBarColor,
+                  cursor: disableSelectColor ? 'auto' : 'pointer',
+                }" :value="7" :disabled="disableSelectColor"
+                  @click="; (showOptionPanel = true), (drawOptionToggle = 7)"></div>
               </v-btn>
             </template>
             <span>
@@ -4685,38 +2687,21 @@
               }}</span>
             </span>
           </tippy>
-          <div
-            v-show="drawOptionToggle === 7 && showOptionPanel"
-            id="optionPanel7"
-            class="option-panel-row"
-            style="padding: 9px"
-          >
+          <div v-show="drawOptionToggle === 7 && showOptionPanel" id="optionPanel7" class="option-panel-row"
+            style="padding: 9px">
             <p class="option-panel-title">{{ $t('text.color') }}</p>
             <div class="color" style="margin: unset">
-              <div
-                v-for="(row, index) in colorArr"
-                :key="'row' + index"
-                class="d-flex"
-              >
-                <div
-                  v-for="(color, idx) in row"
-                  :key="'color' + idx"
-                  style="width: 25px; height: 25px; cursor: pointer"
-                  :style="{ 'background-color': color }"
-                ></div>
+              <div v-for="(row, index) in colorArr" :key="'row' + index" class="d-flex">
+                <div v-for="(color, idx) in row" :key="'color' + idx" style="width: 25px; height: 25px; cursor: pointer"
+                  :style="{ 'background-color': color }"></div>
               </div>
             </div>
           </div>
           <!-- thickness select -->
           <tippy v-show="!disableSelectWidth">
             <template v-slot:trigger>
-              <v-btn
-                text
-                :value="8"
-                class="toolbarButton draw-tool8"
-                color="primaryCustom"
-                :disabled="disableSelectWidth"
-              >
+              <v-btn text :value="8" class="toolbarButton draw-tool8" color="primaryCustom"
+                :disabled="disableSelectWidth">
               </v-btn>
             </template>
             <span>
@@ -4725,39 +2710,21 @@
               }}</span>
             </span>
           </tippy>
-          <div
-            v-show="drawOptionToggle === 8 && showOptionPanel"
-            id="optionPanel8"
-            class="option-panel-row"
-          >
+          <div v-show="drawOptionToggle === 8 && showOptionPanel" id="optionPanel8" class="option-panel-row">
             <p class="option-panel-title" style="margin: 0">
               {{ $t('text.thickness') }}
             </p>
-            <v-slider
-              v-model="drawToolBarWidth"
-              class="thickness-bar"
-              :label="drawToolBarWidth + $t('text.point')"
-              inverse-label
-              dense
-              hide-details
-              :step="drawToolToggle !== 6 && drawToolToggle !== 5 ? 2 : 1"
+            <v-slider v-model="drawToolBarWidth" class="thickness-bar" :label="drawToolBarWidth + $t('text.point')"
+              inverse-label dense hide-details :step="drawToolToggle !== 6 && drawToolToggle !== 5 ? 2 : 1"
               :max="drawToolToggle === 6 || drawToolToggle === 5 ? 10 : 60"
-              :min="drawToolToggle === 6 || drawToolToggle === 5 ? 1 : 2"
-              track-color="#eeeeee"
-              style="width: 100%; margin-top: -5px"
-              @change="showDrawOptionPanel"
-            ></v-slider>
+              :min="drawToolToggle === 6 || drawToolToggle === 5 ? 1 : 2" track-color="#eeeeee"
+              style="width: 100%; margin-top: -5px" @change="showDrawOptionPanel"></v-slider>
           </div>
           <!-- text size select -->
           <tippy v-show="!disableSelectSize">
             <template v-slot:trigger>
-              <v-btn
-                text
-                :value="9"
-                class="toolbarButton draw-tool9"
-                color="primaryCustom"
-                :disabled="disableSelectSize"
-              >
+              <v-btn text :value="9" class="toolbarButton draw-tool9" color="primaryCustom"
+                :disabled="disableSelectSize">
               </v-btn>
             </template>
             <span>
@@ -4766,43 +2733,31 @@
               }}</span>
             </span>
           </tippy>
-          <v-btn-toggle
-            v-show="drawOptionToggle === 9 && showOptionPanel"
-            id="optionPanel9"
-            v-model="selectedWidth.text"
-            mandatory
-            class="option-panel-row"
-          >
-            <v-btn
-              v-for="(item, index) in textSizeOptions"
-              :key="item.label"
-              text
-              :value="item.value"
-              color="primaryCustom"
-              class="toolbarButton"
-              :style="{
+          <v-btn-toggle v-show="drawOptionToggle === 9 && showOptionPanel" id="optionPanel9"
+            v-model="selectedWidth.text" mandatory class="option-panel-row">
+            <v-btn v-for="(item, index) in textSizeOptions" :key="item.label" text :value="item.value"
+              color="primaryCustom" class="toolbarButton" :style="{
                 'font-size':
                   index === 0
                     ? '50px'
                     : index === 1
-                    ? '40px'
-                    : index === 2
-                    ? '30px'
-                    : index === 3
-                    ? '20px'
-                    : '14px',
+                      ? '40px'
+                      : index === 2
+                        ? '30px'
+                        : index === 3
+                          ? '20px'
+                          : '14px',
                 height:
                   index === 0
                     ? '28%'
                     : index === 1
-                    ? '24%'
-                    : index === 2
-                    ? '20%'
-                    : index === 3
-                    ? '16%'
-                    : '12%',
-              }"
-              >{{ item.label }}
+                      ? '24%'
+                      : index === 2
+                        ? '20%'
+                        : index === 3
+                          ? '16%'
+                          : '12%',
+              }">{{ item.label }}
             </v-btn>
           </v-btn-toggle>
         </v-btn-toggle>
@@ -4811,67 +2766,28 @@
     </v-slide-y-transition>
 
     <!-- mode 1 right commnet  -->
-    <v-navigation-drawer
-      v-if="mode === 1 || mode === 3"
-      id="rightDrawerContainer"
-      v-model="commentDrawer"
-      :clipped="true"
-      :absolute="!$vuetify.breakpoint.mdAndDown"
-      :fixed="$vuetify.breakpoint.mdAndDown"
-      app
-      right
-      width="240"
-      color="#f8f9fa"
-      touchless
-      floating
-      hide-overlay
-      class="commentDrawer"
-      style="height: 100%; border-left: 1px solid #e0e0e0; z-index: 200"
-    >
+    <v-navigation-drawer v-if="mode === 1 || mode === 3" id="rightDrawerContainer" v-model="commentDrawer"
+      :clipped="true" :absolute="!$vuetify.breakpoint.mdAndDown" :fixed="$vuetify.breakpoint.mdAndDown" app right
+      width="240" color="#f8f9fa" touchless floating hide-overlay class="commentDrawer"
+      style="height: 100%; border-left: 1px solid #e0e0e0; z-index: 200">
       <v-card v-if="mode === 1" class="ma-2">
-        <v-textarea
-          v-model="newComment"
-          name="input-7-1"
-          solo
-          :label="$t('label.createComment')"
-          auto-grow
-          background-color="white"
-          class="mt-7 comment-input"
-          :counter="400"
-        ></v-textarea>
+        <v-textarea v-model="newComment" name="input-7-1" solo :label="$t('label.createComment')" auto-grow
+          background-color="white" class="mt-7 comment-input" :counter="400"></v-textarea>
         <v-slide-y-transition>
-          <v-card-actions
-            v-show="newComment && newComment.length > 0"
-            style="background-color: #f8f9fa"
-          >
+          <v-card-actions v-show="newComment && newComment.length > 0" style="background-color: #f8f9fa">
             <v-spacer></v-spacer>
-            <v-btn
-              color="gray"
-              small
-              text
-              class="mr-2"
-              @click="newComment = ''"
-            >
+            <v-btn color="gray" small text class="mr-2" @click="newComment = ''">
               {{ $t('button.cancel') }}
             </v-btn>
-            <v-btn
-              color="primary"
-              depressed
-              small
-              :disabled="newComment.length > 400"
-              @click="addComment"
-            >
+            <v-btn color="primary" depressed small :disabled="newComment.length > 400" @click="addComment">
               {{ $t('button.add') }}
             </v-btn>
           </v-card-actions>
         </v-slide-y-transition>
       </v-card>
       <v-expansion-panels multiple class="pdfAnnotation-panel" tile>
-        <v-expansion-panel
-          v-for="(page, index) in commentAnnotations[selectedFile - 1]"
-          v-show="page.length > 0"
-          :key="index"
-        >
+        <v-expansion-panel v-for="(page, index) in commentAnnotations[selectedFile - 1]" v-show="page.length > 0"
+          :key="index">
           <v-expansion-panel-header>
             <div>{{ $t('message.pageX').replace('{page}', index + 1) }}</div>
             <!-- <v-spacer></v-spacer>
@@ -4892,32 +2808,17 @@
           <v-expansion-panel-content>
             <template v-for="(anno, i) in page">
               <!-- predecessors add -->
-              <v-card
-                v-if="anno.annotationType"
-                :key="'pdfAnnotations_' + i"
-                class="pdfAnnotation"
-                @click="jumpPdfAnnotation(anno)"
-              >
+              <v-card v-if="anno.annotationType" :key="'pdfAnnotations_' + i" class="pdfAnnotation"
+                @click="jumpPdfAnnotation(anno)">
                 <v-card-subtitle class="font-weight-bold d-flex">
-                  <v-avatar
-                    :color="
-                      anno.color
-                        ? `rgba(${anno.color[0]},
+                  <v-avatar :color="anno.color
+                      ? `rgba(${anno.color[0]},
                     ${anno.color[1]},
                     ${anno.color[2]},
                     0.3)`
-                        : `rgba(0,0,0,0.3)`
-                    "
-                    width="40"
-                    min-width="40"
-                    height="40"
-                    class="my-auto ml-0 mr-2"
-                  >
-                    <img
-                      src="/icon/comment.svg"
-                      alt="comment-person"
-                      style="object-fit: none"
-                    />
+                      : `rgba(0,0,0,0.3)`
+                    " width="40" min-width="40" height="40" class="my-auto ml-0 mr-2">
+                    <img src="/icon/comment.svg" alt="comment-person" style="object-fit: none" />
                   </v-avatar>
                   <div class="text-caption" style="line-break: anywhere">
                     <span>{{ anno.titleObj.str }}</span>
@@ -4932,27 +2833,12 @@
                 </v-card-text>
               </v-card>
               <!-- self add -->
-              <v-card
-                v-else
-                :key="'pdfAnnotations_self_' + i"
-                class="pdfAnnotation"
-                @click="jumpPdfAnnotation(anno)"
-              >
+              <v-card v-else :key="'pdfAnnotations_self_' + i" class="pdfAnnotation" @click="jumpPdfAnnotation(anno)">
                 <v-card-subtitle class="font-weight-bold d-flex">
-                  <v-avatar
-                    :color="anno.color || `rgba(0,0,0,0.3)`"
-                    width="40"
-                    min-width="40"
-                    height="40"
-                    class="my-auto ml-0 mr-2 overflow-visible"
-                  >
-                    <img
-                      src="/icon/comment.svg"
-                      alt="comment-person"
-                      style="object-fit: none"
-                    />
-                    <div
-                      style="
+                  <v-avatar :color="anno.color || `rgba(0,0,0,0.3)`" width="40" min-width="40" height="40"
+                    class="my-auto ml-0 mr-2 overflow-visible">
+                    <img src="/icon/comment.svg" alt="comment-person" style="object-fit: none" />
+                    <div style="
                         position: absolute;
                         bottom: -5px;
                         right: -5px;
@@ -4962,8 +2848,7 @@
                         height: 20px;
                         border-radius: 50px;
                         text-align: center;
-                      "
-                    >
+                      ">
                       {{ anno.id + 1 }}
                     </div>
                   </v-avatar>
@@ -4976,16 +2861,11 @@
                   </div>
                   <v-menu offset-y z-index="200">
                     <template v-slot:activator="{ on, attrs }">
-                      <v-btn class="my-auto" icon v-bind="attrs" v-on="on"
-                        ><v-icon>mdi-dots-horizontal</v-icon></v-btn
-                      >
+                      <v-btn class="my-auto" icon v-bind="attrs" v-on="on"><v-icon>mdi-dots-horizontal</v-icon></v-btn>
                     </template>
                     <v-list style="cursor: pointer">
-                      <v-list-item
-                        v-for="(action, j) in commentOptionMenu"
-                        :key="'commentOptionMenu_' + j"
-                        @click="commentAction(action.func, anno.id)"
-                      >
+                      <v-list-item v-for="(action, j) in commentOptionMenu" :key="'commentOptionMenu_' + j"
+                        @click="commentAction(action.func, anno.id)">
                         <v-list-item-title>{{
                           action.title
                         }}</v-list-item-title>
@@ -4994,17 +2874,8 @@
                   </v-menu>
                 </v-card-subtitle>
                 <v-card-text class="pb-7">
-                  <v-textarea
-                    v-model="anno.content"
-                    name="input-7-1"
-                    outlined
-                    solo
-                    auto-grow
-                    hide-details
-                    dense
-                    class="mt-7 comment-input"
-                    @click.stop
-                  ></v-textarea>
+                  <v-textarea v-model="anno.content" name="input-7-1" outlined solo auto-grow hide-details dense
+                    class="mt-7 comment-input" @click.stop></v-textarea>
                 </v-card-text>
 
                 <!-- <div
@@ -5021,54 +2892,24 @@
       </v-expansion-panels>
     </v-navigation-drawer>
 
-    <v-navigation-drawer
-      v-if="mode === 1 || mode === 3"
-      id="rightDrawerContainer"
-      v-model="attachmentDrawer"
-      :clipped="true"
-      :absolute="!$vuetify.breakpoint.mdAndDown"
-      :fixed="$vuetify.breakpoint.mdAndDown"
-      app
-      right
-      width="240"
-      color="#f8f9fa"
-      touchless
-      floating
-      hide-overlay
-      class="attachmentDrawer"
-      style="height: 100%; border-left: 1px solid #e0e0e0; z-index: 200"
-    >
+    <v-navigation-drawer v-if="mode === 1 || mode === 3" id="rightDrawerContainer" v-model="attachmentDrawer"
+      :clipped="true" :absolute="!$vuetify.breakpoint.mdAndDown" :fixed="$vuetify.breakpoint.mdAndDown" app right
+      width="240" color="#f8f9fa" touchless floating hide-overlay class="attachmentDrawer"
+      style="height: 100%; border-left: 1px solid #e0e0e0; z-index: 200">
       <v-expansion-panels multiple class="pdfAnnotation-panel" tile>
-        <v-expansion-panel
-          v-for="(page, index) in attachmentAnnotations[selectedFile - 1]"
-          v-show="page.length > 0"
-          :key="index"
-        >
+        <v-expansion-panel v-for="(page, index) in attachmentAnnotations[selectedFile - 1]" v-show="page.length > 0"
+          :key="index">
           <v-expansion-panel-header>
             <div>{{ $t('message.pageX').replace('{page}', index + 1) }}</div>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <template v-for="(anno, i) in page">
               <!-- predecessors add -->
-              <v-card
-                v-if="anno.annotationType"
-                :key="'pdfAnnotations_' + i"
-                class="pdfAnnotation"
-                @click="jumpPdfAnnotation(anno)"
-              >
+              <v-card v-if="anno.annotationType" :key="'pdfAnnotations_' + i" class="pdfAnnotation"
+                @click="jumpPdfAnnotation(anno)">
                 <v-card-subtitle class="font-weight-bold d-flex">
-                  <v-avatar
-                    :color="`rgba(0,0,0,0.3)`"
-                    width="40"
-                    min-width="40"
-                    height="40"
-                    class="my-auto ml-0 mr-2"
-                  >
-                    <img
-                      width="22"
-                      height="22"
-                      src="/images/tasks/paperclip.png"
-                    />
+                  <v-avatar :color="`rgba(0,0,0,0.3)`" width="40" min-width="40" height="40" class="my-auto ml-0 mr-2">
+                    <img width="22" height="22" src="/images/tasks/paperclip.png" />
                   </v-avatar>
                   <div class="text-subtitle-1" style="line-break: anywhere">
                     <span>{{ anno.file.filename }}</span>
@@ -5076,9 +2917,7 @@
                   <v-spacer></v-spacer>
                   <v-menu offset-y z-index="200">
                     <template v-slot:activator="{ on, attrs }">
-                      <v-btn class="my-auto" icon v-bind="attrs" v-on="on"
-                        ><v-icon>mdi-dots-horizontal</v-icon></v-btn
-                      >
+                      <v-btn class="my-auto" icon v-bind="attrs" v-on="on"><v-icon>mdi-dots-horizontal</v-icon></v-btn>
                     </template>
                     <v-list style="cursor: pointer">
                       <v-list-item @click="downloadAttachment(anno)">
@@ -5086,17 +2925,14 @@
                           $t('button.download')
                         }}</v-list-item-title>
                       </v-list-item>
-                      <v-list-item
-                        v-if="
-                          checkAttachmentContentType(anno, [
-                            'jpg',
-                            'jpeg',
-                            'png',
-                            'txt',
-                          ])
-                        "
-                        @click="openPreviewAttachment(anno)"
-                      >
+                      <v-list-item v-if="
+                        checkAttachmentContentType(anno, [
+                          'jpg',
+                          'jpeg',
+                          'png',
+                          'txt',
+                        ])
+                      " @click="openPreviewAttachment(anno)">
                         <v-list-item-title>{{
                           $t('button.preview')
                         }}</v-list-item-title>
@@ -5111,17 +2947,14 @@
       </v-expansion-panels>
     </v-navigation-drawer>
 
-    <v-main
-      class="tour-create-task-6"
-      :style="{
-        'margin-left':
-          (mode === 4 && control === 0 && role === 'HOST') ||
+    <v-main class="tour-create-task-6" :style="{
+      'margin-left':
+        (mode === 4 && control === 0 && role === 'HOST') ||
           (mode === 4 && control === 1 && role === 'SIGNER')
-            ? '65px'
-            : 0,
-        'margin-top': mode === 1 && showDrawTool ? '50px' : 0,
-      }"
-    >
+          ? '65px'
+          : 0,
+      'margin-top': mode === 1 && showDrawTool ? '50px' : 0,
+    }">
       <div id="viewerContainer" ref="listContainer">
         <div id="viewer" class="pdfViewer"></div>
       </div>
@@ -5145,25 +2978,16 @@
         Loading...
       </div>
     </div>
-    <v-dialog
-      v-model="signatureDialog"
-      overlay-opacity="0.9"
-      :fullscreen="$utils.isMobile(false)"
-      :persistent="$utils.isMobile(false)"
-      max-width="600"
-      :no-click-animation="$utils.isMobile(false)"
-      style="max-height: 100%"
-      @input="cancelSignature()"
-    >
+    <v-dialog v-model="signatureDialog" overlay-opacity="0.9" :fullscreen="$utils.isMobile(false)"
+      :persistent="$utils.isMobile(false)" max-width="600" :no-click-animation="$utils.isMobile(false)"
+      style="max-height: 100%" @input="cancelSignature()">
       <!-- select signature -->
-      <template
-        v-if="
-          isLogin === true &&
-          isAddSignature === false &&
-          signatureCount > 0 &&
-          isInPersonSign === false
-        "
-      >
+      <template v-if="
+        isLogin === true &&
+        isAddSignature === false &&
+        signatureCount > 0 &&
+        isInPersonSign === false
+      ">
         <v-card class="rounded-lg">
           <v-app-bar dark flat color="primaryCustom">
             <v-toolbar-title class="ml-5 mx-auto text-h6">
@@ -5171,87 +2995,46 @@
             </v-toolbar-title>
           </v-app-bar>
           <v-divider></v-divider>
-          <div
-            v-if="annotateSignature && annotateSignature.type === 9"
-            class="text-subtitle-1 px-8 pt-2"
-            style="color: rgba(0, 0, 0, 0.6)"
-          >
+          <div v-if="annotateSignature && annotateSignature.type === 9" class="text-subtitle-1 px-8 pt-2"
+            style="color: rgba(0, 0, 0, 0.6)">
             {{ $t('text.b2b2cPInfo') }}
           </div>
-          <div
-            v-else-if="annotateSignature && annotateSignature.type === 10"
-            class="text-subtitle-1 px-8 pt-2"
-            style="color: rgba(0, 0, 0, 0.6)"
-          >
+          <div v-else-if="annotateSignature && annotateSignature.type === 10" class="text-subtitle-1 px-8 pt-2"
+            style="color: rgba(0, 0, 0, 0.6)">
             {{ $t('text.b2b2cOInfo') }}
           </div>
-          <div
-            v-if="
-              annotateSignature &&
-              (annotateSignature.type === 9 || annotateSignature.type === 10)
-            "
-            class="px-8"
-          >
-            <a
-              style="text-decoration: underline"
-              @click="$emit('goApplyB2b2c', annotateSignature.type)"
-              >{{ $t('link.goApplyB2b2c') }}
+          <div v-if="
+            annotateSignature &&
+            (annotateSignature.type === 9 || annotateSignature.type === 10)
+          " class="px-8">
+            <a style="text-decoration: underline" @click="$emit('goApplyB2b2c', annotateSignature.type)">{{
+              $t('link.goApplyB2b2c') }}
               <svg-icon-gotolink />
             </a>
           </div>
           <v-card-text class="d-flex flex-column align-center pa-5">
-            <div
-              class="dialog-scroll-list"
-              :class="{ 'mobile-dialog-scroll-list': $utils.isMobile(false) }"
-            >
-              <v-item-group
-                v-if="signatureList && signatureList.length > 0"
-                v-model="selectedSignature"
-              >
+            <div class="dialog-scroll-list" :class="{ 'mobile-dialog-scroll-list': $utils.isMobile(false) }">
+              <v-item-group v-if="signatureList && signatureList.length > 0" v-model="selectedSignature">
                 <v-container>
                   <v-row>
-                    <v-col
-                      v-for="(sig, idx) in signatureList"
-                      :key="idx"
-                      cols="12"
-                    >
+                    <v-col v-for="(sig, idx) in signatureList" :key="idx" cols="12">
                       <v-item v-slot="{ active, toggle }">
-                        <v-card
-                          outlined
-                          elevation="0"
-                          style="cursor: pointer"
-                          :class="{
-                            toggledItem: active,
-                          }"
-                          @click.native="toggle"
-                        >
+                        <v-card outlined elevation="0" style="cursor: pointer" :class="{
+                          toggledItem: active,
+                        }" @click.native="toggle">
                           <v-card-title class="pt-2 px-2 pb-0">
-                            <v-chip
-                              v-if="sig.label !== null && sig.label !== ''"
-                              label
-                              ><span class="labelTextWrap">{{
-                                sig.label
-                              }}</span></v-chip
-                            >
+                            <v-chip v-if="sig.label !== null && sig.label !== ''" label><span class="labelTextWrap">{{
+                              sig.label
+                            }}</span></v-chip>
                             <!-- empty div for same height title -->
                             <div v-else text-color="white">&nbsp;</div>
                             <v-spacer />
-                            <v-icon
-                              v-if="selectedSignature === idx"
-                              color="#333"
-                              >mdi-check-circle-outline</v-icon
-                            >
-                            <v-icon v-else color="#333"
-                              >mdi-circle-outline</v-icon
-                            >
+                            <v-icon v-if="selectedSignature === idx" color="#333">mdi-check-circle-outline</v-icon>
+                            <v-icon v-else color="#333">mdi-circle-outline</v-icon>
                           </v-card-title>
                           <v-card-text class="my-4">
                             <v-row justify="center" align="center">
-                              <v-img
-                                contain
-                                :src="sig.content"
-                                max-height="100"
-                              />
+                              <v-img contain :src="sig.content" max-height="100" />
                             </v-row>
                           </v-card-text>
                           <v-card-actions>
@@ -5264,38 +3047,19 @@
                 </v-container>
               </v-item-group>
             </div>
-            <v-btn
-              color="primaryCustom"
-              large
-              outlined
-              class="mt-2 tour-sign-task-start"
-              style="width: calc(100% - 60px)"
-              @click="openAddSignatureDialog"
-            >
+            <v-btn color="primaryCustom" large outlined class="mt-2 tour-sign-task-start"
+              style="width: calc(100% - 60px)" @click="openAddSignatureDialog">
               <v-icon left>mdi-signature</v-icon>
               {{ $t('button.addSignatureNow') }}
             </v-btn>
           </v-card-text>
           <v-card-actions class="px-5 py-5 grey lighten-3">
             <v-spacer></v-spacer>
-            <v-btn
-              large
-              outlined
-              color="primaryCustom"
-              class="text-subtitle-2 mr-2"
-              @click="cancelSignature()"
-            >
+            <v-btn large outlined color="primaryCustom" class="text-subtitle-2 mr-2" @click="cancelSignature()">
               {{ $t('button.cancel') }}
             </v-btn>
-            <v-btn
-              large
-              color="primaryCustom"
-              class="text-subtitle-2"
-              :disabled="
-                selectedSignature === null || selectedSignature === undefined
-              "
-              @click="chooseSignature"
-            >
+            <v-btn large color="primaryCustom" class="text-subtitle-2" :disabled="selectedSignature === null || selectedSignature === undefined
+              " @click="chooseSignature">
               {{ $t('button.complete') }}
             </v-btn>
           </v-card-actions>
@@ -5303,93 +3067,50 @@
       </template>
       <!-- sign canvas -->
       <template v-else>
-        <v-card
-          class="signatureCanvasDialog align-center"
-          :class="{
-            'rounded-lg': !isLandscape || !$utils.isMobile(false),
-            'rounded-0': isLandscape && $utils.isMobile(false),
-            'd-flex': isLandscape && $utils.isMobile(false),
-          }"
-        >
-          <v-app-bar
-            v-if="!isLandscape || !$utils.isMobile(false)"
-            dark
-            flat
-            color="primaryCustom"
-          >
+        <v-card class="signatureCanvasDialog align-center" :class="{
+          'rounded-lg': !isLandscape || !$utils.isMobile(false),
+          'rounded-0': isLandscape && $utils.isMobile(false),
+          'd-flex': isLandscape && $utils.isMobile(false),
+        }">
+          <v-app-bar v-if="!isLandscape || !$utils.isMobile(false)" dark flat color="primaryCustom">
             <v-toolbar-title class="ml-5 mx-auto text-h6">
               {{ $t('heading.createSignature') }}
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-switch
-              v-if="mode !== 1"
-              v-model="textDirection"
-              :prepend-icon="
-                textDirection
-                  ? 'mdi-format-text-rotation-vertical'
-                  : 'mdi-format-text-rotation-none'
-              "
-              inset
-              dense
-              hide-details
-              :label="`${
-                textDirection
+            <v-switch v-if="mode !== 1" v-model="textDirection" :prepend-icon="textDirection
+                ? 'mdi-format-text-rotation-vertical'
+                : 'mdi-format-text-rotation-none'
+              " inset dense hide-details :label="`${textDirection
                   ? $t('options.vertical')
                   : $t('options.horizontal')
-              }`"
-            ></v-switch>
+                }`"></v-switch>
             <v-spacer v-if="mode !== 1 && $utils.isMobile(false)"></v-spacer>
-            <v-btn
-              v-if="$utils.isMobile(false)"
-              icon
-              dark
-              @click="cancelSignature()"
-            >
+            <v-btn v-if="$utils.isMobile(false)" icon dark @click="cancelSignature()">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-app-bar>
-          <div
-            v-if="annotateSignature && annotateSignature.type === 9"
-            class="text-subtitle-1 px-8 pt-2"
-            style="color: rgba(0, 0, 0, 0.6)"
-          >
+          <div v-if="annotateSignature && annotateSignature.type === 9" class="text-subtitle-1 px-8 pt-2"
+            style="color: rgba(0, 0, 0, 0.6)">
             {{ $t('text.b2b2cPInfo') }}
           </div>
-          <div
-            v-else-if="annotateSignature && annotateSignature.type === 10"
-            class="text-subtitle-1 px-8 pt-2"
-            style="color: rgba(0, 0, 0, 0.6)"
-          >
+          <div v-else-if="annotateSignature && annotateSignature.type === 10" class="text-subtitle-1 px-8 pt-2"
+            style="color: rgba(0, 0, 0, 0.6)">
             {{ $t('text.b2b2cOInfo') }}
           </div>
-          <div
-            v-if="
-              annotateSignature &&
-              (annotateSignature.type === 9 || annotateSignature.type === 10)
-            "
-            class="px-8"
-          >
-            <a
-              style="text-decoration: underline"
-              @click="$emit('goApplyB2b2c', annotateSignature.type)"
-              >{{ $t('link.goApplyB2b2c') }}
+          <div v-if="
+            annotateSignature &&
+            (annotateSignature.type === 9 || annotateSignature.type === 10)
+          " class="px-8">
+            <a style="text-decoration: underline" @click="$emit('goApplyB2b2c', annotateSignature.type)">{{
+              $t('link.goApplyB2b2c') }}
               <svg-icon-gotolink />
             </a>
           </div>
-          <v-card-text
-            class="pa-5 justify-center align-center"
-            :class="{
-              'd-flex': $vuetify.breakpoint.mdAndDown && isOnlyMobile,
-            }"
-          >
-            <v-btn-toggle
-              v-if="useHandWriting === true"
-              v-model="signatureDialogToggle"
-              mandatory
-              color="primaryCustom"
-              class="mb-2"
-              style="width: 100%"
-            >
+          <v-card-text class="pa-5 justify-center align-center" :class="{
+            'd-flex': $vuetify.breakpoint.mdAndDown && isOnlyMobile,
+          }">
+            <v-btn-toggle v-if="useHandWriting === true" v-model="signatureDialogToggle" mandatory color="primaryCustom"
+              class="mb-2" style="width: 100%">
               <v-btn large class="text-subtitle-2" style="width: 50%">
                 {{ $t('button.handwritingPad') }}
               </v-btn>
@@ -5398,48 +3119,25 @@
               </v-btn>
             </v-btn-toggle>
             <!-- 簽名板 -->
-            <template
-              v-if="signatureDialogToggle === 0 && useHandWriting === true"
-            >
+            <template v-if="signatureDialogToggle === 0 && useHandWriting === true">
               <div id="signatureBoard" class="signatureBoard">
                 <canvas id="ppCanvas" width="560" height="300"></canvas>
               </div>
               <v-row justify="center" align="center">
                 <v-col cols="12" sm="6">
-                  <v-select
-                    v-model="ppSignId"
-                    outlined
-                    dense
-                    hide-details
-                    :items="ppSignList"
-                    item-text="name"
-                    item-value="id"
-                    :label="$t('label.handwritingDevices')"
-                    class="mt-2"
-                    style="max-width: 100%"
-                    :menu-props="{ auto: true }"
-                  ></v-select>
+                  <v-select v-model="ppSignId" outlined dense hide-details :items="ppSignList" item-text="name"
+                    item-value="id" :label="$t('label.handwritingDevices')" class="mt-2" style="max-width: 100%"
+                    :menu-props="{ auto: true }"></v-select>
                 </v-col>
                 <v-col cols="6" sm="3">
-                  <v-btn
-                    block
-                    color="primaryCustom"
-                    class="text-subtitle-2 mt-2"
-                    :disabled="isPolling"
-                    @click="initialDevice"
-                  >
+                  <v-btn block color="primaryCustom" class="text-subtitle-2 mt-2" :disabled="isPolling"
+                    @click="initialDevice">
                     {{ $t('button.initialize') }}
                   </v-btn>
                 </v-col>
                 <v-col cols="6" sm="3">
-                  <v-btn
-                    block
-                    outlined
-                    color="primaryCustom"
-                    class="text-subtitle-2 mt-2"
-                    :disabled="!isPolling"
-                    @click="uninitDevice"
-                  >
+                  <v-btn block outlined color="primaryCustom" class="text-subtitle-2 mt-2" :disabled="!isPolling"
+                    @click="uninitDevice">
                     {{ $t('button.deinitialize') }}
                   </v-btn>
                 </v-col>
@@ -5448,129 +3146,68 @@
             <!-- virtual 簽名板 -->
             <template v-else>
               <div id="signatureBoard" class="signatureBoard ma-auto">
-                <vueSignature
-                  ref="signature"
-                  :sig-option="option"
-                  @notFinishSignatureChange="
-                    (value) => (notFinishSignature = value)
-                  "
-                ></vueSignature>
+                <vueSignature ref="signature" :sig-option="option" @notFinishSignatureChange="
+                  (value) => (notFinishSignature = value)
+                "></vueSignature>
               </div>
-              <div
-                class="flex-column ml-4"
-                :class="{
-                  'd-flex': isLandscape && $utils.isMobile(false),
-                  'd-none': !(isLandscape && $utils.isMobile(false)),
-                }"
-              >
-                <v-btn
-                  large
-                  outlined
-                  color="primaryCustom"
-                  class="text-subtitle-2"
-                  @click="clear"
-                >
+              <div class="flex-column ml-4" :class="{
+                'd-flex': isLandscape && $utils.isMobile(false),
+                'd-none': !(isLandscape && $utils.isMobile(false)),
+              }">
+                <v-btn large outlined color="primaryCustom" class="text-subtitle-2" @click="clear">
                   {{ $t('button.clear') }}
                 </v-btn>
-                <v-btn
-                  large
-                  color="primaryCustom"
-                  class="text-subtitle-2 mt-4 tour-sign-task-finish-mobile"
-                  :disabled="notFinishSignature"
-                  :loading="addSignatureLoading"
-                  @click="addSignature"
-                >
+                <v-btn large color="primaryCustom" class="text-subtitle-2 mt-4 tour-sign-task-finish-mobile"
+                  :disabled="notFinishSignature" :loading="addSignatureLoading" @click="addSignature">
                   {{ $t('button.complete') }}
                 </v-btn>
-                <v-switch
-                  v-if="mode !== 1"
-                  v-model="textDirection"
-                  :prepend-icon="
-                    textDirection
-                      ? 'mdi-format-text-rotation-vertical'
-                      : 'mdi-format-text-rotation-none'
-                  "
-                  inset
-                  dense
-                  hide-details
-                ></v-switch>
+                <v-switch v-if="mode !== 1" v-model="textDirection" :prepend-icon="textDirection
+                    ? 'mdi-format-text-rotation-vertical'
+                    : 'mdi-format-text-rotation-none'
+                  " inset dense hide-details></v-switch>
                 <p v-if="mode !== 1">
                   {{
-                    `${
-                      textDirection
-                        ? $t('options.vertical')
-                        : $t('options.horizontal')
+                    `${textDirection
+                      ? $t('options.vertical')
+                      : $t('options.horizontal')
                     }`
                   }}
                 </p>
                 <v-spacer></v-spacer>
-                <v-btn
-                  v-if="$utils.isMobile(false)"
-                  text
-                  color="primaryCustom"
-                  class="text-subtitle-2 mr-2"
-                  @click="cancelSignature()"
-                >
+                <v-btn v-if="$utils.isMobile(false)" text color="primaryCustom" class="text-subtitle-2 mr-2"
+                  @click="cancelSignature()">
                   {{ $t('button.cancel') }}
                 </v-btn>
               </div>
             </template>
           </v-card-text>
-          <v-card-actions
-            class="px-5 py-5 grey lighten-3"
-            :class="{
-              'd-none': isLandscape && $utils.isMobile(false),
-            }"
-          >
-            <v-btn
-              large
-              text
-              color="primaryCustom"
-              class="text-subtitle-2 mr-2"
-              @click="clear"
-            >
+          <v-card-actions class="px-5 py-5 grey lighten-3" :class="{
+            'd-none': isLandscape && $utils.isMobile(false),
+          }">
+            <v-btn large text color="primaryCustom" class="text-subtitle-2 mr-2" @click="clear">
               {{ $t('button.clear') }}
             </v-btn>
-            <v-btn
-              v-if="$vuetify.breakpoint.mdAndUp && !$utils.isMobile(true)"
-              large
-              text
-              color="primaryCustom"
-              class="text-subtitle-2 mr-2 text-capitalize tour-sign-task-qrcode"
-              @click="openGoToMobileSignpadDialog"
-            >
+            <v-btn v-if="$vuetify.breakpoint.mdAndUp && !$utils.isMobile(true)" large text color="primaryCustom"
+              class="text-subtitle-2 mr-2 text-capitalize tour-sign-task-qrcode" @click="openGoToMobileSignpadDialog">
               {{ $t('button.qrCodeSign') }}
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn
-              large
-              color="primaryCustom"
-              class="text-subtitle-2 tour-sign-task-finish"
-              :disabled="notFinishSignature"
-              :loading="addSignatureLoading"
-              @click="addSignature"
-            >
+            <v-btn large color="primaryCustom" class="text-subtitle-2 tour-sign-task-finish"
+              :disabled="notFinishSignature" :loading="addSignatureLoading" @click="addSignature">
               {{ $t('button.complete') }}
             </v-btn>
           </v-card-actions>
         </v-card>
       </template>
     </v-dialog>
-    <v-dialog
-      v-model="addStampDialog"
-      content-class="no-scroll-dialog"
-      overlay-opacity="0.9"
-      max-width="550"
-      @input="cancelStamp()"
-    >
-      <template
-        v-if="
-          isLogin === true &&
-          isAddStamp === false &&
-          stampCount > 0 &&
-          isInPersonSign === false
-        "
-      >
+    <v-dialog v-model="addStampDialog" content-class="no-scroll-dialog" overlay-opacity="0.9" max-width="550"
+      @input="cancelStamp()">
+      <template v-if="
+        isLogin === true &&
+        isAddStamp === false &&
+        stampCount > 0 &&
+        isInPersonSign === false
+      ">
         <v-card class="rounded-lg">
           <v-app-bar dark flat color="primaryCustom">
             <v-toolbar-title class="ml-5 mx-auto text-h6">
@@ -5578,86 +3215,46 @@
             </v-toolbar-title>
           </v-app-bar>
           <v-divider></v-divider>
-          <div
-            v-if="annotateStamp && annotateStamp.type === 11"
-            class="text-subtitle-1 px-8 pt-2"
-            style="color: rgba(0, 0, 0, 0.6)"
-          >
+          <div v-if="annotateStamp && annotateStamp.type === 11" class="text-subtitle-1 px-8 pt-2"
+            style="color: rgba(0, 0, 0, 0.6)">
             {{ $t('text.b2b2cPInfo') }}
           </div>
-          <div
-            v-else-if="annotateStamp && annotateStamp.type === 12"
-            class="text-subtitle-1 px-8 pt-2"
-            style="color: rgba(0, 0, 0, 0.6)"
-          >
+          <div v-else-if="annotateStamp && annotateStamp.type === 12" class="text-subtitle-1 px-8 pt-2"
+            style="color: rgba(0, 0, 0, 0.6)">
             {{ $t('text.b2b2cOInfo') }}
           </div>
-          <div
-            v-if="
-              annotateStamp &&
-              (annotateStamp.type === 11 || annotateStamp.type === 12)
-            "
-            class="px-8"
-          >
-            <a
-              style="text-decoration: underline"
-              @click="$emit('goApplyB2b2c', annotateStamp.type)"
-              >{{ $t('link.goApplyB2b2c') }}
+          <div v-if="
+            annotateStamp &&
+            (annotateStamp.type === 11 || annotateStamp.type === 12)
+          " class="px-8">
+            <a style="text-decoration: underline" @click="$emit('goApplyB2b2c', annotateStamp.type)">{{
+              $t('link.goApplyB2b2c') }}
               <svg-icon-gotolink />
             </a>
           </div>
           <v-card-text class="d-flex flex-column pa-5">
             <div class="dialog-scroll-list">
-              <v-item-group
-                v-if="stampList && stampList.length > 0"
-                v-model="selectedStamp"
-              >
+              <v-item-group v-if="stampList && stampList.length > 0" v-model="selectedStamp">
                 <v-container>
                   <v-row>
-                    <v-col
-                      v-for="(stamp, idx) in stampList"
-                      :key="idx"
-                      cols="12"
-                      lg="6"
-                      xl="6"
-                      md="6"
-                    >
+                    <v-col v-for="(stamp, idx) in stampList" :key="idx" cols="12" lg="6" xl="6" md="6">
                       <v-item v-slot="{ active, toggle }">
-                        <v-card
-                          outlined
-                          elevation="0"
-                          style="cursor: pointer"
-                          :class="{
-                            toggledItem: active,
-                          }"
-                          @click.native="toggle"
-                        >
+                        <v-card outlined elevation="0" style="cursor: pointer" :class="{
+                          toggledItem: active,
+                        }" @click.native="toggle">
                           <v-card-title class="pt-2 px-2 pb-0">
-                            <v-chip
-                              v-if="stamp.label !== null && stamp.label !== ''"
-                              :title="stamp.label"
-                              label
-                              ><span class="labelTextWrap">
-                                {{ stamp.label }}</span
-                              ></v-chip
-                            >
+                            <v-chip v-if="stamp.label !== null && stamp.label !== ''" :title="stamp.label" label><span
+                                class="labelTextWrap">
+                                {{ stamp.label }}</span></v-chip>
                             <!-- empty div for same height title -->
                             <div v-else text-color="white">&nbsp;</div>
                             <v-spacer />
-                            <v-icon v-if="selectedStamp === idx" color="#333"
-                              >mdi-check-circle-outline</v-icon
-                            >
-                            <v-icon v-else color="#333"
-                              >mdi-circle-outline</v-icon
-                            >
+                            <v-icon v-if="selectedStamp === idx" color="#333">mdi-check-circle-outline</v-icon>
+                            <v-icon v-else color="#333">mdi-circle-outline</v-icon>
                           </v-card-title>
                           <v-card-text class="my-4">
                             <v-row justify="center" align="center">
-                              <v-img
-                                contain
-                                :src="stamp.content"
-                                max-width="100"
-                              />
+                              <v-img contain :src="stamp.content" max-width="100" />
                             </v-row>
                           </v-card-text>
                           <v-card-actions>
@@ -5670,36 +3267,18 @@
                 </v-container>
               </v-item-group>
             </div>
-            <v-btn
-              color="primaryCustom"
-              large
-              outlined
-              class="mt-2"
-              style="width: calc(100% - 60px); align-self: center"
-              @click="openAddStampDialog"
-            >
+            <v-btn color="primaryCustom" large outlined class="mt-2"
+              style="width: calc(100% - 60px); align-self: center" @click="openAddStampDialog">
               <v-icon left>mdi-stamper</v-icon>
-              {{ $t('button.addStamp') }}</v-btn
-            >
+              {{ $t('button.addStamp') }}</v-btn>
           </v-card-text>
           <v-card-actions class="px-5 py-5 grey lighten-3">
             <v-spacer></v-spacer>
-            <v-btn
-              large
-              outlined
-              color="primaryCustom"
-              class="text-subtitle-2 mr-2"
-              @click="cancelStamp()"
-            >
+            <v-btn large outlined color="primaryCustom" class="text-subtitle-2 mr-2" @click="cancelStamp()">
               {{ $t('button.cancel') }}
             </v-btn>
-            <v-btn
-              large
-              color="primaryCustom"
-              class="text-subtitle-2"
-              :disabled="selectedStamp === null"
-              @click="chooseStamp"
-            >
+            <v-btn large color="primaryCustom" class="text-subtitle-2" :disabled="selectedStamp === null"
+              @click="chooseStamp">
               {{ $t('button.complete') }}
             </v-btn>
           </v-card-actions>
@@ -5712,74 +3291,47 @@
               {{ $t('heading.uploadStmpImg') }}
             </v-toolbar-title>
           </v-app-bar>
-          <div
-            v-if="annotateStamp && annotateStamp.type === 11"
-            class="text-subtitle-1 px-8 pt-2"
-            style="color: rgba(0, 0, 0, 0.6)"
-          >
+          <div v-if="annotateStamp && annotateStamp.type === 11" class="text-subtitle-1 px-8 pt-2"
+            style="color: rgba(0, 0, 0, 0.6)">
             {{ $t('text.b2b2cPInfo') }}
           </div>
-          <div
-            v-else-if="annotateStamp && annotateStamp.type === 12"
-            class="text-subtitle-1 px-8 pt-2"
-            style="color: rgba(0, 0, 0, 0.6)"
-          >
+          <div v-else-if="annotateStamp && annotateStamp.type === 12" class="text-subtitle-1 px-8 pt-2"
+            style="color: rgba(0, 0, 0, 0.6)">
             {{ $t('text.b2b2cOInfo') }}
           </div>
-          <div
-            v-if="
-              annotateStamp &&
-              (annotateStamp.type === 11 || annotateStamp.type === 12)
-            "
-            class="px-8"
-          >
-            <a
-              style="text-decoration: underline"
-              @click="$emit('goApplyB2b2c', annotateStamp.type)"
-              >{{ $t('link.goApplyB2b2c') }}
+          <div v-if="
+            annotateStamp &&
+            (annotateStamp.type === 11 || annotateStamp.type === 12)
+          " class="px-8">
+            <a style="text-decoration: underline" @click="$emit('goApplyB2b2c', annotateStamp.type)">{{
+              $t('link.goApplyB2b2c') }}
               <svg-icon-gotolink />
             </a>
           </div>
           <v-card-text class="px-10 pt-10 pb-5">
-            <div
-              class="d-flex flex-column justify-center align-center"
-              :class="['dropZone', dragging ? 'dropZone-over' : '']"
-              @dragover="dragging = true"
-              @dragleave="dragging = false"
-            >
+            <div class="d-flex flex-column justify-center align-center"
+              :class="['dropZone', dragging ? 'dropZone-over' : '']" @dragover="dragging = true"
+              @dragleave="dragging = false">
               <template v-if="!dragging && stampFile === null">
-                <div
-                  class="d-flex flex-column justify-center align-center"
-                  @drag="onFileChange"
-                >
-                  <img
-                    width="50"
-                    height="50"
-                    src="/images/index/ic_index_upload.svg"
-                  />
+                <div class="d-flex flex-column justify-center align-center" @drag="onFileChange">
+                  <img width="50" height="50" src="/images/index/ic_index_upload.svg" />
                   <template v-if="$vuetify.breakpoint.lgAndUp">
-                    <div
-                      id="dropZone-title"
-                      class="
+                    <div id="dropZone-title" class="
                         text-subtitle-1 text-sm-h6
                         grey--text
                         text--darken-2
                         mt-4
-                      "
-                    >
+                      ">
                       {{ $t('text.clickOrDragImg') }}
                     </div>
                   </template>
                   <template v-else>
-                    <div
-                      id="dropZone-title"
-                      class="
+                    <div id="dropZone-title" class="
                         text-subtitle-1 text-sm-h6
                         grey--text
                         text--darken-2
                         mt-4
-                      "
-                    >
+                      ">
                       {{ $t('text.clickToUploadImg') }}
                     </div>
                   </template>
@@ -5790,67 +3342,32 @@
               </template>
               <template v-if="dragging">
                 <div class="d-flex flex-column justify-center align-center">
-                  <v-icon size="64" color="#1975a0"
-                    >mdi-file-upload-outline</v-icon
-                  >
+                  <v-icon size="64" color="#1975a0">mdi-file-upload-outline</v-icon>
                   <div class="text-h6 mt-4" style="color: #1975a0 !important">
                     {{ $t('text.dragImgHere') }}
                   </div>
                 </div>
               </template>
-              <v-img
-                v-if="stampFile !== null && !dragging"
-                class="stampImage"
-                :src="stampFile"
-                alt="stamp"
-                contain
-              />
-              <input
-                type="file"
-                accept=".png,.jpg,.jpeg,.gif,.bmp"
-                @change="onFileChange"
-              />
+              <v-img v-if="stampFile !== null && !dragging" class="stampImage" :src="stampFile" alt="stamp" contain />
+              <input type="file" accept=".png,.jpg,.jpeg,.gif,.bmp" @change="onFileChange" />
             </div>
-            <v-btn
-              large
-              outlined
-              color="primaryCustom"
-              class="mt-4"
-              style="width: 100%"
-              @click="removeStampBgDialog = true"
-              >{{ $t('button.removeStampBg') }}</v-btn
-            >
+            <v-btn large outlined color="primaryCustom" class="mt-4" style="width: 100%"
+              @click="removeStampBgDialog = true">{{
+                $t('button.removeStampBg') }}</v-btn>
           </v-card-text>
         </v-card>
         <v-card-actions class="px-10 py-5 grey lighten-3">
           <v-spacer></v-spacer>
-          <v-btn
-            large
-            outlined
-            color="primaryCustom"
-            content-class="text-subtitle-2 mr-2"
-            @click="cancelStamp()"
-          >
+          <v-btn large outlined color="primaryCustom" content-class="text-subtitle-2 mr-2" @click="cancelStamp()">
             {{ $t('button.cancel') }}
           </v-btn>
-          <v-btn
-            large
-            color="primaryCustom"
-            class="text-subtitle-2"
-            :loading="addStampLoading"
-            @click="addStamp"
-          >
+          <v-btn large color="primaryCustom" class="text-subtitle-2" :loading="addStampLoading" @click="addStamp">
             {{ $t('button.ok') }}
           </v-btn>
         </v-card-actions>
       </template>
     </v-dialog>
-    <v-dialog
-      v-model="addAttachmentDialog"
-      overlay-opacity="0.9"
-      max-width="600"
-      @input="cancelAttachment()"
-    >
+    <v-dialog v-model="addAttachmentDialog" overlay-opacity="0.9" max-width="600" @input="cancelAttachment()">
       <v-card>
         <v-app-bar dark flat color="primaryCustom">
           <v-toolbar-title class="ml-5 mx-auto text-h6">
@@ -5858,46 +3375,29 @@
           </v-toolbar-title>
         </v-app-bar>
         <v-card-text class="px-10 pt-10 pb-5">
-          <div
-            v-if="!exceedUploadLimit"
-            class="d-flex flex-column justify-center align-center"
-            :class="['dropZone', dragging ? 'dropZone-over' : '']"
-            @dragover="dragging = true"
-            @dragleave="dragging = false"
-          >
+          <div v-if="!exceedUploadLimit" class="d-flex flex-column justify-center align-center"
+            :class="['dropZone', dragging ? 'dropZone-over' : '']" @dragover="dragging = true"
+            @dragleave="dragging = false">
             <template v-if="!dragging">
-              <div
-                class="d-flex flex-column justify-center align-center"
-                @drag="onAttachmentFileChange"
-              >
-                <img
-                  width="50"
-                  height="50"
-                  src="/images/index/ic_index_upload.svg"
-                />
+              <div class="d-flex flex-column justify-center align-center" @drag="onAttachmentFileChange">
+                <img width="50" height="50" src="/images/index/ic_index_upload.svg" />
                 <template v-if="$vuetify.breakpoint.lgAndUp">
-                  <div
-                    id="dropZone-title"
-                    class="
+                  <div id="dropZone-title" class="
                       text-subtitle-1 text-sm-h6
                       grey--text
                       text--darken-2
                       mt-4
-                    "
-                  >
+                    ">
                     {{ $t('text.clickOrDragAttach') }}
                   </div>
                 </template>
                 <template v-else>
-                  <div
-                    id="dropZone-title"
-                    class="
+                  <div id="dropZone-title" class="
                       text-subtitle-1 text-sm-h6
                       grey--text
                       text--darken-2
                       mt-4
-                    "
-                  >
+                    ">
                     {{ $t('text.clickToUploadAttach') }}
                   </div>
                 </template>
@@ -5905,29 +3405,18 @@
             </template>
             <template v-if="dragging">
               <div class="d-flex flex-column justify-center align-center">
-                <v-icon size="64" color="#1975a0"
-                  >mdi-file-upload-outline</v-icon
-                >
+                <v-icon size="64" color="#1975a0">mdi-file-upload-outline</v-icon>
                 <div class="text-h6 mt-4" style="color: #1975a0 !important">
                   {{ $t('text.dragAttachHere') }}
                 </div>
               </div>
             </template>
-            <input
-              ref="attachmentInput"
-              type="file"
-              :disabled="attachmentFiles.length > 4"
-              @change="onAttachmentFileChange"
-            />
+            <input ref="attachmentInput" type="file" :disabled="attachmentFiles.length > 4"
+              @change="onAttachmentFileChange" />
           </div>
 
           <v-chip-group column class="mt-2">
-            <v-chip
-              v-for="(f, i) in attachmentFiles"
-              :key="`attachment-${i}`"
-              close
-              @click:close="deleteAttachment(i)"
-            >
+            <v-chip v-for="(f, i) in attachmentFiles" :key="`attachment-${i}`" close @click:close="deleteAttachment(i)">
               <span style="max-width: 300px" class="text-truncate">
                 {{ f.name }}
               </span>
@@ -5947,54 +3436,27 @@
       </v-card>
       <v-card-actions class="px-10 py-5 grey lighten-3">
         <v-spacer></v-spacer>
-        <v-btn
-          v-if="mode !== 5 || annotateAttachment != null"
-          large
-          outlined
-          color="primaryCustom"
-          content-class="text-subtitle-2 mr-2"
-          @click="cancelAttachment()"
-        >
+        <v-btn v-if="mode !== 5 || annotateAttachment != null" large outlined color="primaryCustom"
+          content-class="text-subtitle-2 mr-2" @click="cancelAttachment()">
           {{ $t('button.close') }}
         </v-btn>
-        <v-btn
-          v-if="mode === 5 && annotateAttachment == null"
-          large
-          outlined
-          color="primaryCustom"
-          content-class="text-subtitle-2 mr-2"
-          @click="cancelAttachment()"
-        >
+        <v-btn v-if="mode === 5 && annotateAttachment == null" large outlined color="primaryCustom"
+          content-class="text-subtitle-2 mr-2" @click="cancelAttachment()">
           {{ $t('button.cancel') }}
         </v-btn>
-        <v-btn
-          v-if="mode === 5 && annotateAttachment == null"
-          :disabled="attachmentFiles.length <= 0"
-          large
-          color="primaryCustom"
-          class="text-subtitle-2"
-          :loading="addAttachmentLoading"
-          @click="addAttachment"
-        >
+        <v-btn v-if="mode === 5 && annotateAttachment == null" :disabled="attachmentFiles.length <= 0" large
+          color="primaryCustom" class="text-subtitle-2" :loading="addAttachmentLoading" @click="addAttachment">
           {{ $t('button.ok') }}
         </v-btn>
       </v-card-actions>
     </v-dialog>
     <v-dialog v-model="removeStampBgDialog" hide-overlay fullscreen>
       <v-card style="background-color: #f1f5f8">
-        <remove-stamp-bg
-          v-if="removeStampBgDialog"
-          @add="addRemoveBgStamp"
-          @cancel="cancelRemoveBgProcess"
-        ></remove-stamp-bg>
+        <remove-stamp-bg v-if="removeStampBgDialog" @add="addRemoveBgStamp"
+          @cancel="cancelRemoveBgProcess"></remove-stamp-bg>
       </v-card>
     </v-dialog>
-    <v-dialog
-      v-model="addImageDialog"
-      overlay-opacity="0.9"
-      max-width="450"
-      @input="cancelImage()"
-    >
+    <v-dialog v-model="addImageDialog" overlay-opacity="0.9" max-width="450" @input="cancelImage()">
       <v-card>
         <v-app-bar dark flat color="primaryCustom">
           <v-toolbar-title class="ml-5 mx-auto text-h6">
@@ -6002,45 +3464,29 @@
           </v-toolbar-title>
         </v-app-bar>
         <v-card-text class="px-10 pt-10 pb-5">
-          <div
-            class="d-flex flex-column justify-center align-center"
-            :class="['dropZone', dragging ? 'dropZone-over' : '']"
-            @dragover="dragging = true"
-            @dragleave="dragging = false"
-          >
+          <div class="d-flex flex-column justify-center align-center"
+            :class="['dropZone', dragging ? 'dropZone-over' : '']" @dragover="dragging = true"
+            @dragleave="dragging = false">
             <template v-if="!dragging && imageFile === null">
-              <div
-                class="d-flex flex-column justify-center align-center"
-                @drag="onImageFileChange"
-              >
-                <img
-                  width="50"
-                  height="50"
-                  src="/images/tasks/uploadPhoto.svg"
-                />
+              <div class="d-flex flex-column justify-center align-center" @drag="onImageFileChange">
+                <img width="50" height="50" src="/images/tasks/uploadPhoto.svg" />
                 <template v-if="$vuetify.breakpoint.lgAndUp">
-                  <div
-                    id="dropZone-title"
-                    class="
+                  <div id="dropZone-title" class="
                       text-subtitle-1 text-sm-h6
                       grey--text
                       text--darken-2
                       mt-4
-                    "
-                  >
+                    ">
                     {{ $t('text.clickOrDragImg') }}
                   </div>
                 </template>
                 <template v-else>
-                  <div
-                    id="dropZone-title"
-                    class="
+                  <div id="dropZone-title" class="
                       text-subtitle-1 text-sm-h6
                       grey--text
                       text--darken-2
                       mt-4
-                    "
-                  >
+                    ">
                     {{ $t('text.clickToUploadImg') }}
                   </div>
                 </template>
@@ -6051,69 +3497,33 @@
             </template>
             <template v-if="dragging">
               <div class="d-flex flex-column justify-center align-center">
-                <v-icon size="64" color="#1975a0"
-                  >mdi-file-upload-outline</v-icon
-                >
+                <v-icon size="64" color="#1975a0">mdi-file-upload-outline</v-icon>
                 <div class="text-h6 mt-4" style="color: #1975a0 !important">
                   {{ $t('text.dragImgHere') }}
                 </div>
               </div>
             </template>
-            <v-img
-              v-if="imageFile !== null && !dragging"
-              class="imageFieldImage"
-              :src="imageFile"
-              max-height="100%"
-              alt="imageField"
-              style="height: 95%"
-              contain
-            />
-            <input
-              type="file"
-              accept=".png,.jpg,.jpeg,.gif,.bmp"
-              @change="onImageFileChange"
-            />
+            <v-img v-if="imageFile !== null && !dragging" class="imageFieldImage" :src="imageFile" max-height="100%"
+              alt="imageField" style="height: 95%" contain />
+            <input type="file" accept=".png,.jpg,.jpeg,.gif,.bmp" @change="onImageFileChange" />
           </div>
         </v-card-text>
       </v-card>
       <v-card-actions class="px-10 py-5 grey lighten-3">
-        <v-btn
-          v-if="$vuetify.breakpoint.mdAndUp && !$utils.isMobile(true)"
-          large
-          text
-          color="primaryCustom"
-          class="text-subtitle-2 mr-2 text-capitalize"
-          @click="openGoToMobileUploadImageDialog"
-        >
+        <v-btn v-if="$vuetify.breakpoint.mdAndUp && !$utils.isMobile(true)" large text color="primaryCustom"
+          class="text-subtitle-2 mr-2 text-capitalize" @click="openGoToMobileUploadImageDialog">
           {{ $t('button.qrCodeUploadImage') }}
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn
-          large
-          outlined
-          color="primaryCustom"
-          content-class="text-subtitle-2 mr-2"
-          @click="cancelImage()"
-        >
+        <v-btn large outlined color="primaryCustom" content-class="text-subtitle-2 mr-2" @click="cancelImage()">
           {{ $t('button.cancel') }}
         </v-btn>
-        <v-btn
-          large
-          color="primaryCustom"
-          class="text-subtitle-2"
-          :loading="addImageLoading"
-          @click="addImage"
-        >
+        <v-btn large color="primaryCustom" class="text-subtitle-2" :loading="addImageLoading" @click="addImage">
           {{ $t('button.ok') }}
         </v-btn>
       </v-card-actions>
     </v-dialog>
-    <v-dialog
-      v-model="addTextDialog"
-      overlay-opacity="0.9"
-      max-width="600"
-      @input="cancelText()"
-    >
+    <v-dialog v-model="addTextDialog" overlay-opacity="0.9" max-width="600" @input="cancelText()">
       <v-card>
         <v-app-bar dark flat color="primaryCustom">
           <v-toolbar-title class="ml-5 mx-auto text-h6">
@@ -6126,118 +3536,54 @@
           }}</span>
           <v-row>
             <v-col cols="12" lg="9" sm="7" xs="6">
-              <v-select
-                id="fontFamilySelect"
-                v-model="doneTextStyle.fontFamily"
-                :items="fontFamilyList"
-                item-text="name"
-                item-value="value"
-                height="32"
-                background-color="white"
-                solo
-                flat
-                single-line
-                hide-details
-                style="max-width: 100%; border: 1px solid #dfe1e6"
-                @change="changeDoneTextStyle"
-              >
+              <v-select id="fontFamilySelect" v-model="doneTextStyle.fontFamily" :items="fontFamilyList"
+                item-text="name" item-value="value" height="32" background-color="white" solo flat single-line
+                hide-details style="max-width: 100%; border: 1px solid #dfe1e6" @change="changeDoneTextStyle">
                 <template v-slot:[`selection`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 140px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 140px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
                 <template v-slot:[`item`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 140px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 140px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
               </v-select>
             </v-col>
             <v-col cols="12" lg="3" sm="5" xs="6">
-              <v-select
-                id="fontSizeSelect"
-                v-model="doneTextStyle.fontSize"
-                :items="fontSizeList"
-                item-text="name"
-                item-value="value"
-                height="32"
-                background-color="white"
-                solo
-                flat
-                single-line
-                hide-details
-                style="max-width: 120px; border: 1px solid #dfe1e6"
-                @change="changeDoneTextStyle"
-              >
+              <v-select id="fontSizeSelect" v-model="doneTextStyle.fontSize" :items="fontSizeList" item-text="name"
+                item-value="value" height="32" background-color="white" solo flat single-line hide-details
+                style="max-width: 120px; border: 1px solid #dfe1e6" @change="changeDoneTextStyle">
                 <template v-slot:[`selection`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 100px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
                 <template v-slot:[`item`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 100px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
               </v-select>
             </v-col>
           </v-row>
-          <v-textarea
-            id="doneTextArea"
-            v-model="doneText"
-            height="120"
-            label=""
-            background-color="white"
-            solo
-            flat
-            hide-details
-            :placeholder="$t('placeholder.addText')"
-            class="text-subtitle-2 mt-2"
-            style="max-width: 100%; border: 1px solid #dfe1e6"
-            @keydown.stop
-          ></v-textarea>
+          <v-textarea id="doneTextArea" v-model="doneText" height="120" label="" background-color="white" solo flat
+            hide-details :placeholder="$t('placeholder.addText')" class="text-subtitle-2 mt-2"
+            style="max-width: 100%; border: 1px solid #dfe1e6" @keydown.stop></v-textarea>
         </v-card-text>
       </v-card>
       <v-card-actions class="px-10 py-5 grey lighten-3">
         <v-spacer></v-spacer>
-        <v-btn
-          large
-          outlined
-          color="primaryCustom"
-          content-class="text-subtitle-2 mr-2"
-          @click="cancelText()"
-        >
+        <v-btn large outlined color="primaryCustom" content-class="text-subtitle-2 mr-2" @click="cancelText()">
           {{ $t('button.cancel') }}
         </v-btn>
-        <v-btn
-          :disabled="!doneText"
-          large
-          color="primaryCustom"
-          class="text-subtitle-2"
-          @click="addText"
-        >
+        <v-btn :disabled="!doneText" large color="primaryCustom" class="text-subtitle-2" @click="addText">
           {{ $t('button.ok') }}
         </v-btn>
       </v-card-actions>
     </v-dialog>
-    <v-dialog
-      v-model="addDateDialog"
-      overlay-opacity="0.9"
-      max-width="450"
-      @input="cancelDate()"
-    >
+    <v-dialog v-model="addDateDialog" overlay-opacity="0.9" max-width="450" @input="cancelDate()">
       <v-card>
         <v-app-bar dark flat color="primaryCustom">
           <v-toolbar-title class="ml-5 mx-auto text-h6">
@@ -6250,66 +3596,32 @@
           }}</span>
           <v-row class="mb-1">
             <v-col cols="12" lg="9" sm="7" xs="6">
-              <v-select
-                id="fontFamilySelect"
-                v-model="doneDateStyle.fontFamily"
-                :items="fontFamilyList"
-                item-text="name"
-                item-value="value"
-                height="32"
-                background-color="white"
-                solo
-                flat
-                single-line
-                hide-details
-                style="max-width: 100%; border: 1px solid #dfe1e6"
-              >
+              <v-select id="fontFamilySelect" v-model="doneDateStyle.fontFamily" :items="fontFamilyList"
+                item-text="name" item-value="value" height="32" background-color="white" solo flat single-line
+                hide-details style="max-width: 100%; border: 1px solid #dfe1e6">
                 <template v-slot:[`selection`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 140px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 140px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
                 <template v-slot:[`item`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 140px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 140px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
               </v-select>
             </v-col>
             <v-col cols="12" lg="3" sm="5" xs="6">
-              <v-select
-                id="fontSizeSelect"
-                v-model="doneDateStyle.fontSize"
-                :items="fontSizeList"
-                item-text="name"
-                item-value="value"
-                height="32"
-                background-color="white"
-                solo
-                flat
-                single-line
-                hide-details
-                style="max-width: 120px; border: 1px solid #dfe1e6"
-              >
+              <v-select id="fontSizeSelect" v-model="doneDateStyle.fontSize" :items="fontSizeList" item-text="name"
+                item-value="value" height="32" background-color="white" solo flat single-line hide-details
+                style="max-width: 120px; border: 1px solid #dfe1e6">
                 <template v-slot:[`selection`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 100px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
                 <template v-slot:[`item`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 100px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
@@ -6321,118 +3633,51 @@
           }}</span>
           <v-row>
             <v-col cols="6">
-              <v-select
-                id="dateFormatSelect"
-                v-model="doneDateStyle.dateFormat"
-                :items="dateFormatListFilter"
-                item-text="name"
-                item-value="name"
-                height="32"
-                background-color="white"
-                solo
-                flat
-                single-line
-                hide-details
-                style="max-width: 100%; border: 1px solid #dfe1e6"
-              >
+              <v-select id="dateFormatSelect" v-model="doneDateStyle.dateFormat" :items="dateFormatListFilter"
+                item-text="name" item-value="name" height="32" background-color="white" solo flat single-line
+                hide-details style="max-width: 100%; border: 1px solid #dfe1e6">
                 <template v-slot:[`selection`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 100px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
                 <template v-slot:[`item`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 100px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
               </v-select>
             </v-col>
             <v-col cols="6">
-              <v-select
-                id="dateEraSelect"
-                v-model="doneDateStyle.dateEra"
-                :items="dateEraList"
-                item-text="name"
-                item-value="value"
-                height="32"
-                background-color="white"
-                solo
-                flat
-                single-line
-                hide-details
-                style="max-width: 100%; border: 1px solid #dfe1e6"
-              >
+              <v-select id="dateEraSelect" v-model="doneDateStyle.dateEra" :items="dateEraList" item-text="name"
+                item-value="value" height="32" background-color="white" solo flat single-line hide-details
+                style="max-width: 100%; border: 1px solid #dfe1e6">
                 <template v-slot:[`selection`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 100px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
                 <template v-slot:[`item`]="{ item }">
-                  <div
-                    class="text-body-2 text-truncate"
-                    style="max-width: 100px; overflow: hidden"
-                  >
+                  <div class="text-body-2 text-truncate" style="max-width: 100px; overflow: hidden">
                     {{ item.name }}
                   </div>
                 </template>
               </v-select>
             </v-col>
           </v-row>
-          <v-menu
-            ref="doneDateMenu"
-            v-model="doneDateMenu"
-            :close-on-content-click="false"
-            :return-value.sync="doneDate"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
+          <v-menu ref="doneDateMenu" v-model="doneDateMenu" :close-on-content-click="false"
+            :return-value.sync="doneDate" transition="scale-transition" offset-y min-width="auto">
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                id="doneDateTextField"
-                v-model="formatDoneDate"
-                :label="$t('button.date')"
-                v-bind="attrs"
-                readonly
-                height="32"
-                background-color="white"
-                solo
-                flat
-                single-line
-                hide-details
-                class="mt-2"
-                style="max-width: 100%; border: 1px solid #dfe1e6"
-                v-on="on"
-              ></v-text-field>
+              <v-text-field id="doneDateTextField" v-model="formatDoneDate" :label="$t('button.date')" v-bind="attrs"
+                readonly height="32" background-color="white" solo flat single-line hide-details class="mt-2"
+                style="max-width: 100%; border: 1px solid #dfe1e6" v-on="on"></v-text-field>
             </template>
-            <v-date-picker
-              v-model="doneDate"
-              color="primaryCustom"
-              :locale="$i18n.locale"
-              scrollable
-            >
+            <v-date-picker v-model="doneDate" color="primaryCustom" :locale="$i18n.locale" scrollable>
               <v-spacer></v-spacer>
-              <v-btn
-                text
-                color="primaryCustom"
-                @click="$refs.doneDateMenu.save('')"
-              >
+              <v-btn text color="primaryCustom" @click="$refs.doneDateMenu.save('')">
                 {{ $t('button.clear') }}
               </v-btn>
-              <v-btn
-                text
-                color="primaryCustom"
-                @click="$refs.doneDateMenu.save(doneDate)"
-              >
+              <v-btn text color="primaryCustom" @click="$refs.doneDateMenu.save(doneDate)">
                 {{ $t('button.ok') }}
               </v-btn>
             </v-date-picker>
@@ -6441,32 +3686,16 @@
       </v-card>
       <v-card-actions class="px-10 py-5 grey lighten-3">
         <v-spacer></v-spacer>
-        <v-btn
-          large
-          outlined
-          color="primaryCustom"
-          content-class="text-subtitle-2 mr-2"
-          @click="cancelDate()"
-        >
+        <v-btn large outlined color="primaryCustom" content-class="text-subtitle-2 mr-2" @click="cancelDate()">
           {{ $t('button.cancel') }}
         </v-btn>
-        <v-btn
-          :disabled="!doneDate"
-          large
-          color="primaryCustom"
-          class="text-subtitle-2"
-          @click="addDate"
-        >
+        <v-btn :disabled="!doneDate" large color="primaryCustom" class="text-subtitle-2" @click="addDate">
           {{ $t('button.ok') }}
         </v-btn>
       </v-card-actions>
     </v-dialog>
-    <v-dialog
-      v-model="addSignatureAndStampDialog"
-      overlay-opacity="0.9"
-      max-width="450"
-      @input="cancelSignatureAndStamp()"
-    >
+    <v-dialog v-model="addSignatureAndStampDialog" overlay-opacity="0.9" max-width="450"
+      @input="cancelSignatureAndStamp()">
       <v-card>
         <v-app-bar dark flat color="primaryCustom">
           <v-toolbar-title class="ml-5 mx-auto text-h6">
@@ -6476,25 +3705,15 @@
         <v-card-text class="px-10 pt-10 pb-5 text-center">
           <v-row>
             <v-col cols="6" class="d-flex">
-              <v-btn
-                width="auto"
-                height="160"
-                outlined
-                class="text-subtitle-1 d-flex flex-grow-1"
-                @click="chooseSignatureAndStamp('signature')"
-              >
+              <v-btn width="auto" height="160" outlined class="text-subtitle-1 d-flex flex-grow-1"
+                @click="chooseSignatureAndStamp('signature')">
                 <v-icon class="mr-1" size="22">mdi-signature</v-icon>
                 {{ $t('button.signature') }}
               </v-btn>
             </v-col>
             <v-col cols="6" class="d-flex">
-              <v-btn
-                width="auto"
-                height="160"
-                outlined
-                class="text-subtitle-1 d-flex flex-grow-1"
-                @click="chooseSignatureAndStamp('stamp')"
-              >
+              <v-btn width="auto" height="160" outlined class="text-subtitle-1 d-flex flex-grow-1"
+                @click="chooseSignatureAndStamp('stamp')">
                 <v-icon class="mr-1" size="22">mdi-stamper</v-icon>
                 {{ $t('button.stamp') }}
               </v-btn>
@@ -6504,122 +3723,57 @@
       </v-card>
       <v-card-actions class="px-10 py-5 grey lighten-3">
         <v-spacer></v-spacer>
-        <v-btn
-          large
-          outlined
-          color="primaryCustom"
-          content-class="text-subtitle-2 mr-2"
-          @click="cancelSignatureAndStamp()"
-        >
+        <v-btn large outlined color="primaryCustom" content-class="text-subtitle-2 mr-2"
+          @click="cancelSignatureAndStamp()">
           {{ $t('button.cancel') }}
         </v-btn>
       </v-card-actions>
     </v-dialog>
-    <v-card
-      v-if="mode === 0 && $vuetify.breakpoint.mdAndDown"
-      class="rounded-lg cursorToolContainer"
-      color="#f1f3f5"
-    >
+    <v-card v-if="mode === 0 && $vuetify.breakpoint.mdAndDown" class="rounded-lg cursorToolContainer" color="#f1f3f5">
       <v-btn-toggle v-model="cursorToolToggle" dense group>
-        <v-btn
-          :value="1"
-          text
-          class="rounded-lg"
-          @click="setIsAllowTouchScrolling(true)"
-        >
+        <v-btn :value="1" text class="rounded-lg" @click="setIsAllowTouchScrolling(true)">
           <v-icon size="22">mdi-cursor-default</v-icon>
         </v-btn>
-        <v-btn
-          :value="2"
-          text
-          class="rounded-lg"
-          @click="setIsAllowTouchScrolling(false)"
-        >
+        <v-btn :value="2" text class="rounded-lg" @click="setIsAllowTouchScrolling(false)">
           <v-icon size="22">mdi-selection-drag</v-icon>
         </v-btn>
       </v-btn-toggle>
     </v-card>
-    <v-card
-      v-if="mode === 0 && $vuetify.breakpoint.mdAndDown"
-      id="annotateTool"
-      class="rounded-lg annotateToolContainer"
-    >
-      <v-btn
-        text
-        min-width="48"
-        class="rounded-lg px-2 ma-1"
-        @click="toggleRightDrawer(true)"
-      >
+    <v-card v-if="mode === 0 && $vuetify.breakpoint.mdAndDown" id="annotateTool"
+      class="rounded-lg annotateToolContainer">
+      <v-btn text min-width="48" class="rounded-lg px-2 ma-1" @click="toggleRightDrawer(true)">
         <v-icon size="22">mdi-cog-outline</v-icon>
       </v-btn>
-      <v-btn
-        text
-        min-width="48"
-        class="rounded-lg px-2 ma-1"
-        @click="deleteSelection()"
-      >
+      <v-btn text min-width="48" class="rounded-lg px-2 ma-1" @click="deleteSelection()">
         <v-icon size="22">mdi-trash-can-outline</v-icon>
       </v-btn>
     </v-card>
-    <v-btn
-      v-if="mode === 1 && isAuditor === false"
-      id="autoNavBtn"
-      dense
-      color="primaryCustom"
-      :ripple="false"
-      class="text-subtitle-2"
-      @click="checkAnnotate(false, true)"
-    >
+    <v-btn v-if="mode === 1 && isAuditor === false" id="autoNavBtn" dense color="primaryCustom" :ripple="false"
+      class="text-subtitle-2" @click="checkAnnotate(false, true)">
       {{ $t('button.beginSign') }}
     </v-btn>
     <!-- QRCode 簽名 -->
-    <dialog-go-to-mobile
-      ref="mobileSignpadDialog"
-      :open-dialog="goToMobileSignpadDialog"
-      :task-id="taskId"
-      :text-direction="option.textDirection"
-      @close="closeGoToMobileSignpadDialog"
-      @addSignature="addSignatureFromMobileSignpad"
-    >
+    <dialog-go-to-mobile ref="mobileSignpadDialog" :open-dialog="goToMobileSignpadDialog" :task-id="taskId"
+      :text-direction="option.textDirection" @close="closeGoToMobileSignpadDialog"
+      @addSignature="addSignatureFromMobileSignpad">
     </dialog-go-to-mobile>
     <!-- QRCode 印章去背 -->
-    <dialog-go-to-mobile
-      ref="mobileRemoveBgDialog"
-      :open-dialog="goToMobileRemoveBgDialog"
-      :task-id="taskId"
-      target-path="tasks/mobile-remove-stamp-bg"
-      :content="mobileRemoveBgDialogContent"
-      @close="closeGoToMobileRemoveBgDialog"
-      @addStamp="addStampFromMobileRemoveBg"
-    >
+    <dialog-go-to-mobile ref="mobileRemoveBgDialog" :open-dialog="goToMobileRemoveBgDialog" :task-id="taskId"
+      target-path="tasks/mobile-remove-stamp-bg" :content="mobileRemoveBgDialogContent"
+      @close="closeGoToMobileRemoveBgDialog" @addStamp="addStampFromMobileRemoveBg">
     </dialog-go-to-mobile>
     <!-- QRCode 上傳圖片 -->
-    <dialog-go-to-mobile
-      ref="mobileUploadImageDialog"
-      :open-dialog="goToMobileUploadImageDialog"
-      :task-id="taskId"
-      target-path="tasks/mobile-upload-image"
-      :content="mobileUploadImageDialogContent"
-      @close="closeGoToMobileUploadImageDialog"
-      @addImage="addImage"
-    >
+    <dialog-go-to-mobile ref="mobileUploadImageDialog" :open-dialog="goToMobileUploadImageDialog" :task-id="taskId"
+      target-path="tasks/mobile-upload-image" :content="mobileUploadImageDialogContent"
+      @close="closeGoToMobileUploadImageDialog" @addImage="addImage">
     </dialog-go-to-mobile>
-    <v-dialog
-      v-model="previewAttachmentDialog"
-      max-width="600"
-      overlay-opacity="0.9"
-      :fullscreen="$utils.isMobile(false)"
-      :persistent="$utils.isMobile(false)"
-      :no-click-animation="$utils.isMobile(false)"
-      style="max-height: 100%"
-      @input="cancelPreviewAttachment()"
-    >
+    <v-dialog v-model="previewAttachmentDialog" max-width="600" overlay-opacity="0.9"
+      :fullscreen="$utils.isMobile(false)" :persistent="$utils.isMobile(false)"
+      :no-click-animation="$utils.isMobile(false)" style="max-height: 100%" @input="cancelPreviewAttachment()">
       <v-card>
         <v-app-bar dark flat color="primaryCustom">
-          <v-toolbar-title
-            class="ml-5 text-h6 d-flex align-center"
-            style="max-width: calc(100% - 80px); overflow: hidden"
-          >
+          <v-toolbar-title class="ml-5 text-h6 d-flex align-center"
+            style="max-width: calc(100% - 80px); overflow: hidden">
             <span class="text-truncate">
               {{
                 `${$t('heading.preview')}: ${getAttachmentFilename(
@@ -6634,27 +3788,20 @@
           </v-btn>
         </v-app-bar>
         <v-card-text v-if="previewAttachment" class="px-10 pt-2 pb-5">
-          <img
-            v-if="
-              checkAttachmentContentType(previewAttachment, [
-                'jpg',
-                'jpeg',
-                'png',
-              ])
-            "
-            :id="`attachmentImage_${previewAttachment.id}`"
-            :src="getAttachmentImage(previewAttachment)"
-            style="max-width: 100%; height: auto"
-          />
-          <div
-            v-else-if="checkAttachmentContentType(previewAttachment, ['txt'])"
-            style="
+          <img v-if="
+            checkAttachmentContentType(previewAttachment, [
+              'jpg',
+              'jpeg',
+              'png',
+            ])
+          " :id="`attachmentImage_${previewAttachment.id}`" :src="getAttachmentImage(previewAttachment)"
+            style="max-width: 100%; height: auto" />
+          <div v-else-if="checkAttachmentContentType(previewAttachment, ['txt'])" style="
               max-width: 100%;
               max-height: 500px;
               overflow-y: auto;
               white-space: pre-line;
-            "
-          >
+            ">
             {{ showTextAttachmentContent(previewAttachment) }}
           </div>
         </v-card-text>
@@ -6664,15 +3811,15 @@
 </template>
 
 <style lang="scss" scoped>
-::v-deep .v-application--wrap {
+:v-deep .v-application--wrap {
   min-height: 100%;
 }
 
-::v-deep .v-list-item {
+:v-deep .v-list-item {
   min-height: 36px;
 }
 
-::v-deep .v-text-field.v-text-field--solo .v-input__prepend-outer {
+:v-deep .v-text-field.v-text-field--solo .v-input__prepend-outer {
   margin: auto 5px;
 }
 
@@ -6871,7 +4018,7 @@
   height: 26px;
 }
 
-#drawingToolBarContainer > * > div > div > button {
+#drawingToolBarContainer>*>div>div>button {
   border-radius: 3px;
   min-width: auto !important;
   width: 40px;
@@ -6879,7 +4026,7 @@
   margin-top: 12.5px;
 }
 
-#drawingToolBarContainerRow > * > div > div > button {
+#drawingToolBarContainerRow>*>div>div>button {
   border-radius: 3px;
   margin-right: 5px;
   min-width: 36px;
@@ -6898,8 +4045,8 @@
   left: 0px;
 }
 
-.option-panel > div > div > button,
-.option-panel-row > div > div > button {
+.option-panel>div>div>button,
+.option-panel-row>div>div>button {
   border-radius: 3px !important;
   min-width: auto !important;
   width: 40px !important;
@@ -6907,48 +4054,29 @@
   margin: auto !important;
 }
 
-.option-panel > div,
-.option-panel-row > div {
+.option-panel>div,
+.option-panel-row>div {
   margin: auto;
 }
 
-.option-panel > div:nth-child(n + 2) {
+.option-panel>div:nth-child(n + 2) {
   margin-top: 0;
 }
 
-#drawingToolBarContainer > * {
+#drawingToolBarContainer>* {
   margin: auto;
 }
+
 // set drawing tool bar container button active
-#drawingToolBarContainer
-  > *
-  > div
-  > div
-  > button.theme--light.v-btn--active:hover::before,
-#drawingToolBarContainer
-  > *
-  > div
-  > div
-  > button.theme--light.v-btn--active::before,
-#drawingToolBarContainer
-  > *
-  > div
-  > div
-  > div
-  > button.theme--light.v-btn--active:hover::before,
-#drawingToolBarContainer
-  > *
-  > div
-  > div
-  > div
-  > button.theme--light.v-btn--active::before {
+#drawingToolBarContainer>*>div>div>button.theme--light.v-btn--active:hover::before,
+#drawingToolBarContainer>*>div>div>button.theme--light.v-btn--active::before,
+#drawingToolBarContainer>*>div>div>div>button.theme--light.v-btn--active:hover::before,
+#drawingToolBarContainer>*>div>div>div>button.theme--light.v-btn--active::before {
   opacity: 1;
 }
 
-#drawingToolBarContainer
-  .collaborate-outline-icon.theme--light.v-btn--active:hover::before,
-#drawingToolBarContainer
-  .collaborate-outline-icon.theme--light.v-btn--active::before {
+#drawingToolBarContainer .collaborate-outline-icon.theme--light.v-btn--active:hover::before,
+#drawingToolBarContainer .collaborate-outline-icon.theme--light.v-btn--active::before {
   opacity: 0.18;
 }
 
@@ -7014,7 +4142,7 @@
   top: 50px;
 }
 
-.option-panel-row#optionPanel7 > p {
+.option-panel-row#optionPanel7>p {
   margin: 0;
 }
 
@@ -7033,7 +4161,7 @@
   min-height: 40px;
   height: 40px;
 
-  > div {
+  >div {
     margin: 0;
   }
 }
@@ -7054,7 +4182,7 @@
   left: unset;
 }
 
-#optionPanel9 > button {
+#optionPanel9>button {
   min-height: unset;
   height: calc(195px / 5);
   border: none;
@@ -7268,11 +4396,12 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+
 .mobile-dialog-scroll-list {
   max-height: calc(100vh - 235px);
 }
 
-::v-deep .no-scroll-dialog {
+:v-deep .no-scroll-dialog {
   overflow-y: hidden;
 }
 
@@ -7301,8 +4430,8 @@
     border: 1px solid hsl(0, 0%, 90%);
     box-shadow: none;
 
-    ::v-deep > .v-input__control > .v-input__slot:before,
-    ::v-deep > .v-input__control > .v-input__slot:after {
+    :v-deep>.v-input__control>.v-input__slot:before,
+    :v-deep>.v-input__control>.v-input__slot:after {
       border: none;
     }
   }
@@ -7312,12 +4441,12 @@
       background-color: #f8f9fa;
     }
 
-    ::v-deep .v-expansion-panel-content__wrap {
+    :v-deep .v-expansion-panel-content__wrap {
       padding: 0;
     }
 
-    ::v-deep .v-expansion-panel--active:not(:first-child),
-    .v-expansion-panel--active + .v-expansion-panel {
+    :v-deep .v-expansion-panel--active:not(:first-child),
+    .v-expansion-panel--active+.v-expansion-panel {
       margin-top: 0;
     }
   }
@@ -7356,10 +4485,11 @@
 
 @media screen and (max-width: 1263px) {
   #appToolbar {
-    .v-slide-group:not(.v-slide-group--has-affixes) > .v-slide-group__prev {
+    .v-slide-group:not(.v-slide-group--has-affixes)>.v-slide-group__prev {
       display: none;
     }
-    .v-slide-group.v-slide-group--has-affixes > .v-slide-group__prev {
+
+    .v-slide-group.v-slide-group--has-affixes>.v-slide-group__prev {
       align-items: center;
       display: flex !important;
       flex: 0 1 52px;
@@ -7844,31 +4974,31 @@ export default {
       get() {
         return this.leftDrawer ? [1] : []
       },
-      set(value) {},
+      set(value) { },
     },
     rightDrawerToggle: {
       get() {
         return this.rightDrawer ? [1] : []
       },
-      set(value) {},
+      set(value) { },
     },
     streamingDrawerToggle: {
       get() {
         return this.streamingDrawer ? [1] : []
       },
-      set(value) {},
+      set(value) { },
     },
     commentDrawerToggle: {
       get() {
         return this.commentDrawer ? [1] : []
       },
-      set(value) {},
+      set(value) { },
     },
     attachmentDrawerToggle: {
       get() {
         return this.attachmentDrawer ? [1] : []
       },
-      set(value) {},
+      set(value) { },
     },
     totalSize() {
       return this.attachmentFiles.reduce((prev, curr) => {
@@ -7976,9 +5106,9 @@ export default {
           (!this.$vuetify.breakpoint.mdAndDown &&
             this.control === 0 &&
             this.role === 'HOST') ||
-          (!this.$vuetify.breakpoint.mdAndDown &&
-            this.control === 1 &&
-            this.role === 'SIGNER')
+            (!this.$vuetify.breakpoint.mdAndDown &&
+              this.control === 1 &&
+              this.role === 'SIGNER')
             ? '65px'
             : '0',
       }
@@ -8295,7 +5425,7 @@ export default {
     // 未登入但使用過簽名板(localStorage紀錄)，則使用簽名板
     this.signatureDialogToggle =
       this.useHandWriting === true &&
-      (this.isLogin || this.noLoginUseHandWriting)
+        (this.isLogin || this.noLoginUseHandWriting)
         ? 0
         : 1
   },
@@ -8509,7 +5639,7 @@ export default {
       let panel
       try {
         panel = document.querySelector(`#optionPanel${this.drawToolToggle}`)
-      } catch (e) {} // get panel element
+      } catch (e) { } // get panel element
       switch (this.drawToolToggle) {
         case 1: {
           if (this.mode === 4) {
@@ -8582,7 +5712,7 @@ export default {
       let panel
       try {
         panel = document.querySelector(`#optionPanel${this.drawOptionToggle}`)
-      } catch (e) {} // get panel element
+      } catch (e) { } // get panel element
       switch (this.drawOptionToggle) {
         case 7: {
           // selectedColor
@@ -9039,7 +6169,7 @@ export default {
           const height =
             anno.page * 10 +
             (anno.page - 1) *
-              (document.querySelectorAll('.canvasWrapper')[0].clientHeight + 20)
+            (document.querySelectorAll('.canvasWrapper')[0].clientHeight + 20)
           const annotateY = anno.viewRect ? anno.viewRect[1] : anno.rect[1] / 2
           document
             .querySelector('#viewerContainer')
@@ -9050,8 +6180,8 @@ export default {
           const height =
             anno.page * 10 +
             (anno.page - 1) *
-              (document.querySelectorAll('.canvasWrapper')[0].clientHeight +
-                20) +
+            (document.querySelectorAll('.canvasWrapper')[0].clientHeight +
+              20) +
             anno.y
           document.querySelector('#viewerContainer').scrollTo(0, height - 100)
         }
@@ -9066,10 +6196,10 @@ export default {
         this.comment[this.selectedFile - 1].comment.length === 0
           ? 0
           : Math.max(
-              ...this.comment[this.selectedFile - 1].comment.map(
-                (obj) => obj.id
-              )
-            ) + 1
+            ...this.comment[this.selectedFile - 1].comment.map(
+              (obj) => obj.id
+            )
+          ) + 1
       let color
       if (this.commentAnnotations[this.selectedFile - 1].length === 0) {
         this.commentAnnotations[this.selectedFile - 1] = Array.from(
@@ -10025,10 +7155,10 @@ export default {
             annotateTool.style.setProperty(
               'left',
               evt.position.left -
-                appRect.left +
-                evt.selection.width / 2 -
-                annotateTool.clientWidth / 2 +
-                'px'
+              appRect.left +
+              evt.selection.width / 2 -
+              annotateTool.clientWidth / 2 +
+              'px'
             )
             annotateTool.style.setProperty(
               'top',
@@ -10082,10 +7212,10 @@ export default {
             annotateTool.style.setProperty(
               'left',
               left -
-                appRect.left +
-                width / 2 -
-                annotateTool.clientWidth / 2 +
-                'px'
+              appRect.left +
+              width / 2 -
+              annotateTool.clientWidth / 2 +
+              'px'
             )
             annotateTool.style.setProperty(
               'top',
@@ -10139,10 +7269,10 @@ export default {
             annotateTool.style.setProperty(
               'left',
               left -
-                appRect.left +
-                width / 2 -
-                annotateTool.clientWidth / 2 +
-                'px'
+              appRect.left +
+              width / 2 -
+              annotateTool.clientWidth / 2 +
+              'px'
             )
             annotateTool.style.setProperty(
               'top',
@@ -10188,10 +7318,10 @@ export default {
             annotateTool.style.setProperty(
               'left',
               position.left -
-                appRect.left +
-                selection.width / 2 -
-                annotateTool.clientWidth / 2 +
-                'px'
+              appRect.left +
+              selection.width / 2 -
+              annotateTool.clientWidth / 2 +
+              'px'
             )
             annotateTool.style.setProperty(
               'top',
@@ -10245,10 +7375,10 @@ export default {
             annotateTool.style.setProperty(
               'left',
               left -
-                appRect.left +
-                width / 2 -
-                annotateTool.clientWidth / 2 +
-                'px'
+              appRect.left +
+              width / 2 -
+              annotateTool.clientWidth / 2 +
+              'px'
             )
             annotateTool.style.setProperty(
               'top',
@@ -10302,10 +7432,10 @@ export default {
             annotateTool.style.setProperty(
               'left',
               left -
-                appRect.left +
-                width / 2 -
-                annotateTool.clientWidth / 2 +
-                'px'
+              appRect.left +
+              width / 2 -
+              annotateTool.clientWidth / 2 +
+              'px'
             )
             annotateTool.style.setProperty(
               'top',
@@ -10432,8 +7562,8 @@ export default {
         this.selection.maxlength < 1
           ? 1
           : this.selection.maxlength > 10000
-          ? 10000
-          : Math.floor(this.selection.maxlength)
+            ? 10000
+            : Math.floor(this.selection.maxlength)
       this.selectionSource.fabricLayer.changeMaxlength(this.selection)
     },
     changeValidation(e) {

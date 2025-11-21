@@ -1,157 +1,99 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
-      v-if="smAndDown"
-      v-model="drawer"
-      mobile
-      location="top"
-      temporary
-    >
-      <v-list-item v-if="userInfo" class="px-0 py-3">
-        <div class="d-flex flex-row align-start" style="margin-left: 48px">
-          <v-avatar size="24" color="primaryDarken" class="mr-3">
-            <span class="white--text text-overline">{{
-              getUserIconText()
-            }}</span>
-          </v-avatar>
-          <div class="d-flex flex-column">
-            <div v-if="userInfo.name" class="text-subtitle-2 font-weight-bold">
-              {{ getUserName() }}
+    <ClientOnly>
+      <v-navigation-drawer v-if="smAndDown" v-model="drawer" mobile location="top" temporary>
+        <v-list-item v-if="userInfo" class="px-0 py-3">
+          <div class="d-flex flex-row align-start" style="margin-left: 48px">
+            <v-avatar size="24" color="primaryDarken" class="mr-3">
+              <span class="white--text text-overline">{{
+                getUserIconText()
+              }}</span>
+            </v-avatar>
+            <div class="d-flex flex-column">
+              <div v-if="userInfo.name" class="text-subtitle-2 font-weight-bold">
+                {{ getUserName() }}
+              </div>
+              <div style="font-size: 0.75rem">{{ getUserAccount() }}</div>
             </div>
-            <div style="font-size: 0.75rem">{{ getUserAccount() }}</div>
           </div>
-        </div>
-      </v-list-item>
-      <v-divider
-        class="border-opacity-100"
-        style="border: none; height: 0; border-bottom: 6px solid #f7f7f7"
-      >
-      </v-divider>
-      <v-list nav class="pa-0">
-        <template v-for="(item, index) in drawerItems">
-          <v-list-group
-            v-if="item.subItems && !item.disable"
-            :key="`item-${index}${item.title}`"
-            :group="item.to"
-            color="primary"
-            class="mb-1"
-            no-action
-          >
-            {{ item }}
-            <template v-slot:prependIcon>
-              <svg-icon-setting
-                v-if="item.iconClass === 'setting-icon'"
-                style="margin-left: 36px; margin-right: 10px"
-              />
-              <svg-icon-profile
-                v-if="item.iconClass === 'account-icon'"
-                style="margin-left: 40px; margin-right: 14px"
-              />
-            </template>
-            <template v-slot:activator>
+        </v-list-item>
+        <v-divider class="border-opacity-100" style="border: none; height: 0; border-bottom: 6px solid #f7f7f7">
+        </v-divider>
+        <v-list nav class="pa-0">
+          <template v-for="(item, index) in drawerItems">
+            <v-list-group v-if="item.subItems && !item.disable" :key="`item-${index}${item.title}`" :group="item.to"
+              color="primary" class="mb-1" no-action>
+              {{ item }}
+              <template v-slot:prependIcon>
+                <svg-icon-setting v-if="item.iconClass === 'setting-icon'"
+                  style="margin-left: 36px; margin-right: 10px" />
+                <svg-icon-profile v-if="item.iconClass === 'account-icon'"
+                  style="margin-left: 40px; margin-right: 14px" />
+              </template>
+              <template v-slot:activator>
+                <v-list-item-title class="text-subtitle-2">{{
+                  $t(item.title)
+                }}</v-list-item-title>
+              </template>
+              <template v-for="(subItem, i) in item.subItems">
+                <v-list-item v-if="!subItem.disable" :key="`subItem-${i}`" :to="item.to + subItem.to" color="primary"
+                  router exact nuxt>
+                  <v-list-item-title class="text-subtitle-2">{{
+                    $t(subItem.title)
+                  }}</v-list-item-title>
+                </v-list-item>
+              </template>
+            </v-list-group>
+            <v-list-item v-else-if="item.title && !item.disable" :key="`item2-${index}${item.title}`" :to="item.to"
+              color="primary" router exact nuxt>
+              <v-list-item-action>
+                <div :class="`sidemenuIcon_${index}`"></div>
+              </v-list-item-action>
+
               <v-list-item-title class="text-subtitle-2">{{
                 $t(item.title)
               }}</v-list-item-title>
-            </template>
-            <template v-for="(subItem, i) in item.subItems">
-              <v-list-item
-                v-if="!subItem.disable"
-                :key="`subItem-${i}`"
-                :to="item.to + subItem.to"
-                color="primary"
-                router
-                exact
-                nuxt
-              >
-                <v-list-item-title class="text-subtitle-2">{{
-                  $t(subItem.title)
-                }}</v-list-item-title>
-              </v-list-item>
-            </template>
-          </v-list-group>
-          <v-list-item
-            v-else-if="item.title && !item.disable"
-            :key="`item-${index}${title}`"
-            :to="item.to"
-            color="primary"
-            router
-            exact
-            nuxt
-          >
-            <v-list-item-action>
-              <div :class="`sidemenuIcon_${index}`"></div>
-            </v-list-item-action>
-
-            <v-list-item-title class="text-subtitle-2">{{
-              $t(item.title)
-            }}</v-list-item-title>
-          </v-list-item>
-          <v-subheader
-            v-else-if="
+            </v-list-item>
+            <v-list-subheader v-else-if="
               item.header &&
               drawerItems.filter(
                 (i) => item.type === i.type && i.disable === false
               ).length > 0
-            "
-            :key="`item-${index}`"
-            class="text-overline"
-          >
-            {{ $t(item.header) }}
-          </v-subheader>
-          <v-divider />
-        </template>
-        <v-list-group no-action>
-          <template v-slot:prependIcon>
-            <v-icon style="margin-left: 36px; margin-right: 10px"
-              >mdi-web</v-icon
-            >
+            " :key="`item-${index}`" class="text-overline">
+              {{ $t(item.header) }}
+            </v-list-subheader>
+            <v-divider />
           </template>
-          <template v-slot:activator>
-            <v-list-item-title class="text-subtitle-2">
-              {{ $t('heading.switchLang') }}
-            </v-list-item-title>
-          </template>
-          <v-list-item
-            v-for="{ code, name } in locales"
-            :key="code"
-            :disabled="code === locale"
-            @click="changeLocale(code)"
-          >
-            <v-list-item-title>{{ name }}</v-list-item-title>
-          </v-list-item>
-        </v-list-group>
-        <v-divider v-if="showDocument"></v-divider>
-        <v-list-item
-          v-if="showDocument"
-          class="mb-1"
-          style="cursor: pointer"
-          :href="documentLocation"
-          target="_blank"
-        >
-          <v-list-item-icon>
-            <svg-icon-question-mark
-              style="margin-left: 35px; margin-right: 13px; margin-top: -2px"
-            />
-          </v-list-item-icon>
+          <v-list-group no-action>
+            <template v-slot:prependIcon>
+              <v-icon style="margin-left: 36px; margin-right: 10px">mdi-web</v-icon>
+            </template>
+            <template v-slot:activator>
+              <v-list-item-title class="text-subtitle-2">
+                {{ $t('heading.switchLang') }}
+              </v-list-item-title>
+            </template>
+            <v-list-item v-for="{ code, name } in locales" :key="code" :disabled="code === locale"
+              @click="changeLocale(code)">
+              <v-list-item-title>{{ name }}</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-divider v-if="showDocument"></v-divider>
+          <v-list-item v-if="showDocument" class="mb-1" style="cursor: pointer" :href="documentLocation"
+            target="_blank">
+            <template v-slot:prepend>
+              <svg-icon-question-mark style="margin-left: 35px; margin-right: 13px; margin-top: -2px" />
+            </template>
 
-          <v-list-item-title class="text-subtitle-2">{{
-            $t('link.documentation')
-          }}</v-list-item-title>
-        </v-list-item>
-        <v-list-item
-          v-if="showDocument"
-          class="mb-1"
-          style="cursor: pointer"
-          @click.stop="goToChangelog"
-        >
-          <v-list-item-icon>
-            <div style="position: relative">
-              <v-icon style="margin-left: 34px; margin-right: 10px"
-                >mdi-update</v-icon
-              >
-              <div
-                v-if="changelogUnread"
-                style="
+            <v-list-item-title class="text-subtitle-2">{{
+              $t('link.documentation')
+            }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="showDocument" class="mb-1" style="cursor: pointer" @click.stop="goToChangelog">
+            <template v-slot:prepend>
+              <div style="position: relative">
+                <v-icon style="margin-left: 34px; margin-right: 10px">mdi-update</v-icon>
+                <div v-if="changelogUnread" style="
                   position: absolute;
                   top: 8px;
                   left: 35px;
@@ -159,84 +101,55 @@
                   height: 6px;
                   background-color: red;
                   border-radius: 50%;
-                "
-              ></div>
-            </div>
-          </v-list-item-icon>
+                "></div>
+              </div>
+            </template>
 
-          <v-list-item-title class="text-subtitle-2">{{
-            $t('link.notification')
-          }}</v-list-item-title>
-        </v-list-item>
+            <v-list-item-title class="text-subtitle-2">{{
+              $t('link.notification')
+            }}</v-list-item-title>
+          </v-list-item>
 
-        <v-divider></v-divider>
-        <v-list-item style="cursor: pointer" @click="logout()">
-          <v-list-item-icon>
-            <svg-icon-logout style="margin-left: 37px; margin-right: 15px" />
-          </v-list-item-icon>
+          <v-divider></v-divider>
+          <v-list-item style="cursor: pointer" @click="logout()">
+            <template v-slot:prepend>
+              <svg-icon-logout style="margin-left: 37px; margin-right: 15px" />
+            </template>
 
-          <v-list-item-title class="text-subtitle-2">{{
-            $t('button.signout')
-          }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar
-      class="px-4"
-      flat
-      scroll-target="#pageContainer"
-      style="border-bottom: 1px solid #dddddd"
-      :density="smAndDown ? 'comfortable' : 'default'"
-    >
-      <v-toolbar-title
-        class="d-flex flex-row align-center ml-xl-4 cursor-pointer"
-        style="min-width: 150px; user-select: none; max-width: fit-content"
-        @click="router.push('/')"
-      >
-        <div class="d-flex flex-row justify-center align-center">
-          <v-img
-            alt="logo"
-            :width="mdAndUp ? 150 : 135"
-            :src="logoSrc"
-            style="max-width: 150px; max-height: 42px"
-          />
-        </div>
-      </v-toolbar-title>
-      <v-tabs v-if="!smAndDown" :value="tabValue" optional color="#00653E">
-        <v-tab
-          v-for="(item, index) in tabItems"
-          :key="index"
-          :to="item.to"
-          router
-          nuxt
-        >
+            <v-list-item-title class="text-subtitle-2">{{
+              $t('button.signout')
+            }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
+    </ClientOnly>
+    <ClientOnly>
+      <v-app-bar class="px-4" flat scroll-target="#pageContainer" style="border-bottom: 1px solid #dddddd"
+        :extension-height="smAndDown ? '48' : '0'" :density="smAndDown ? 'comfortable' : 'default'">
+        <v-toolbar-title class="d-flex flex-row align-center ml-xl-4 cursor-pointer"
+          style="min-width: 150px; user-select: none; max-width: fit-content" @click="router.push('/')">
           <div class="d-flex flex-row justify-center align-center">
-            <div class="text-subtitle-1">{{ $t(item.title) }}</div>
+            <v-img alt="logo" :width="mdAndUp ? 150 : 135" :src="logoSrc" style="max-width: 150px; max-height: 42px" />
           </div>
-        </v-tab>
-      </v-tabs>
-      <v-spacer />
-      <span
-        v-if="planInfo?.useB2b2c"
-        v-tippy="{ content: $t('tooltip.buyB2b2cCount') }"
-        class="mr-md-2 mr-6 mt-md-0 mb-n1"
-        style="cursor: pointer"
-        @click.stop="router.push('/settings/cloud-task-count')"
-      >
-        <svg-icon-buy-b2b2c />
-      </span>
-      <div v-if="!smAndDown && showDocument" style="position: relative">
-        <v-btn
-          v-tippy="{ content: $t('tooltip.changelog') }"
-          icon
-          color="primaryDarken"
-          @click.stop="goToChangelog"
-        >
-          <v-icon>mdi-update</v-icon>
-        </v-btn>
-        <div
-          v-if="changelogUnread"
-          style="
+        </v-toolbar-title>
+        <v-tabs v-if="!smAndDown" :value="tabValue" optional color="#00653E">
+          <v-tab v-for="(item, index) in tabItems" :key="index" :to="item.to" router nuxt>
+            <div class="d-flex flex-row justify-center align-center">
+              <div class="text-subtitle-1">{{ $t(item.title) }}</div>
+            </div>
+          </v-tab>
+        </v-tabs>
+        <v-spacer />
+        <span v-if="planInfo?.useB2b2c" v-tippy="{ content: $t('tooltip.buyB2b2cCount') }"
+          class="mr-md-2 mr-6 mt-md-0 mb-n1" style="cursor: pointer"
+          @click.stop="router.push('/settings/cloud-task-count')">
+          <svg-icon-buy-b2b2c />
+        </span>
+        <div v-if="!smAndDown && showDocument" style="position: relative">
+          <v-btn v-tippy="{ content: $t('tooltip.changelog') }" icon color="primaryDarken" @click.stop="goToChangelog">
+            <v-icon>mdi-update</v-icon>
+          </v-btn>
+          <div v-if="changelogUnread" style="
             position: absolute;
             top: 15px;
             left: 14px;
@@ -244,156 +157,108 @@
             height: 6px;
             background-color: red;
             border-radius: 50%;
-          "
-        ></div>
-      </div>
-      <button
-        v-if="tourStore.tourFinished && !tourStore.redeemSuccess"
-        class="mr-md-2 mr-6 mt-md-0 mb-n1 gradient-button"
-        @click.stop="
-          router.push({ path: '/settings/plan', query: { redeem: true } })
-        "
-      >
-        <img src="/icon/tour-gift.png" alt="gift" />
-        {{ $t('button.tourRedeemUpgrade') }}
-      </button>
-      <v-app-bar-nav-icon
-        v-if="smAndDown"
-        class="primaryDarken--text"
-        @click.stop="drawer = !drawer"
-      />
-      <v-btn
-        v-if="!smAndDown && showDocument"
-        v-tippy="{ content: $t('tooltip.documentation') }"
-        icon
-        :href="documentLocation"
-        target="_blank"
-        color="primaryDarken"
-      >
-        <v-icon>mdi-help-circle-outline </v-icon>
-      </v-btn>
-      <v-menu v-if="!smAndDown" offset-y left rounded="md">
-        <template v-slot:activator="{ props }">
-          <v-btn
-            v-tippy="{
+          "></div>
+        </div>
+        <button v-if="tourStore.tourFinished && !tourStore.redeemSuccess"
+          class="mr-md-2 mr-6 mt-md-0 mb-n1 gradient-button" @click.stop="
+            router.push({ path: '/settings/plan', query: { redeem: true } })
+            ">
+          <img src="/icon/tour-gift.png" alt="gift" />
+          {{ $t('button.tourRedeemUpgrade') }}
+        </button>
+        <v-app-bar-nav-icon v-if="smAndDown" class="primaryDarken--text" @click.stop="drawer = !drawer" />
+        <v-btn v-if="!smAndDown && showDocument" v-tippy="{ content: $t('tooltip.documentation') }" icon
+          :href="documentLocation" target="_blank" color="primaryDarken">
+          <v-icon>mdi-help-circle-outline </v-icon>
+        </v-btn>
+        <v-menu v-if="!smAndDown" offset-y left rounded="md">
+          <template v-slot:activator="{ props }">
+            <v-btn v-tippy="{
               content: $t('tooltip.setting'),
-            }"
-            icon
-            color="primaryDarken"
-            v-bind="props"
-          >
-            <v-icon>mdi-cog-outline</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list width="200px">
-          <template v-for="(item, i) in gearItems">
-            <v-list-item
-              v-if="!item.disable"
-              :key="`gear-item-${i}`"
-              :to="`/settings${item.to}`"
-              nuxt
-            >
-              <v-list-item-title class="text-subtitle-1">{{
-                $t(item.title)
-              }}</v-list-item-title>
-            </v-list-item>
+            }" icon color="primaryDarken" v-bind="props">
+              <v-icon>mdi-cog-outline</v-icon>
+            </v-btn>
           </template>
-        </v-list>
-      </v-menu>
-      <v-menu
-        v-if="!smAndDown"
-        v-model="openProfileMenu"
-        :close-on-content-click="false"
-        offset-y
-        left
-        rounded="md"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-            v-tippy="{
-              content: $t('tooltip.personalSetting'),
-            }"
-          >
-            <v-avatar size="24" color="primaryDarken">
-              <span class="white--text text-overline">{{
-                getUserIconText()
-              }}</span>
-            </v-avatar>
-          </v-btn>
-        </template>
 
-        <v-list width="270px">
-          <v-list-item v-if="userInfo">
-            <div class="d-flex flex-column">
-              <div
-                v-if="userInfo.name"
-                class="text-subtitle-1 font-weight-bold"
-              >
-                {{ getUserName() }}
+          <v-list width="200px">
+            <template v-for="(item, i) in gearItems">
+              <v-list-item v-if="!item.disable" :key="`gear-item-${i}`" :to="`/settings${item.to}`" nuxt>
+                <v-list-item-title class="text-subtitle-1">{{
+                  $t(item.title)
+                }}</v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
+        <v-menu v-if="!smAndDown" v-model="openProfileMenu" :close-on-content-click="false" offset-y left rounded="md">
+          <template v-slot:activator="{ props }">
+            <v-btn icon v-bind="props" v-tippy="{
+              content: $t('tooltip.personalSetting'),
+            }">
+              <v-avatar size="24" color="primaryDarken">
+                <span class="white--text text-overline">{{
+                  getUserIconText()
+                }}</span>
+              </v-avatar>
+            </v-btn>
+          </template>
+
+          <v-list width="270px">
+            <v-list-item v-if="userInfo">
+              <div class="d-flex flex-column">
+                <div v-if="userInfo.name" class="text-subtitle-1 font-weight-bold">
+                  {{ getUserName() }}
+                </div>
+                <div class="text-caption">{{ getUserAccount() }}</div>
+                <div class="text-caption grey--text">
+                  {{ getUserType() }}
+                </div>
               </div>
-              <div class="text-caption">{{ getUserAccount() }}</div>
-              <div class="text-caption grey--text">
-                {{ getUserType() }}
-              </div>
-            </div>
-          </v-list-item>
-          <v-divider></v-divider>
-          <template v-for="(item, i) in avatarItems">
-            <v-list-item
-              v-if="!item.disable"
-              :key="`avatar-item-${i}`"
-              @click="
+            </v-list-item>
+            <v-divider></v-divider>
+            <template v-for="(item, i) in avatarItems">
+              <v-list-item v-if="!item.disable" :key="`avatar-item-${i}`" @click="
                 () => {
                   router.push(`/account${item.to}`)
                   openProfileMenu = false
                 }
-              "
-            >
-              <v-list-item-title class="text-subtitle-1">{{
-                $t(item.title)
-              }}</v-list-item-title>
-            </v-list-item>
-          </template>
-          <v-list-group no-action>
-            <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" :title="$t('heading.switchLang')">
+              ">
+                <v-list-item-title class="text-subtitle-1">{{
+                  $t(item.title)
+                }}</v-list-item-title>
               </v-list-item>
             </template>
-            <v-list-item
-              v-for="{ code, name } in locales"
-              :key="code"
-              :disabled="code === locale"
-              @click="changeLocale(code)"
-            >
-              <v-list-item-title>{{ name }}</v-list-item-title>
+            <v-list-group no-action>
+              <template v-slot:activator="{ props }">
+                <v-list-item v-bind="props" :title="$t('heading.switchLang')">
+                </v-list-item>
+              </template>
+              <v-list-item v-for="{ code, name } in locales" :key="code" :disabled="code === locale"
+                @click="changeLocale(code)">
+                <v-list-item-title>{{ name }}</v-list-item-title>
+              </v-list-item>
+            </v-list-group>
+            <v-list-item style="cursor: pointer" @click="logout">
+              <v-list-item-title class="text-subtitle-1">{{
+                $t('button.signout')
+              }}</v-list-item-title>
             </v-list-item>
-          </v-list-group>
-          <v-list-item style="cursor: pointer" @click="logout">
-            <v-list-item-title class="text-subtitle-1">{{
-              $t('button.signout')
-            }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <template v-if="smAndDown" v-slot:extension>
-        <v-tabs :value="tabValue" optional color="#00653E">
-          <v-tab
-            v-for="(item, index) in tabItems"
-            :key="index"
-            :to="item.to"
-            router
-            nuxt
-          >
-            <div class="d-flex flex-row justify-center align-center">
-              <div class="text-subtitle-1">{{ $t(item.title) }}</div>
-            </div>
-          </v-tab>
-        </v-tabs>
-      </template>
-    </v-app-bar>
+          </v-list>
+        </v-menu>
+        <template v-slot:extension>
+          <div v-if="smAndDown" class="w-100">
+            <v-tabs :value="tabValue" optional color="#00653E">
+              <v-tab v-for="(item, index) in tabItems" :key="index" :to="item.to" router nuxt>
+                <div class="d-flex flex-row justify-center align-center">
+                  <div class="text-subtitle-1">{{ $t(item.title) }}</div>
+                </div>
+              </v-tab>
+            </v-tabs>
+          </div>
+
+        </template>
+      </v-app-bar>
+    </ClientOnly>
     <v-main>
       <v-container id="pageContainer" class="pa-0" fluid fill-height>
         <!-- <v-card
@@ -437,70 +302,11 @@
       </v-container>
     </v-main>
 
-    <!-- alert -->
-    <v-alert
-      v-model="alertStore.show"
-      :color="alertStore.type"
-      :icon="alertStore.icon"
-      border
-      style="
-        position: fixed;
-        top: 10%;
-        left: 50%;
-        transform: translate(-50%, 0);
-        justify-content: center;
-        z-index: 999999;
-      "
-    >
-      {{ alertStore.message }}
-      <v-icon medium class="ml-4" @click="alertStore.closeMessage()">
-        mdi-close
-      </v-icon>
-    </v-alert>
-
-    <!-- snackbar -->
-    <v-snackbar
-      v-model="snackbarStore.show"
-      :timeout="snackbarStore.timeout"
-      rounded="lg"
-      multi-line
-      style="word-break: break-all"
-    >
-      <v-icon
-        :icon="snackbarStore.icon"
-        :color="snackbarStore.type"
-        variant="text"
-        class="mr-2"
-      ></v-icon>
-      {{ snackbarStore.message }}
-
-      <template v-slot:actions>
-        <v-btn
-          :color="snackbarStore.type"
-          text
-          @click="snackbarStore.closeMessage()"
-        >
-          {{ $t('button.close') }}
-        </v-btn>
-        <!-- <v-btn
-          icon="mdi-close"
-          color="white"
-          variant="text"
-          @click="snackbarStore.closeMessage()"
-        >
-          Close
-        </v-btn> -->
-      </template>
-    </v-snackbar>
-
-    <messageDialog></messageDialog>
   </v-app>
 </template>
 
 <script setup>
 import { useDisplay } from 'vuetify'
-import { useAlertStore } from '@/stores/alert'
-import { useTourStore } from '@/stores/tour'
 
 const { getMyInfoApi, patchMyInfoApi } = useUserApi()
 const runtimeConfig = useRuntimeConfig()
@@ -509,10 +315,8 @@ const router = useRouter()
 const { $clevertap } = useNuxtApp()
 const { t, locale, locales, setLocale } = useI18n()
 const { smAndDown, mdAndUp } = useDisplay()
-const alertStore = useAlertStore()
 const mainStore = useMainStore()
 const tourStore = useTourStore()
-const snackbarStore = useSnackbarStore()
 
 const showLoading = ref(true)
 const drawer = ref(false)
@@ -843,21 +647,25 @@ function goToChangelog() {
     -moz-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -moz-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
+
 @-webkit-keyframes spinner-loader {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
+
 @keyframes spinner-loader {
   0% {
     -moz-transform: rotate(0deg);
@@ -865,6 +673,7 @@ function goToChangelog() {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -moz-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
@@ -882,6 +691,7 @@ function goToChangelog() {
 div.v-list-item__icon.v-list-group__header__prepend-icon {
   margin-right: 0px !important;
 }
+
 div.v-list-item__icon.v-list-group__header__append-icon {
   margin-right: 24px !important;
 }
@@ -895,9 +705,7 @@ div.v-list-item__icon {
 .gradient-button {
   white-space: nowrap;
   font-size: 12px;
-  background: transparent
-    linear-gradient(90deg, #26ff55 0%, #268aff 48%, #fc55ff 100%) 0% 0%
-    no-repeat padding-box;
+  background: transparent linear-gradient(90deg, #26ff55 0%, #268aff 48%, #fc55ff 100%) 0% 0% no-repeat padding-box;
   border-radius: 17px;
   padding: 8px 14px;
   color: #ffffff;

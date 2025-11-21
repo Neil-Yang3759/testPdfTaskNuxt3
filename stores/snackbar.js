@@ -5,7 +5,7 @@ export const useSnackbarStore = defineStore('snackbar', () => {
   const show = ref(false)
   const message = ref('')
   const type = ref('')
-  const timeout = ref(-1)
+  const timeout = ref(5000)
   const iconList = ref([
     { error: 'mdi-alert' },
     { success: 'mdi-check-circle' },
@@ -22,7 +22,7 @@ export const useSnackbarStore = defineStore('snackbar', () => {
     message.value = payload.message
     type.value = payload.type
     show.value = true
-    timeout.value = payload.timeout || -1
+    timeout.value = payload.timeout || 5000
   }
 
   function closeMessage() {

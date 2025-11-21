@@ -1,5 +1,3 @@
-// import this after install `@mdi/font` package
-import colors from 'vuetify/lib/util/colors.js'
 import '@mdi/font/css/materialdesignicons.css'
 
 import 'vuetify/styles'

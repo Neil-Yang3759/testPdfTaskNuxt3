@@ -1,8 +1,8 @@
 import { useGlobalVarStore } from '~/stores/globalVar'
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const globalVarStore = useGlobalVarStore()
-  globalVarStore.loading = true
+  // const globalVarStore = useGlobalVarStore()
+  // globalVarStore.loading = true
   const token = useCookie('PDF_JWT_TOKEN')
 
   // 1. 設定白名單 (不需要登入就能去的頁面)
@@ -21,7 +21,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
 
   // 设置loading为false
-  setTimeout(() => {
-    globalVarStore.loading = false
-  }, 2000)
+  // setTimeout(() => {
+  //   globalVarStore.loading = false
+  // }, 2000)
 })

@@ -7,6 +7,11 @@ export function useFileApi() {
       body: formData,
     })
   }
+  const downloadFileApi = async (fileId) => {
+    return await useMyFetch(`/file/download/${fileId}`, {
+      method: 'GET',
+    })
+  }
 
-  return { uploadFileApi }
+  return { uploadFileApi, downloadFileApi }
 }

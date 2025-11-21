@@ -1,42 +1,20 @@
 <template>
   <div class="taskContainer">
-    <v-app-bar
-      :clipped-left="true"
-      color="primary"
-      dark
-      fixed
-      flat
-      :extended="mdAndDown"
-      height="50"
-    >
+    <v-app-bar :clipped-left="true" color="primary" dark fixed flat :extended="mdAndDown" height="50">
       <div v-if="model.taskName" class="d-flex align-center">
-        <img
-          v-if="isB2b2c"
-          width="20"
-          height="20"
-          src="/images/tasks/taskCloud.svg"
-        />
-        <img
-          v-else
-          width="20"
-          height="20"
-          src="/images/tasks/taskStandard.svg"
-        />
+        <img v-if="isB2b2c" width="20" height="20" src="/images/tasks/taskCloud.svg" />
+        <img v-else width="20" height="20" src="/images/tasks/taskStandard.svg" />
         <div class="ml-2 taskName" style="font-size: 13px">
           {{ model.taskName }}
         </div>
       </div>
       <template v-if="!mdAndDown">
-        <v-stepper
-          v-model="step"
-          class="align-center justify-center text-center elevation-0"
-          style="
+        <v-stepper v-model="step" class="align-center justify-center text-center elevation-0" style="
             position: absolute;
             left: 28%;
             right: 28%;
             background: transparent !important;
-          "
-        >
+          ">
           <v-stepper-header>
             <v-stepper-step step="1">
               {{ getTitle(1) }}
@@ -61,14 +39,7 @@
       <template v-if="mdAndDown" v-slot:extension>
         <v-row no-gutters justify="center" align="center">
           <v-col cols="2">
-            <v-btn
-              v-if="step !== 1"
-              block
-              depressed
-              text
-              color="white"
-              @click="step--"
-            >
+            <v-btn v-if="step !== 1" block depressed text color="white" @click="step--">
               {{ $t('button.previous') }}
             </v-btn>
           </v-col>
@@ -84,32 +55,14 @@
             </div>
           </v-col>
           <v-col cols="2">
-            <v-btn
-              v-if="step === 1"
-              class="tour-create-task-3"
-              block
-              depressed
-              text
-              color="white"
-              :disabled="!fileReady"
-              @click="finishPersonPrepare()"
-            >
+            <v-btn v-if="step === 1" class="tour-create-task-3" block depressed text color="white"
+              :disabled="!fileReady" @click="finishPersonPrepare()">
               {{ $t('button.next') }}
             </v-btn>
-            <v-btn
-              v-if="step === 2"
-              block
-              depressed
-              text
-              color="white"
-              @click="checkAnnotate"
-            >
+            <v-btn v-if="step === 2" block depressed text color="white" @click="checkAnnotate">
               {{ $t('button.next') }}
             </v-btn>
-            <div
-              v-if="step === 3"
-              class="d-flex flex-row align-center justify-center"
-            >
+            <div v-if="step === 3" class="d-flex flex-row align-center justify-center">
               <v-btn small outlined @click="startPdfTask()">
                 {{ $t('button.send') }}
               </v-btn>
@@ -138,6 +91,1037 @@
         {{ $t('button.giveUp') }}
       </v-btn>
     </v-app-bar>
+    <v-window v-model="step" touchless class="fill-height">
+      <v-window-item v-if="step === 1" :value="1" class="fill-height mt-6">
+        <v-row justify="center" no-gutters>
+          <v-col cols="12" sm="10" md="8" lg="6" xl="6">
+            <pdf-upload ref="pdfUpload" class="tour-create-task-0" :is-b2b2c="isB2b2c"
+              :parent-task-name="model.taskName" @loadTemplateTaskPeople="loadTemplateTask"
+              @initFirstKeepFindAnnotation="
+                () => {
+                  firstKeepFindAnnotation = true
+                }
+              "></pdf-upload>
+          </v-col>
+        </v-row>
+        <v-row justify="center" no-gutters>
+          <v-col cols="12" sm="10" md="8" lg="6" xl="6">
+            <v-card flat class="pa-0">
+              <v-card-text class="pt-0">
+                <v-row no-gutters>
+                  <v-col cols="12">
+                    <v-card flat>
+                      <v-card-title class="text-h6 text-sm-h5">{{
+                        $t('label.taskName')
+                      }}</v-card-title>
+                      <v-card-text>
+                        <validation-observer ref="taskNameObserver" vid="taskName">
+                          <validation-provider v-slot="{ errors }" vid="taskName" :name="$t('label.taskName')"
+                            rules="required" style="width: 100%">
+                            <v-text-field v-model="model.taskName" :error-messages="errors"
+                              :placeholder="$t('label.taskName')" outlined dense hide-details required
+                              class="text-subtitle-1 mr-2"></v-text-field>
+                          </validation-provider>
+                        </validation-observer>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-card flat>
+                      <v-card-title class="text-h6 text-sm-h5">{{
+                        $t('heading.setSigners')
+                      }}</v-card-title>
+                      <v-card-text>
+                        <validation-observer ref="personObserver" vid="person">
+                          <v-form ref="personForm">
+                            <div class="d-flex flex-row align-center">
+                              <v-checkbox v-model="model.isNotParallel" :label="$t('label.setSigningOrder')"
+                                hide-details class="mb-4" :disabled="hasAuditorOrNotNormalSign"></v-checkbox>
+                              <v-tooltip max-width="250" min-width="250" eager bottom>
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-icon small class="ml-2 mt-1" color="grey " v-bind="attrs"
+                                    v-on="on">mdi-information</v-icon>
+                                </template>
+                                <div>
+                                  {{ $t('tooltip.setSigningOrder') }}
+                                  <ul>
+                                    <li>
+                                      {{ $t('options.emailSign') }}/{{
+                                        $t('label.reviewOnly')
+                                      }}
+                                    </li>
+                                    <li>{{ $t('options.faceSign') }}</li>
+                                    <li v-if="planInfo.useCollaborateSign">
+                                      {{ $t('options.collaborateSign') }}
+                                    </li>
+                                  </ul>
+                                </div>
+                              </v-tooltip>
+                              <v-spacer />
+                              <v-btn v-if="planInfo.signingGroupCount > 0" color="primary" text
+                                @click="dialogSignerGroupApply = true">
+                                {{ $t('button.applySignerGroup') }}
+                              </v-btn>
+                            </div>
+                            <draggable v-model="model.taskPerson" v-bind="dragOptions" handle=".handle"
+                              @start="drag = true" @end="taskPersonEnd">
+                              <transition-group type="transition" :name="!drag ? 'flip-list' : null">
+                                <div v-for="(person, index) in model.taskPerson" :key="`task${person.id}`"
+                                  class="d-flex flex-row align-center">
+                                  <v-card width="100%" outlined class="mb-4">
+                                    <v-icon v-if="!person.noSMS" medium class="handle" style="
+                                        position: absolute;
+                                        bottom: 10px;
+                                        left: 10px;
+                                      ">
+                                      mdi-drag-vertical
+                                    </v-icon>
+                                    <div style="
+                                        position: absolute;
+                                        top: 5px;
+                                        right: 10px;
+                                      ">
+                                      <!-- 不設定簽署順序的時候或方案不提供的時候不能選擇現場簽 -->
+                                      <widget-select-sign-mode v-model="person.signMode" :disabled="!model.isNotParallel || isB2b2c
+                                        " :no-line-sign="index !== 0" @change="
+                                          changeSignMode(person.id, $event)
+                                          " />
+                                    </div>
+                                    <v-card-title class="
+                                        py-2
+                                        d-flex
+                                        flex-column flex-md-row
+                                        align-start align-md-center
+                                      ">
+                                      <div class="d-flex" style="width: 60%">
+                                        <v-chip :color="getPersonColor(person)" class="text-subtitle-1 mr-4" style="
+                                            width: 30px;
+                                            height: 30px;
+                                            justify-content: center;
+                                          ">
+                                          <template v-if="model.isNotParallel">
+                                            <div class="text-caption">
+                                              {{ index + 1 }}
+                                            </div>
+                                          </template>
+                                        </v-chip>
+                                        <div>
+                                          {{
+                                            person.placeholder
+                                              ? person.placeholder.name
+                                              : '&nbsp;'
+                                          }}
+                                        </div>
+                                      </div>
+                                      <v-spacer v-if="$vuetify.breakpoint.mdAndUp" />
+                                    </v-card-title>
+                                    <v-card-text>
+                                      <div class="d-flex flex-row align-bottom">
+                                        <div style="
+                                            width: 76px;
+                                            margin-right: 10px;
+                                            align-self: flex-end;
+                                            padding: 0 8px;
+                                          ">
+                                          <!--寄送選項，現場簽只有姓名，所以不顯示-->
+                                          <widget-select-send-method v-show="person.signMode !== 'FACE_SIGN' &&
+                                            person.signMode !== 'NO_SMS_SIGN'
+                                            " v-model="person.sendMethod" :disabled="person.signMode ===
+                                              'COLLABORATE_SIGN' || isB2b2c
+                                              " @input="
+                                                changeSendMethod(
+                                                  person.id,
+                                                  $event
+                                                )
+                                                ">
+                                          </widget-select-send-method>
+                                        </div>
+                                        <div class="flex-grow-1" :class="{
+                                          'tour-create-task-1': index === 0,
+                                        }">
+                                          <v-row no-gutter>
+                                            <v-col cols="12" md="6" class="pr-md-2">
+                                              <validation-provider v-slot="{ errors }" :vid="`name${index}`"
+                                                :name="$t('label.name')" rules="required" style="width: 100%">
+                                                <v-text-field v-model="person.name" :error-messages="errors"
+                                                  :label="$t('label.name')" :placeholder="$t('label.name')
+                                                    " outlined dense hide-details required class="text-subtitle-1">
+                                                  <template v-if="person.signMode !==
+                                                    'FACE_SIGN'
+                                                    " #append>
+                                                    <v-menu bottom offset-y>
+                                                      <template v-slot:activator="{
+                                                        on,
+                                                        attrs,
+                                                      }">
+                                                        <v-btn :disabled="isTour" icon v-bind="attrs"
+                                                          v-on="on"><svg-icon-contacts /></v-btn>
+                                                      </template>
+                                                      <v-list>
+                                                        <v-list-item @click="
+                                                          chooseContact(
+                                                            index,
+                                                            'task',
+                                                            'google'
+                                                          )
+                                                          ">
+                                                          <v-list-item-title>
+                                                            {{
+                                                              $t(
+                                                                'button.googContacts'
+                                                              )
+                                                            }}
+                                                          </v-list-item-title>
+                                                        </v-list-item>
+                                                        <v-list-item @click="
+                                                          chooseContact(
+                                                            index,
+                                                            'task',
+                                                            'CONTACT'
+                                                          )
+                                                          ">
+                                                          <v-list-item-title>{{
+                                                            $t(
+                                                              'button.contacts'
+                                                            )
+                                                          }}
+                                                          </v-list-item-title>
+                                                        </v-list-item>
+                                                        <v-list-item @click="
+                                                          chooseContact(
+                                                            index,
+                                                            'task',
+                                                            'COMPANY_MEMBER'
+                                                          )
+                                                          ">
+                                                          <v-list-item-title>
+                                                            {{
+                                                              $t(
+                                                                'button.compMembers'
+                                                              )
+                                                            }}
+                                                          </v-list-item-title>
+                                                        </v-list-item>
+                                                      </v-list>
+                                                    </v-menu>
+                                                  </template>
+                                                </v-text-field>
+                                              </validation-provider>
+                                            </v-col>
+                                          </v-row>
+                                          <!-- 現場簽不填電子郵件和手機號碼 -->
+                                          <v-row v-if="
+                                            person.signMode !== 'FACE_SIGN'
+                                          " no-gutters class="mt-md-2 mt-0">
+                                            <v-col v-if="
+                                              [
+                                                'EMAIL',
+                                                'EMAIL_PHONE',
+                                              ].includes(person.sendMethod)
+                                            " cols="12" md="6" class="pr-md-2 mt-2 mt-md-0">
+                                              <validation-provider v-slot="{ errors }" :vid="`email${index}`"
+                                                :name="$t('label.email')" :rules="{
+                                                  email: true,
+                                                  required: [
+                                                    'EMAIL',
+                                                    'EMAIL_PHONE',
+                                                  ].includes(person.sendMethod),
+                                                }" style="width: 100%">
+                                                <v-text-field v-model="person.email" type="email"
+                                                  :error-messages="errors" :label="$t('label.email')" :placeholder="$t('label.email')
+                                                    " outlined dense hide-details required class="text-subtitle-1">
+                                                </v-text-field>
+                                              </validation-provider>
+                                            </v-col>
+                                            <v-col v-if="
+                                              [
+                                                'PHONE',
+                                                'EMAIL_PHONE',
+                                              ].includes(person.sendMethod)
+                                            " cols="12" md="6" class="mt-2 mt-md-0">
+                                              <validation-provider v-slot="{ errors }" :vid="`phone${index}`"
+                                                :name="$t('label.mobilePhone')" :rules="{
+                                                  required: [
+                                                    'PHONE',
+                                                    'EMAIL_PHONE',
+                                                  ].includes(person.sendMethod),
+                                                }" style="width: 100%">
+                                                <v-text-field v-model="person.phone" autocapitalize="none"
+                                                  :error-messages="errors" :label="$t('label.mobilePhone')
+                                                    " :placeholder="$t('label.mobilePhone')
+                                                      " outlined dense hide-details required class="
+                                                    text-subtitle-1
+                                                    pr-md-2
+                                                  ">
+                                                </v-text-field>
+                                              </validation-provider>
+                                            </v-col>
+                                          </v-row>
+                                        </div>
+                                      </div>
+                                      <v-row no-gutters class="ml-16 pl-2 pl-md-6">
+                                        <!--現場簽設定主持人-->
+                                        <div v-if="
+                                          person.signMode !== 'NORMAL_SIGN' &&
+                                          person.signMode !== 'NO_SMS_SIGN'
+                                        " class="mt-2 flex-grow-1">
+                                          <v-checkbox v-model="person.setNewHost" :label="person.signMode === 'FACE_SIGN'
+                                            ? $t(
+                                              'label.designatedRecipient'
+                                            )
+                                            : $t('label.signHost')
+                                            " hide-details dense class="text-subtitle-1" />
+                                          <v-row v-if="person.setNewHost" class="mt-2" no-gutters>
+                                            <v-col cols="12" class="pr-md-2" md="6">
+                                              <validation-provider v-slot="{ errors }" :vid="`hostName${index}`"
+                                                :name="$t('label.name')" rules="required">
+                                                <v-text-field v-model="person.hostName" :error-messages="errors"
+                                                  :label="$t('label.name')" :placeholder="$t('label.name')
+                                                    " outlined dense hide-details required readonly
+                                                  class="text-subtitle-1">
+                                                  <template #append>
+                                                    <v-menu bottom offset-y>
+                                                      <template v-slot:activator="{
+                                                        on,
+                                                        attrs,
+                                                      }">
+                                                        <v-btn icon v-bind="attrs" class="ma-0"
+                                                          v-on="on"><svg-icon-contacts />
+                                                        </v-btn>
+                                                      </template>
+                                                      <v-list>
+                                                        <!--現場簽主持人只能從公司成員選取 -->
+                                                        <v-list-item @click="
+                                                          chooseContact(
+                                                            index,
+                                                            'host',
+                                                            'COMPANY_MEMBER'
+                                                          )
+                                                          ">
+                                                          <v-list-item-title>{{
+                                                            $t(
+                                                              'button.compMembers'
+                                                            )
+                                                          }}</v-list-item-title>
+                                                        </v-list-item>
+                                                      </v-list>
+                                                    </v-menu>
+                                                  </template>
+                                                </v-text-field>
+                                              </validation-provider>
+                                            </v-col>
+                                          </v-row>
+                                          <v-row v-if="person.setNewHost" class="mt-2" no-gutters>
+                                            <v-col cols="12" md="6">
+                                              <validation-provider v-slot="{ errors }" :vid="`hostEmail${index + 1}`"
+                                                :name="$t('label.email')" rules="required">
+                                                <v-text-field v-model="person.hostEmail" :error-messages="errors"
+                                                  :label="$t('label.email')" :placeholder="$t('label.email')
+                                                    " outlined dense hide-details required readonly class="
+                                                    mt-md-0 mt-1
+                                                    text-subtitle-1
+                                                    pr-md-2
+                                                  ">
+                                                </v-text-field>
+                                              </validation-provider>
+                                            </v-col>
+                                          </v-row>
+                                        </div>
+                                      </v-row>
+                                      <div class="
+                                          d-flex
+                                          align-md-center align-end
+                                          flex-md-row flex-column
+                                        ">
+                                        <v-spacer></v-spacer>
+
+                                        <div class="d-flex align-center mr-md-3">
+                                          <div class="
+                                              d-flex
+                                              flex-md-row flex-column
+                                              align-md-center
+                                              alien-end
+                                            ">
+                                            <!-- 只審核時不能選擇聲明錄影 -->
+                                            <div class="d-flex align-center">
+                                              <v-checkbox v-if="planInfo.useVideo" v-model="person.needVideo"
+                                                class="ml-3" style="height: 24px" dense :label="$t('label.consentVideo')
+                                                  " :disabled="person.isAuditor ||
+                                                    person.signMode ===
+                                                    'COLLABORATE_SIGN'
+                                                    ">
+                                              </v-checkbox>
+                                              <v-tooltip max-width="250" min-width="250" eager bottom>
+                                                <template v-slot:activator="{
+                                                  on,
+                                                  attrs,
+                                                }">
+                                                  <v-icon v-if="planInfo.useVideo" small class="ml-2 mt-3"
+                                                    color="#949494" v-bind="attrs" v-on="on">mdi-information</v-icon>
+                                                </template>
+                                                {{ $t('tooltip.consentVideo') }}
+                                              </v-tooltip>
+                                            </div>
+
+                                            <div class="d-flex align-center">
+                                              <!-- 現場簽和雲端憑證任務沒有只審核 -->
+                                              <!-- tour活動不顯示只審核 -->
+                                              <v-checkbox v-if="!isTour" v-model="person.isAuditor"
+                                                :label="$t('label.reviewOnly')" class="ml-3" style="height: 24px" dense
+                                                :disabled="!model.isNotParallel ||
+                                                  person.signMode !==
+                                                  'NORMAL_SIGN'
+                                                  " @change="
+                                                    changePersonSignRole(
+                                                      person.id,
+                                                      $event
+                                                    )
+                                                    ">
+                                              </v-checkbox>
+                                              <v-tooltip max-width="250" min-width="250" eager bottom>
+                                                <template v-slot:activator="{
+                                                  on,
+                                                  attrs,
+                                                }">
+                                                  <v-icon v-if="!isTour" small class="ml-2 mt-3" color="#949494"
+                                                    v-bind="attrs" v-on="on">mdi-information</v-icon>
+                                                </template>
+                                                {{ $t('tooltip.reviewOnly') }}
+                                              </v-tooltip>
+                                            </div>
+                                            <div class="d-flex align-center">
+                                              <v-checkbox v-model="person.isNeedOtp" :disabled="person.signMode !==
+                                                'NORMAL_SIGN' ||
+                                                [
+                                                  'PHONE',
+                                                  'EMAIL_PHONE',
+                                                ].includes(person.sendMethod)
+                                                " label="OTP" class="ml-3" dense style="height: 24px"></v-checkbox>
+                                              <v-tooltip max-width="250" min-width="250" eager bottom>
+                                                <template v-slot:activator="{
+                                                  on,
+                                                  attrs,
+                                                }">
+                                                  <v-icon small class="ml-2 mt-3" color="#949494" v-bind="attrs"
+                                                    v-on="on">mdi-information</v-icon>
+                                                </template>
+                                                <span>
+                                                  {{ $t('tooltip.otp') }}
+                                                </span>
+                                              </v-tooltip>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="d-flex align-center mt-3">
+                                          <div v-if="
+                                            person.signMode !== 'FACE_SIGN'
+                                          " class="text--button" @click="
+                                            openSignSettingDialog(person)
+                                            ">
+                                            {{ $t('heading.advSettings') }}
+                                          </div>
+                                          <v-icon v-show="model.taskPerson.length > 1" medium class="ml-2"
+                                            color="#949494" @click="deletePerson(index, 'task')">
+                                            mdi-trash-can
+                                          </v-icon>
+                                        </div>
+                                      </div>
+                                    </v-card-text>
+                                  </v-card>
+                                </div>
+                              </transition-group>
+                            </draggable>
+                            <dialog-sign-setting ref="signSettingDialog" page="useTemplate"
+                              :open-dialog="signSettingDialog" @close="signSettingDialog = false"
+                              @update="updateSignSetting">
+                            </dialog-sign-setting>
+                          </v-form>
+                        </validation-observer>
+                        <v-btn v-if="model.taskPerson.length < maxSignaturePerPdf" class="ml-n4 tour-create-task-2"
+                          color="primary" text @click="addPerson('task')">
+                          <v-icon class="mr-1"> mdi-plus-circle </v-icon>
+                          {{ $t('button.addSigner') }}
+                        </v-btn>
+                        <p v-else class="red--text text--lighten-1">
+                          {{
+                            $t('text.pdfSignMax', { max: maxSignaturePerPdf })
+                          }}
+                        </p>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-card flat>
+                      <v-card-title class="text-h6 text-sm-h5">{{
+                        $t('button.sendCopy')
+                      }}</v-card-title>
+                      <v-card-text>
+                        <validation-observer ref="ccObserver" vid="cc">
+                          <v-form ref="ccForm">
+                            <div v-for="(person, index) in model.ccPerson" :key="`cc${person.id}`"
+                              class="d-flex flex-row align-center">
+                              <v-card width="100%" outlined class="mb-4">
+                                <v-card-text class="d-flex flex-row align-center pa-5">
+                                  <v-row no-gutters justify="center" align="center">
+                                    <v-col cols="12" class="pr-md-2" md="4">
+                                      <validation-provider v-slot="{ errors }" :vid="`name${index}`"
+                                        :name="$t('label.name')" rules="required" style="width: 100%">
+                                        <v-text-field v-model="person.name" :error-messages="errors"
+                                          :label="$t('label.name')" :placeholder="$t('label.name')" outlined dense
+                                          hide-details required class="text-subtitle-1">
+                                        </v-text-field>
+                                      </validation-provider>
+                                    </v-col>
+                                    <v-col cols="12" md="8">
+                                      <validation-provider v-slot="{ errors }" :vid="`email${index}`"
+                                        :name="$t('label.email')" rules="required|email" style="width: 100%">
+                                        <v-text-field v-model="person.email" type="email" :error-messages="errors"
+                                          :label="$t('label.email')" :placeholder="$t('label.email')" outlined dense
+                                          hide-details required class="mt-md-0 mt-1 text-subtitle-1">
+                                          <template #append>
+                                            <v-menu bottom offset-y>
+                                              <template v-slot:activator="{ on, attrs }">
+                                                <v-btn icon v-bind="attrs" v-on="on">
+                                                  <svg-icon-contacts />
+                                                </v-btn>
+                                              </template>
+                                              <v-list>
+                                                <v-list-item @click="
+                                                  chooseContact(
+                                                    index,
+                                                    'cc',
+                                                    'google'
+                                                  )
+                                                  ">
+                                                  <v-list-item-title>{{
+                                                    $t('button.googContacts')
+                                                  }}</v-list-item-title>
+                                                </v-list-item>
+                                                <v-list-item @click="
+                                                  chooseContact(
+                                                    index,
+                                                    'cc',
+                                                    'CONTACT'
+                                                  )
+                                                  ">
+                                                  <v-list-item-title>{{
+                                                    $t('button.contacts')
+                                                  }}</v-list-item-title>
+                                                </v-list-item>
+                                                <v-list-item @click="
+                                                  chooseContact(
+                                                    index,
+                                                    'cc',
+                                                    'COMPANY_MEMBER'
+                                                  )
+                                                  ">
+                                                  <v-list-item-title>{{
+                                                    $t('button.compMembers')
+                                                  }}</v-list-item-title>
+                                                </v-list-item>
+                                              </v-list>
+                                            </v-menu>
+                                          </template>
+                                        </v-text-field>
+                                      </validation-provider>
+                                    </v-col>
+                                  </v-row>
+                                  <v-icon medium class="ml-4" color="#949494" @click="deletePerson(index, 'cc')">
+                                    mdi-trash-can
+                                  </v-icon>
+                                </v-card-text>
+                              </v-card>
+                            </div>
+                          </v-form>
+                        </validation-observer>
+
+                        <v-btn color="primary" class="ml-n4" text @click="addPerson('cc')">
+                          <v-icon class="mr-1"> mdi-plus-circle </v-icon>
+                          {{ $t('button.addCc') }}
+                        </v-btn>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col v-if="!mdAndDown" cols="12" class="grey-zone pt-5 pb-8">
+            <v-row>
+              <v-col></v-col>
+              <v-col></v-col>
+              <v-col>
+                <v-btn class="tour-create-task-3" color="primary" large @click="finishPersonPrepare()">
+                  {{ $t('button.next') }}
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-window-item>
+
+      <v-window-item v-if="step === 2" :value="2" class="fill-height">
+        <template>
+          <div class="fill-height">
+            <div class="fill-height" :class="{
+              pdfViewer: !mdAndDown,
+              'pdfViewer-sm': mdAndDown,
+            }">
+              <client-only v-if="loaded">
+                <pdf ref="vuePdf" :user-info="userInfo" :file-list="fileSrcList"
+                  :people-names="taskPeopleWithoutAuditor" :color-list="colorList" :mode="0" :use-hand-writing="false"
+                  :keep-annotation-id="model.keepFindAnnotation === true
+                    ? model.keepFindAnnotationPersonId
+                    : null
+                    " :use-b2b2c="isB2b2c" :watermark="watermark"></pdf>
+              </client-only>
+            </div>
+            <v-footer v-if="!mdAndDown" absolute color="grey lighten-3"
+              style="z-index: 199; border-top: 1px solid #e0e0e0 !important">
+              <v-card color="grey lighten-3" width="100%" flat tile>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" outlined large class="mr-2" @click="step--">
+                    {{ $t('button.previous') }}
+                  </v-btn>
+                  <v-btn color="primary" depressed large class="tour-create-task-10" @click="checkAnnotate">
+                    {{ $t('button.next') }}
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-footer>
+          </div>
+        </template>
+      </v-window-item>
+
+      <v-window-item v-if="step === 3" :value="3" class="fill-height mt-3">
+        <v-row justify="center" class="px-3">
+          <v-col cols="12" class="grey-zone mt-n3">
+            <v-row justify="center">
+              <v-col cols="12" sm="10" md="8" lg="6" xl="5">
+                <!--文件列表-->
+                <div v-if="fileSrcList.length > 0" width="100%" class="
+                    mt-3
+                    d-flex
+                    flex-row
+                    align-center
+                    justify-space-between
+                  ">
+                  <div>
+                    <div v-for="file in fileSrcList" :key="file.id">
+                      <div class="d-flex flex-row align-center">
+                        <v-icon large class="mr-3">mdi-file-pdf-box</v-icon>
+                        <div class="confirm-file-name" style="word-break: break-word">
+                          {{ file.name }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style="
+                    border-top: 4px solid #e3e3e3;
+                    height: 0;
+                    margin-top: 10px;
+                    margin-bottom: 20px;
+                  "></div>
+                <div class="d-flex">
+                  <div class="chip-label">
+                    <span>{{ $t('heading.signers') }}</span>
+                  </div>
+                  <div>
+                    <v-chip v-for="(p, i) in model.taskPerson" :key="`task${i}`" class="mr-1 mb-2" outlined>
+                      <v-icon left :color="getPersonColor(p)" class="mr-0">mdi-circle-medium</v-icon>
+                      <!--現場簽沒有email-->
+                      <span class="chip-name-wrap" :class="{
+                        'chip-text-mobile': mdAndDown,
+                        'chip-text-desktop': !mdAndDown,
+                      }">
+                        {{ p.email ? p.email : p.name }}
+                      </span>
+                    </v-chip>
+                  </div>
+                </div>
+                <div v-if="model.ccPerson.length > 0" class="mt-3 d-flex flex-column">
+                  <v-divider class="mb-5"></v-divider>
+                  <div class="d-flex">
+                    <div class="chip-label">
+                      <span>{{ $t('heading.cc') }}</span>
+                    </div>
+                    <div>
+                      <v-chip v-for="(p, i) in model.ccPerson" :key="`cc${i}`" class="mr-1 mb-2" outlined>
+                        {{ p.email }}
+                      </v-chip>
+                    </div>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-col cols="12" sm="10" md="8" lg="6" xl="5">
+            <v-card flat>
+              <v-row>
+                <v-col cols="12">
+                  <v-subheader>{{ $t('heading.mailSubject') }}</v-subheader>
+                  <validation-observer ref="emailSubjectObserver" vid="emailSubject">
+                    <validation-provider v-slot="{ errors }" vid="emailSubject" :name="$t('heading.mailSubject')"
+                      rules="required|max:200" style="width: 100%">
+                      <v-text-field v-model="model.emailSubject" outlined :error-messages="errors" counter="200" dense
+                        required class="text-subtitle-1"></v-text-field>
+                    </validation-provider>
+                  </validation-observer>
+                  <v-subheader>{{ $t('heading.mailMessage') }}</v-subheader>
+                  <validation-observer ref="emailMessageObserver" vid="emailMessage">
+                    <validation-provider v-slot="{ errors }" vid="emailMessage" :name="$t('heading.mailMessage')"
+                      rules="max:200" style="width: 100%">
+                      <v-textarea v-model="model.emailMessage" outlined :error-messages="errors" counter="200" rows="3"
+                        required class="text-subtitle-1"></v-textarea>
+                    </validation-provider>
+                  </validation-observer>
+                  <!-- v1.7.0 隱藏附件區塊
+                        <v-subheader class="mt-4">附件</v-subheader>
+                        <attachment-upoad
+                          ref="uploadAttachment"
+                        ></attachment-upoad>
+                        -->
+                </v-col>
+                <v-col v-if="getUserTemplateIsRemain()" cols="12">
+                  <v-checkbox v-model="model.notUseOnce" :label="$t('label.saveAsTmpl')" hide-details
+                    class="mt-0"></v-checkbox>
+                </v-col>
+
+                <v-col v-if="model.isNotParallel && model.taskPerson.length > 1" cols="12">
+                  <v-checkbox v-model="model.isOverlay" :label="$t('label.isOverlay')" hide-details
+                    class="mt-0"></v-checkbox>
+                </v-col>
+                <v-col v-if="planInfo.useSIBlockChain" cols="12">
+                  <v-checkbox v-model="model.siBlockChain" :label="$t('label.siBlockChain')" hide-details
+                    class="mt-0"></v-checkbox>
+                </v-col>
+                <!-- <v-col
+                    v-if="
+                      getUserRemindAatlTime() !== null &&
+                      getUserRemindAatlTime() > 0
+                    "
+                    cols="12"
+                  >
+                    <v-checkbox
+                      v-model="model.isFinalAatl"
+                      label="簽署結果安全憑證"
+                      hide-details
+                      class="ml-7 mt-0"
+                    ></v-checkbox>
+                  </v-col> -->
+                <v-divider v-if="model.setExpiredDate" class="mx-8"></v-divider>
+                <v-col cols="12">
+                  <v-checkbox v-model="model.setExpiredDate" :label="$t('label.setSigningDeadline')" hide-details
+                    class="mt-0">
+                  </v-checkbox>
+                  <widget-expired-date v-if="model.setExpiredDate" ref="widgetExpiredDate"
+                    :parent-expired-date="model.expiredDate" class="ml-5"></widget-expired-date>
+                </v-col>
+              </v-row>
+
+              <v-card-actions v-if="!mdAndDown">
+                <v-spacer></v-spacer>
+                <v-btn color="primary" outlined large class="mr-2" @click="step--">
+                  {{ $t('button.previous') }}
+                </v-btn>
+
+                <v-btn color="primary" class="tour-create-task-11" depressed large @click="startPdfTask()">
+                  {{ $t('button.send') }}
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-window-item>
+    </v-window>
+    <!-- 聯絡人列表 dialog -->
+    <dialog-contact ref="dialogContact" :open-dialog="contactDialog" :source="editSource" @close="chooseContactCancel"
+      @submitContact="chooseContactOK">
+    </dialog-contact>
+    <!-- 聯絡人列表(連結Google) dialog -->
+    <dialog-contact-from-google ref="dialogContactFromGoogle" :open-dialog="contactFromGoogleDialog"
+      @close="chooseContactCancel" @submitContact="chooseContactOK">
+    </dialog-contact-from-google>
+    <v-dialog v-model="deletePeopleDialog" overlay-opacity="0.9" max-width="500" @input="deletePeopleDialog = false">
+      <v-card class="rounded-lg pa-5">
+        <v-card-title>
+          <v-icon class="mr-1">mdi-alert-outline</v-icon>
+          <span style="font-weight: 700">{{ $t('heading.headsUp') }}</span>
+        </v-card-title>
+        <v-card-text class="px-10 pt-5 pb-5">
+          <div class="text-subtitle-1">
+            {{ $t('text.delNotFinish', { notFinish: notFinishList.length }) }}
+          </div>
+        </v-card-text>
+        <v-card-actions class="px-5 py-5">
+          <v-spacer></v-spacer>
+          <v-btn text class="mr-2" @click="deletePeopleDialog = false">
+            {{ $t('button.cancel') }}
+          </v-btn>
+          <v-btn color="#AA0000" dark class="text-subtitle-2" @click="deleteNotFinishPeople">
+            {{ $t('button.delete') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="warningDialog" overlay-opacity="0.9" max-width="500" @input="warningDialog = false">
+      <v-card class="rounded-lg pa-5">
+        <v-card-title>
+          <v-icon class="mr-1">mdi-alert-outline</v-icon>
+          <span style="font-weight: 700">{{ $t('heading.warning') }}</span>
+        </v-card-title>
+        <v-card-text class="px-10 pt-5 pb-5">
+          <div class="text-subtitle-1">{{ $t('text.confirmGiveUpTask') }}</div>
+        </v-card-text>
+        <v-card-actions class="px-5 py-5">
+          <v-spacer></v-spacer>
+          <v-btn text class="mr-2" @click="warningDialog = false">
+            {{ $t('button.cancel') }}
+          </v-btn>
+          <v-btn color="#AA0000" dark class="text-subtitle-2" @click="confirmLeave">
+            {{ $t('button.giveUp') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="previewPdfDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+      <v-card class="fill-height">
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="previewPdfDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>{{ $t('heading.preview') }}</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text class="fill-height pa-0" style="background: #f1f3f5">
+          <client-only v-if="loaded && previewPdfDialog">
+            <pdf key="previewPdf" :file-list="fileSrcList" :people-names="model.taskPerson" :color-list="colorList"
+              :mode="2" :use-hand-writing="false" :keep-annotation-id="null" :use-b2b2c="false" :watermark="watermark">
+            </pdf>
+          </client-only>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <!-- 如果第一個簽署人是自己，詢問是否要現在開始簽核 -->
+    <v-dialog v-model="startTaskNowDialog" overlay-opacity="0.9" max-width="500"
+      @input="$router.push(localePath('/tasks'))">
+      <v-card class="rounded-lg pa-5">
+        <v-card-title>
+          <v-icon class="mr-1">mdi-information</v-icon>
+          <span style="font-weight: 700">{{ $t('heading.headsUp') }}</span>
+        </v-card-title>
+        <v-card-text class="px-10 pt-5 pb-5">
+          <div class="text-subtitle-1">{{ $t('text.startSigningNow') }}</div>
+        </v-card-text>
+        <v-card-actions class="px-5 py-5">
+          <v-spacer></v-spacer>
+          <v-btn text class="text-button mr-2" @click="$router.push(localePath('/tasks'))">
+            {{ $t('button.no') }}
+          </v-btn>
+          <v-btn color="primary" @click="goToSign">
+            {{ $t('button.yes') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="findAnnotationDialog" overlay-opacity="0.9" max-width="500" @input="keepFindAnnotationCancel()">
+      <v-card class="rounded-lg">
+        <v-app-bar dark flat color="primary">
+          <v-toolbar-title class="ml-5 mx-auto text-h6">{{
+            $t('heading.pdfFormFields')
+          }}</v-toolbar-title>
+        </v-app-bar>
+        <v-card-text class="px-10 pt-10 pb-5">
+          <v-radio-group v-model="model.keepFindAnnotation" column>
+            <v-radio :label="$t('label.preserveFormFields')" :value="true"></v-radio>
+            <div>
+              <div class="annotationPeopleTitle text-subtitle-2">
+                {{ $t('label.assignToSigner') }}
+              </div>
+              <v-select v-model="model.keepFindAnnotationPersonId" :items="model.taskPerson" item-text="name"
+                item-value="id" height="42" solo flat single-line hide-details class="annotationPeopleSelect"
+                :label="$t('label.selectSignerAssign')" :disabled="!model.keepFindAnnotation ||
+                  model.keepFindAnnotation === false
+                  " :menu-props="{
+                    auto: true,
+                    bottom: true,
+                    offsetY: true,
+                    maxHeight: '100%',
+                  }">
+                <template v-slot:[`selection`]="{ item }">
+                  <div class="text-body-2 text-truncate" style="max-width: 240px; overflow: hidden">
+                    {{ item.name }}
+                  </div>
+                </template>
+                <template v-slot:[`item`]="{ item }">
+                  <div class="text-body-2 text-truncate" style="max-width: 240px; overflow: hidden">
+                    {{ item.name }}
+                  </div>
+                </template>
+              </v-select>
+            </div>
+            <v-radio :label="$t('label.notPreserveFormFields')" :value="false"></v-radio>
+          </v-radio-group>
+        </v-card-text>
+        <v-card-actions class="px-10 py-5 grey lighten-3">
+          <v-spacer></v-spacer>
+          <v-btn large outlined color="primary" class="text-button mr-2" @click="keepFindAnnotationCancel()">
+            {{ $t('button.cancel') }}
+          </v-btn>
+          <v-btn large color="primary" class="text-button" :disabled="model.keepFindAnnotation === null ||
+            model.keepFindAnnotation === undefined ||
+            (model.keepFindAnnotation === true &&
+              (model.keepFindAnnotationPersonId === null ||
+                model.keepFindAnnotationPersonId === undefined))
+            " @click="keepFindAnnotationOk()">
+            {{ $t('button.ok') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="changeAuditorDialog" overlay-opacity="0.9" max-width="500" persistent>
+      <v-card class="rounded-lg pa-5">
+        <v-card-title>
+          <v-icon class="mr-1">mdi-alert-outline</v-icon>
+          <span style="font-weight: 700">{{ $t('heading.warning') }}</span>
+        </v-card-title>
+        <v-card-text class="px-10 pt-5 pb-5">
+          <div class="text-subtitle-1">{{ $t('text.auditorNoAnnotate') }}</div>
+        </v-card-text>
+        <v-card-actions class="px-5 py-5">
+          <v-spacer></v-spacer>
+          <v-btn text class="text-button mr-2" @click="cancelChangeAuditor">
+            {{ $t('button.no') }}
+          </v-btn>
+          <v-btn color="#AA0000" dark @click="confirmChangeAuditor">
+            {{ $t('button.yes') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="collaborateNotSetDialog" overlay-opacity="0.9" max-width="500" persistent>
+      <v-card class="rounded-lg pa-5">
+        <v-card-title>
+          <v-icon class="mr-1">mdi-alert-outline</v-icon>
+          <span style="font-weight: 700">{{
+            $t('heading.settingNotFinished')
+          }}</span>
+        </v-card-title>
+        <v-card-text class="px-10 pt-5 pb-5">
+          <div class="text-subtitle-1">{{ $t('text.fieldsNotSet') }}</div>
+          <div class="text-subtitle-1 red--text">
+            {{ $t('label.collaborateDate') }}
+          </div>
+        </v-card-text>
+        <v-card-actions class="px-5 py-5">
+          <v-spacer></v-spacer>
+          <v-btn color="primary" dark @click="goSetCollaborateSign">
+            {{ $t('button.goSet') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="checkSmsSubjectLengthDialog" overlay-opacity="0.9" max-width="500" persistent>
+      <v-card class="rounded-lg pa-5">
+        <v-card-title>
+          <v-icon class="mr-1">mdi-alert-outline</v-icon>
+          <span style="font-weight: 700">{{ $t('heading.headsUp') }}</span>
+        </v-card-title>
+        <v-card-text class="px-10 pt-5 pb-5">
+          <div class="text-subtitle-1">
+            {{
+              $t('message.smsSubjectLengthConfirm', {
+                limit: $config.smsLengthLimit,
+              })
+            }}
+          </div>
+        </v-card-text>
+        <v-card-actions class="px-5 py-5">
+          <v-spacer></v-spacer>
+          <v-btn text class="text-button mr-2" @click="checkSmsSubjectLengthDialog = false">
+            {{ $t('button.cancel') }}
+          </v-btn>
+          <v-btn color="primary" dark @click="confirmSmsLengthStartPdf">
+            {{ $t('button.confirm') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogB2b2cNotSet" overlay-opacity="0.9" max-width="450" persistent>
+      <v-card class="rounded-lg pa-8">
+        <v-card-title style="border-bottom: #707070 solid 0.5px" class="px-0">
+          <v-icon color="#AA0000" class="mr-1">mdi-alert-outline</v-icon>
+          <span style="font-weight: 700; word-break: break-word">{{
+            $t('heading.b2b2cNotSet')
+          }}</span>
+        </v-card-title>
+        <v-card-text class="px-0 pt-5 pb-5">
+          <div class="text-subtitle-1">
+            {{ $t('message.b2b2cNotSet') }}
+          </div>
+        </v-card-text>
+        <v-card-actions class="px-0 pt-5">
+          <v-spacer></v-spacer>
+
+          <v-btn color="primary" large class="text-subtitle-2" @click="switchB2b2cSetting">
+            {{ $t('button.goSet') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogTourNotFinish" overlay-opacity="0.9" max-width="500" persistent>
+      <v-card class="rounded-lg pa-5">
+        <v-card-title>
+          <v-icon class="mr-1">mdi-information-outline</v-icon>
+          <span style="font-weight: 700">{{ $t('heading.headsUp') }}</span>
+        </v-card-title>
+        <v-card-text class="px-10 pt-5 pb-5">
+          <div class="text-subtitle-1">{{ $t('message.tourNotFinish') }}</div>
+        </v-card-text>
+        <v-card-actions class="px-5 py-5">
+          <v-spacer></v-spacer>
+          <v-btn color="primary" dark @click="leaveTour">
+            {{ $t('button.ok') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <dialog-leave-tour :open-dialog="dialogLeaveTour" @close="startTour" @confirm="endTour" />
+    <dialog-signer-group-apply :open-dialog="dialogSignerGroupApply" :current-signer-length="model.taskPerson.length"
+      :apply-to-create="emptyPerson" @close="dialogSignerGroupApply = false" @choose="applySignerGroup" />
+    <v-dialog v-model="showLinkDialog" overlay-opacity="0.9" max-width="550" persistent @input="closeShowLinkDialog">
+      <v-card class="rounded-lg">
+        <v-app-bar flat class="dialog-header">
+          {{ $t('heading.shareSignLink') }}
+        </v-app-bar>
+        <v-card-text class="px-10 pt-5 pb-5">
+          <div v-if="$vuetify.breakpoint.mdAndUp" class="text-subtitle-1">
+            {{ $t('text.shareSignLink') }}
+          </div>
+          <div v-else class="text-subtitle-1">
+            {{ $t('text.shareSignLinkMobile') }}
+          </div>
+          <div class="qrcode">
+            <div class="qrcode-spacing">
+              <v-btn outlined @click="copyShareLink"><v-icon left>mdi-content-copy</v-icon>{{ $t('button.copyLink')
+              }}</v-btn>
+            </div>
+            <v-divider v-if="$vuetify.breakpoint.mdAndUp" class="mx-4" vertical></v-divider>
+            <div v-if="$vuetify.breakpoint.mdAndUp" class="qrcode-spacing">
+              <canvas id="qrcode-canvas"></canvas>
+            </div>
+          </div>
+        </v-card-text>
+        <v-card-actions class="px-10 py-5 grey lighten-3">
+          <v-spacer />
+          <v-btn text class="text-subtitle-2" @click="closeShowLinkDialog">
+            {{ $t('button.leave') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -149,7 +1133,7 @@ import { useEventListener } from '@vueuse/core'
 import { useDisplay } from 'vuetify'
 import { driver } from 'driver.js'
 import { validateTaiwanIdCard } from '~/composables/taiwanIdCardValidation'
-import { isDefined } from '@vueuse/core'
+import { isDefined, useStorage } from '@vueuse/core'
 
 const snackbarStore = useSnackbarStore()
 const globalVarStore = useGlobalVarStore()
@@ -158,11 +1142,16 @@ const alertStore = useAlertStore()
 const uploadPdfStore = useUploadPdfStore()
 const tourStore = useTourStore()
 const mainStore = useMainStore()
+const route = useRoute()
+const router = useRouter()
 const { $store } = useNuxtApp()
 const { getColorList } = useColors()
 const { t, locale, locales, setLocale } = useI18n()
 const { mdAndDown, mdAndUp } = useDisplay()
 const { $clevertap } = useNuxtApp()
+const { getRestrictApi } = usePlanApi()
+const { getRulesApi } = useCreditApi()
+const { getWatermarkApi } = useCompanyApi()
 
 const userInfo = ref(null)
 const step = ref(1)
@@ -417,6 +1406,7 @@ const annotate = computed(() => {
   return fileSrcList.value.map((f) => f.annotate)
 })
 const planInfo = computed(() => {
+  console.log(mainStore.planInfo)
   return mainStore.planInfo
 })
 const isTour = computed(() => {
@@ -565,7 +1555,7 @@ onBeforeRouteLeave((to, from, next) => {
 
 onUnmounted(() => {
   uploadPdfStore.fileUploadFromIndex = null
-  mainStore.deleteAllAttachmentFiles()
+  mainStore.attachmentFiles = []
 })
 function leaveTour() {
   localStorage.removeItem('tourNotFinish')
@@ -688,9 +1678,8 @@ function deletePerson(index, type) {
                     const g = parseInt(hex.slice(3, 5), 16)
                     const b = parseInt(hex.slice(5, 7), 16)
                     data.color = `rgba(${r},${g},${b}, 0.6)`
-                    data.stroke = `rgb(${r > 10 ? r - 10 : r}, ${
-                      g > 10 ? g - 10 : g
-                    }, ${b > 10 ? b - 10 : b})`
+                    data.stroke = `rgb(${r > 10 ? r - 10 : r}, ${g > 10 ? g - 10 : g
+                      }, ${b > 10 ? b - 10 : b})`
                   }
                   return data
                 })
@@ -1190,9 +2179,8 @@ async function startPdfTask() {
               wrapDiv.style.width = 'auto'
               wrapDiv.style.height = 'auto'
               const fontWeight = dataItem.fontWeight || 'normal'
-              wrapDiv.style.font = `${fontWeight} ${
-                dataItem.fontSize * dataItem.scale
-              }px ${dataItem.fontFamily}`
+              wrapDiv.style.font = `${fontWeight} ${dataItem.fontSize * dataItem.scale
+                }px ${dataItem.fontFamily}`
               wrapDiv.style.fontStyle = dataItem.fontStyle
               wrapDiv.style.whiteSpace = 'pre'
               wrapDiv.style.visibility = 'hidden'
@@ -1424,9 +2412,8 @@ function taskPersonEnd(evt) {
             const g = parseInt(hex.slice(3, 5), 16)
             const b = parseInt(hex.slice(5, 7), 16)
             data.color = `rgba(${r},${g},${b}, 0.6)`
-            data.stroke = `rgb(${r > 10 ? r - 10 : r}, ${
-              g > 10 ? g - 10 : g
-            }, ${b > 10 ? b - 10 : b})`
+            data.stroke = `rgb(${r > 10 ? r - 10 : r}, ${g > 10 ? g - 10 : g
+              }, ${b > 10 ? b - 10 : b})`
           }
         })
       })
@@ -1825,6 +2812,395 @@ function switchB2b2cSetting() {
   vuePdfRef.value.switchB2b2cSetting()
   dialogB2b2cNotSet.value = false
 }
+function cancelChangeAuditor() {
+  const person = model.value.taskPerson.find(
+    (p) => p.id === changeRoleId.value
+  )
+  person.isAuditor = false
+  person.signRole = 'SIGNER'
+  changeAuditorDialog.value = false
+}
+function confirmChangeAuditor() {
+  const person = model.value.taskPerson.find(
+    (p) => p.id === changeRoleId.value
+  )
+  person.signRole = 'AUDITOR'
+  // 只審核不需要聲明錄影
+  person.needVideo = false
+  changeAuditorDialog.value = false
+}
+// 變更是否爲現場簽
+async function changeSignMode(personId, signMode) {
+  const myInfo = userInfo.value
+  const person = model.value.taskPerson.find((p) => p.id === personId)
+  person.noSMS = false
+  if (signMode === 'FACE_SIGN') {
+    person.face = true
+    // 現場簽不能勾選只審核
+    person.isAuditor = false
+    person.signRole = 'SIGNER'
+    person.isNeedOtp = false
+    // 現場簽清空email與手機號碼資料
+    person.email = ''
+    person.phone = ''
+    // 現場簽預設的主持人是目前的帳號
+    person.hostEmail = myInfo.email
+    person.hostName = myInfo.name
+  } else {
+    person.face = false
+    if (signMode === 'COLLABORATE_SIGN') {
+      const collaborateSigners = model.value.taskPerson.filter(
+        (person) => person.signMode === 'COLLABORATE_SIGN'
+      )
+      if (collaborateSigners.length > 1) {
+        alertStore.showAlert({
+          message: t('message.collaborateSignLimit'),
+          type: 'error',
+        })
+        await nextTick()
+        person.signMode = 'NORMAL_SIGN'
+        return
+      }
+      person.isAuditor = false
+      person.signRole = 'SIGNER'
+      // 視訊簽沒有聲明錄影
+      person.needVideo = false
+      // 視訊簽預設的主持人是目前的帳號
+      person.hostEmail = myInfo.email
+      person.hostName = myInfo.name
+      person.isNeedOtp = false
+      // 視訊簽只能使用email寄送
+      person.sendMethod = 'EMAIL'
+      person.phone = ''
+    } else {
+      if (signMode === 'NO_SMS_SIGN') {
+        person.sendMethod = 'PHONE'
+        person.email = ''
+        person.noSMS = true
+      }
+      person.hostEmail = ''
+      person.hostName = ''
+      person.collaborateSignDate = ''
+      person.isNeedOtp = ['PHONE', 'EMAIL_PHONE'].includes(
+        person.sendMethod
+      )
+    }
+  }
+}
+function keepFindAnnotationCancel() {
+  findAnnotationDialog.value = false
+  model.value.keepFindAnnotation = null
+  model.value.keepFindAnnotationPersonId = null
+}
+function keepFindAnnotationOk() {
+  if (
+    model.value.keepFindAnnotation === true &&
+    model.value.keepFindAnnotationPersonId !== null &&
+    model.value.keepFindAnnotationPersonId !== undefined
+  ) {
+    firstKeepFindAnnotation.value = false
+    findAnnotationDialog.value = false
+    step.value++
+  } else if (model.value.keepFindAnnotation === false) {
+    firstKeepFindAnnotation.value = false
+    isFindAnnotation.value = false
+    findAnnotationDialog.value = false
+    model.value.keepFindAnnotation = null
+    model.value.keepFindAnnotationPersonId = null
+    step.value++
+  }
+}
+function deleteNotFinishPeople() {
+  // 刪除沒有設定簽署的人員
+  model.value.taskPerson = model.value.taskPerson.filter(
+    (p) => !notFinishList.value.map((f) => f.id).includes(p.id)
+  )
+  // 重新設定id與annotate
+  taskPersonEnd(null)
+  notFinishList.value = []
+  // 進入確認頁
+  step.value++
+  deletePeopleDialog.value = false
+}
+function changeSendMethod(personId, value) {
+  const person = model.value.taskPerson.find((p) => p.id === personId)
+  // 如果只有email或手機號碼則清空另一欄位
+  // 有手機號碼則必須勾選OTP
+  if (value === 'EMAIL') {
+    person.phone = ''
+    person.isNeedOtp = false
+  } else if (value === 'PHONE') {
+    person.email = ''
+    person.isNeedOtp = person.signMode === 'NORMAL_SIGN'
+  } else if (value === 'EMAIL_PHONE') {
+    person.isNeedOtp = person.signMode === 'NORMAL_SIGN'
+  }
+}
+async function preDownloadFile() {
+  const result = await downloadFileApi(fileId.value)
+  if (result !== null && result !== '') {
+    const blobData = await fetch(result.pdfLink).then((res) => res.blob())
+    const file = new Blob([blobData])
+    file.name = `${result.fileName}`
+    uploadPdfStore.fileUploadFromIndex = [file]
+    pdfUpload.checkFileInStore()
+  } else {
+    alertStore.showAlert({
+      message: t('message.preDownloadFileError'),
+      type: 'error',
+    })
+  }
+}
+async function preDownloadFileForTour() {
+  const tourPdfFileName =
+    locale.value === 'en'
+      ? 'TermsOfService(Tour).pdf'
+      : '服務條款(活動).pdf'
+
+  const blobData = await fetch(`/${tourPdfFileName}`).then((res) =>
+    res.blob()
+  )
+  const file = new Blob([blobData])
+  file.name = tourPdfFileName
+  uploadPdfStore.fileUploadFromIndex = [file]
+  pdfUpload.checkFileInStore()
+}
+function passDataFromTemplate(data) {
+  model.value.ccPerson = data.ccPerson
+  model.value.isOverlay = data.isOverlay
+  model.value.isNotParallel = data.isNotParallel
+  model.value.isFinalAatl = data.isFinalAatl
+  model.value.setExpiredDate = data.setExpiredDate
+  model.value.expiredDate = data.expiredDate
+  model.value.emailSubject = data.emailSubject
+  model.value.emailMessage = data.emailMessage
+  model.value.taskName = data.pdfTaskName
+  pdfUpload.loadFileList(pdfDataRef.value.fileSrcList)
+  pdfUpload.passDataFromTemplate(data)
+  mainStore.sendTemplateData = null
+}
+function goToSign() {
+  const query = {
+    taskId: startTaskId.value,
+    email: mainStore.userInfo.email,
+  }
+  if (startTaskPhone.value) {
+    Object.assign(query, { phone: startTaskPhone.value })
+  }
+  router.push({
+    path: '/tasks/sign-task',
+    query,
+  })
+}
+function openSignSettingDialog(person) {
+  signSettingDialog.value = true
+  const editSettingPerson = Object.assign({}, person)
+  editSettingPerson.id = person.id
+  signSettingDialog.loadSetting(editSettingPerson)
+}
+function updateSignSetting(setting) {
+  const person = model.value.taskPerson.find((p) => p.id === setting.id)
+  Object.assign(person, setting)
+}
+function goSetCollaborateSign() {
+  const person = model.value.taskPerson.find(
+    (p) => p.signMode === 'COLLABORATE_SIGN' && !p.collaborateSignDate
+  )
+  if (person) {
+    collaborateNotSetDialog.value = false
+    openSignSettingDialog(person)
+  }
+}
+// 變更簽核角色（只審核 - AUDITOR，簽署 - SIGNER）
+function changePersonSignRole(personId, value) {
+  if (value) {
+    changeRoleId.value = personId
+    // 檢查annotate是否有這個簽署人的資料，如果有才需要跳出警告dialog
+    let hasAnnotate = false
+    annotateForPerson.value.forEach((file) => {
+      file.forEach((page) => {
+        hasAnnotate =
+          hasAnnotate || page.data.some((data) => data.id === personId)
+      })
+    })
+    if (hasAnnotate) {
+      changeAuditorDialog.value = true
+    } else {
+      confirmChangeAuditor()
+    }
+  } else {
+    const person = model.value.taskPerson.find((p) => p.id === personId)
+    person.signRole = 'SIGNER'
+  }
+}
+function checkSmsSubjectLength() {
+  // 是否有寄送簡訊
+  const sendSms = model.value.taskPerson.some(
+    (p) =>
+      ['PHONE', 'EMAIL_PHONE'].includes(p.sendMethod) && p.noSMS === false
+  )
+  // 計算SMS主旨是否會增加點數用量
+  pointPerSms.value = Math.ceil(
+    (model.value.emailSubject.length +
+      config.public.frontendURL.length +
+      config.public.smsPathLength) /
+    config.public.smsLengthLimit
+  )
+  const subjectLengthExceed = pointPerSms.value > 1
+  // confirmSmsSubjectLength=true 表示已經確認過提示
+  return sendSms && subjectLengthExceed && !confirmSmsSubjectLength.value
+}
+function confirmSmsLengthStartPdf() {
+  checkSmsSubjectLengthDialog.value = false
+  confirmSmsSubjectLength.value = true
+  finishPersonPrepare()
+}
+function startTour() {
+  dialogLeaveTour.value = false
+  confirmLeaveTour.value = false
+  driverObj.value = driver({
+    overlayOpacity: 0,
+    popoverClass: 'onboarding-popover',
+    allowClose: false,
+    stagePadding: 4,
+    prevBtnText: t('button.cancel'),
+    nextBtnText: t('button.tourNext'),
+    doneBtnText: t('button.cancel'),
+    showButtons: ['previous', 'next'],
+    steps: tourSteps[step.value],
+    onPrevClick: () => {
+      // 將上一步按鈕的位置作為取消
+      showConfirmLeaveTour()
+    },
+  })
+  setTimeout(() => {
+    if (tourLeaveProgress.value > -1) {
+      driverObj.value.drive(tourLeaveProgress.value)
+      tourLeaveProgress.value = -1
+    } else {
+      driverObj.value.drive(1)
+    }
+  }, 300)
+}
+function showConfirmLeaveTour() {
+  tourLeaveProgress.value = driverObj.value.getActiveIndex()
+  driverObj.destroy()
+  dialogLeaveTour.value = true
+}
+function endTour() {
+  dialogLeaveTour.value = false
+  confirmLeaveTour.value = true
+  isEditing.value = false
+  tourStore.startCreateTask = false
+  $clevertap.event.push('Onboarding', {
+    TourName: 'CreateTask',
+    TourStatus: 'Aborted',
+    DeviceType: mdAndUp ? 'Desktop' : 'Mobile',
+    OnboardingStatus: 'Ongoing',
+  })
+  tourStore.minimizeTourEventBlock = true
+  if (leaveTo.value !== null) {
+    // 如果是按「上一頁」離開則確認後回到「上一頁」
+    router.push(leaveTo.value.path)
+  } else {
+    // 預設回到首頁
+    router.push('/')
+  }
+}
+function tourNextChangeTextSize() {
+  vuePdf.showSidebar()
+  tourMoveNext()
+}
+function tourNextHideSidebar() {
+  vuePdf.hideSidebar()
+  tourNextScrollToLastPage()
+}
+function tourNextScrollToLastPage() {
+  vuePdf.scrollToBottom()
+  tourMoveNext()
+}
+function tourNextScrollBackToTop() {
+  vuePdf.scrollToTop()
+  tourMoveNext()
+}
+async function tourMoveNext() {
+  await nextTick()
+  setTimeout(() => {
+    driverObj.moveNext()
+  }, 300)
+}
+function tourNextFillSigner() {
+  model.value.taskPerson[0].name = userInfo.value.name
+  model.value.taskPerson[0].email = userInfo.value.email
+  tourMoveNext()
+}
+function applySignerGroup(signerGroup) {
+  // 如果簽署人為空的時候則將簽署組合的內容新增
+  if (emptyPerson) {
+    model.value.taskPerson = []
+    for (let i = 0; i < signerGroup.person.length; i++) {
+      const newPerson = {
+        placeholder: {
+          name: signerGroup.person[i].role,
+        },
+        name: signerGroup.person[i].name,
+        email: signerGroup.person[i].email,
+        id: i + 1,
+        phone: '',
+        setNewHost: false,
+        hostName: '',
+        hostEmail: '',
+        signRole: 'SIGNER',
+        signMode: 'NORMAL_SIGN',
+        isAuditor: false,
+        isNeedOtp: false,
+        culture: locale.value,
+        face: false,
+        needVideo: false,
+        sendMethod: 'EMAIL',
+        collaborateSignDate: '',
+      }
+      model.value.taskPerson.push(newPerson)
+    }
+  } else {
+    for (let i = 0; i < signerGroup.person.length; i++) {
+      model.value.taskPerson[i].placeholder = {
+        name: signerGroup.person[i].role,
+      }
+      model.value.taskPerson[i].name = signerGroup.person[i].name
+      // 如果noSMS為true，則跳過設定email
+      if (model.value.taskPerson[i].noSMS) {
+        continue
+      }
+      model.value.taskPerson[i].email = signerGroup.person[i].email
+      if (
+        planInfo.value.useSMSPerson &&
+        model.value.taskPerson[i].sendMethod !== 'EMAIL'
+      ) {
+        model.value.taskPerson[i].sendMethod = 'EMAIL'
+        model.value.taskPerson[i].phone = ''
+        model.value.taskPerson[i].isNeedOtp = false
+      }
+    }
+  }
+}
+function copyShareLink() {
+  navigator.clipboard.writeText(shareLink)
+  snackbarStore.showSnackbar({
+    message: t('message.shareLinkCopied'),
+    color: 'error',
+  })
+}
+function closeShowLinkDialog() {
+  const canvases = document.querySelectorAll('#qrcode-canvas')
+  for (const canvas of canvases) {
+    const ctx = canvas.getContext('2d')
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+  }
+  shareLink.value = ''
+  showLinkDialog.value = false
+  router.push('/tasks')
+}
 
 useHead({
   title: t('title.createTask'),
@@ -1836,13 +3212,13 @@ useHead({
 @use '~/assets/onboarding.css';
 </style>
 <style lang="scss" scoped>
-::v-deep .v-stepper__step > span {
+:v-deep .v-stepper__step>span {
   background-color: #009138 !important;
   color: white;
   border: 1px solid white;
 }
 
-::v-deep .v-stepper__step--active > span {
+:v-deep .v-stepper__step--active>span {
   background-color: white !important;
   color: #009138 !important;
 }
@@ -1872,13 +3248,13 @@ useHead({
   padding-top: 50px;
 }
 
-::v-deep .v-stepper__step__step {
+:v-deep .v-stepper__step__step {
   width: 15px !important;
   min-width: 15px !important;
   height: 15px;
 }
 
-::v-deep .v-stepper__step {
+:v-deep .v-stepper__step {
   font-size: 13px;
 }
 
@@ -1902,10 +3278,12 @@ useHead({
   display: flex;
   flex-direction: row;
 }
+
 .mainButton {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
+
 .actionsButton {
   border-left: 0px !important;
   border-top-left-radius: 0;
@@ -1915,12 +3293,15 @@ useHead({
   margin-left: -3.5px;
   padding-left: 10px !important;
 }
+
 .pdfViewer {
   height: calc(100% - 73px);
 }
+
 .pdfViewer-sm {
   height: 100%;
 }
+
 .taskName {
   max-width: 300px;
   font-size: 13px;
@@ -1945,7 +3326,7 @@ useHead({
   border: 1px solid #e7e9ee;
 }
 
-::v-deep .v-input__slot > .v-input__append-inner {
+:v-deep .v-input__slot>.v-input__append-inner {
   margin-top: 2px !important;
 }
 
@@ -1960,7 +3341,7 @@ useHead({
   font-weight: bold;
 }
 
-.chip-label > span {
+.chip-label>span {
   display: inline-block;
   margin-top: 3px;
 }
@@ -2007,7 +3388,7 @@ div.qrcode {
   align-items: center;
 }
 
-div.qrcode > div.qrcode-spacing {
+div.qrcode>div.qrcode-spacing {
   flex: 1 1;
   justify-self: center;
 }
@@ -2018,7 +3399,7 @@ div.qrcode > div.qrcode-spacing {
   border-bottom: 1px solid #009138;
 }
 
-::v-deep .hide-scrollbar textarea {
+:v-deep .hide-scrollbar textarea {
   overflow-y: hidden;
 }
 </style>
